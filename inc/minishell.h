@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 09:43:39 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/08 21:38:02 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/06/09 00:24:06 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 # include <signal.h> */
 
 /*  */
-# define MAX_TOKENS 100
+# define MAX_TOKENS 1024
 
 /* COLOR intro */
 # define RT			"\033[0m"
@@ -135,6 +135,7 @@ void	free_ast(t_ast *root);
 char	*remove_quotes(const char *token);
 char	*skip_spaces(char *input);
 int		is_number(const char *str);
+char	*get_dir(t_cmd *cmd, char *prev_dir);
 
 /*                                   BUILT                                    */
 
@@ -165,7 +166,7 @@ t_cmd	*ast_to_cmd(t_ast *root);
 void	process_cmd(char *prompt);
 void	execute_ast(t_ast *root);
 void	execute_command(t_cmd *cmd);
-void	execute_builtin(t_cmd *cmd);
+int		execute_builtin(t_cmd *cmd);
 
 int		count_ast_nodes(t_ast *root);
 void	populate_tokens_array(t_ast *root, char **tokens, int *index);

@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 14:18:00 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/08 22:43:16 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/06/08 23:19:18 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,6 @@ t_token	*tokenize(char *input)
 {
 	t_token	*head;
 	char	*token;
-	t_token	*temp;
 
 	head = NULL;
 	while (*input)

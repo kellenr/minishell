@@ -33,8 +33,8 @@ t_op	valid_op(const char *operator)
 		return (AND);
 	if (cmp_s(operator, "||") == 0)
 		return (OR);
-	if (cmp_s(operator, "~") == 0)
-		return (TILDE);
+	// if (cmp_s(operator, "~") == 0)
+	// 	return (TILDE);
 	if (cmp_s(operator, "$") == 0)
 		return (DOLLAR);
 	return (NONE);

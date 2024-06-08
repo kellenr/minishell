@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 13:54:08 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/08 21:48:34 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/06/09 00:24:51 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ void	execute_ast(t_ast *root)
  * Takes a command structure as an argument.
  * Executes the built-in command if recognized.
  */
-void	execute_builtin(t_cmd *cmd)
+int	execute_builtin(t_cmd *cmd)
 {
 	if (ft_strcmp(cmd->cmd, "exit") == 0)
 		ft_exit(cmd);
@@ -80,6 +80,7 @@ void	execute_builtin(t_cmd *cmd)
 		ft_echo(cmd);
 	else if (ft_strcmp(cmd->cmd, "cd") == 0)
 		ft_cd(cmd);
+	return (0);
 }
 
 /*
@@ -93,6 +94,8 @@ void	execute_command(t_cmd *cmd)
 	pid_t	pid;
 	int		status;
 
+	if (execute_builtin(cmd))
+		return ;
 	pid = fork();
 	if (pid == 0)
 	{
@@ -102,7 +105,7 @@ void	execute_command(t_cmd *cmd)
 			exit(EXIT_FAILURE);
 		}
 	}
-	else if (pid < 0)
+	else if (pid > 0)
 	{
 		waitpid(pid, &status, 0);
 		if (status >= 0)

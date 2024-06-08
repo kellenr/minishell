@@ -1,0 +1,87 @@
+
+/*
+ * Function to get the home directory.
+ * Returns the home directory or NULL if an error occurs.
+ */
+char	*get_home(void)
+{
+	char *home = getenv("HOME");
+	if (!home)
+	{
+		ft_printf("cd: HOME not set\n");
+		return (NULL);
+	}
+	return (home);
+}
+
+/*
+ * Function to get the target directory based on the command arguments.
+ * Takes the command structure and previous directory as arguments.
+ * Returns the target directory or NULL if an error occurs.
+ */
+char	*target_dir(t_cmd *cmd, char **previous_dir)
+{
+	char *target_dir;
+
+	if (cmd->argc < 2 || ft_strcmp(cmd->tokens[1], "~") == 0)
+		return (get_home());
+	else if (ft_strcmp(cmd->tokens[1], "-") == 0)
+	{
+		if (!*previous_dir)
+		{
+			ft_printf("cd: OLDPWD not set\n");
+			return (NULL);
+		}
+		target_dir = *previous_dir;
+		ft_printf("%s\n", *previous_dir); // Print the previous directory
+	}
+	else
+		target_dir = cmd->tokens[1];
+	return (target_dir);
+}
+
+/*
+ * Function to change the directory.
+ * Takes the target directory and previous directory as arguments.
+ * Changes the current directory and updates the previous directory.
+ * Returns EXIT_SUCCESS or EXIT_FAILURE.
+ */
+int	change_directory(char *target_dir, char **previous_dir)
+{
+	char cwd[1024];
+
+	if (getcwd(cwd, sizeof(cwd)) == NULL)
+	{
+		perror("getcwd");
+		return (EXIT_FAILURE);
+	}
+
+	if (chdir(target_dir) != 0)
+	{
+		perror("cd");
+		return (EXIT_FAILURE);
+	}
+
+	free(*previous_dir);
+	*previous_dir = ft_strdup(cwd);
+
+	return (EXIT_SUCCESS);
+}
+
+/*
+ * Function to change the directory.
+ * Takes a command structure as an argument.
+ * Handles special cases for 'cd ~' and 'cd -'.
+ */
+int	ft_cd(t_cmd *cmd)
+{
+	static char *prev_dir;
+	char *tgt_dir;
+
+	prev_dir = NULL;
+	tgt_dir = target_dir(cmd, &prev_dir);
+	if (!tgt_dir)
+		return (EXIT_FAILURE);
+
+	return (change_directory(tgt_dir, &prev_dir));
+}
