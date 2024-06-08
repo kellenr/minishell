@@ -6,7 +6,7 @@
 #    By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/07 17:06:07 by keramos-          #+#    #+#              #
-#    Updated: 2024/06/03 16:02:41 by keramos-         ###   ########.fr        #
+#    Updated: 2024/06/08 21:23:26 by keramos-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -67,7 +67,7 @@ SRCS = minishell.c \
 	utils/input.c utils/intro_art.c utils/utils.c utils/checks.c \
 	utils/erro.c utils/free.c \
 	parsing/ast.c parsing/token.c \
-	built/built_cd.c built/built_echo.c built/built_pwd.c \
+	built/built_cd.c built/built_echo.c built/built_pwd.c built/built_exit.c \
 	src/cmd_execute.c src/execute.c src/process.c
 
 OBJS = $(SRCS:.c=.o)

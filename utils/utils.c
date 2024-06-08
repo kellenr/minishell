@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 19:44:25 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/02 19:29:13 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/06/08 20:29:40 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ char	*trim_whitespace(char *str)
 		str++;
 	if (*str == 0)
 		return (str);
-	end = str + strlen(str) - 1;
+	end = str + ft_strlen(str) - 1;
 	while (end > str && ft_isspace(*end))
 		end--;
 	*(end + 1) = '\0';
@@ -69,7 +69,7 @@ int	cmp_s(const char *str1, const char *str2)
  * Takes a string with possible surrounding quotes.
  * Returns a new string with the quotes removed.
  */
-char	*remove_quotes(char *str)
+/* char	*remove_quotes(char *str)
 {
 	int len = ft_strlen(str);
 	if ((str[0] == '"' && str[len - 1] == '"') || \
@@ -79,4 +79,5 @@ char	*remove_quotes(char *str)
 		return (new_str);
 	}
 	return (ft_strdup(str));
-}
+} */
+

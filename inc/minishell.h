@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 09:43:39 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/03 15:30:23 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/06/08 21:38:02 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,6 +113,8 @@ typedef struct s_token
 /*                                 SOURCES                                    */
 /* ************************************************************************** */
 
+extern int	g_status;
+
 /*                               handel msg                                   */
 
 void	ft_intro_art(void);
@@ -130,20 +132,24 @@ void	ft_error(char *str);
 void	free_cmd(t_cmd *cmd);
 void	free_tokens(t_token *tokens);
 void	free_ast(t_ast *root);
-char	*remove_quotes(char *str);
+char	*remove_quotes(const char *token);
+char	*skip_spaces(char *input);
+int		is_number(const char *str);
 
 /*                                   BUILT                                    */
 
 int		ft_echo(t_cmd *scmd);
 int		ft_pwd(void);
 int		ft_cd(t_cmd *cmd);
+void	ft_env(t_cmd *cmd);
+void	ft_exit(t_cmd *cmd);
 
 /*                                  Parsing                                   */
 
 t_token	*create_token(char *value);
 void	add_token(t_token **head, char *value);
 t_token	*tokenize(char *input);
-char	**tokens_to_array(t_token *tokens);
+char	*extract_token(char **input);
 t_ast	*create_ast_node(char *value);
 t_ast	*init_ast(t_token **tokens);
 t_ast	*handle_non_operator(t_token **current_token, t_ast *current_node);

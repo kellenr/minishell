@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 13:54:08 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/02 19:05:34 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/06/08 21:48:34 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,11 +73,7 @@ void	execute_ast(t_ast *root)
 void	execute_builtin(t_cmd *cmd)
 {
 	if (ft_strcmp(cmd->cmd, "exit") == 0)
-	{
-		ft_printf("Exiting minishell...\n");
-		free_cmd(cmd);
-		exit(0);
-	}
+		ft_exit(cmd);
 	else if (ft_strcmp(cmd->cmd, "pwd") == 0)
 		ft_pwd();
 	else if (ft_strcmp(cmd->cmd, "echo") == 0)
@@ -87,8 +83,10 @@ void	execute_builtin(t_cmd *cmd)
 }
 
 /*
- * Helper function to execute a command.
+ * Function to execute a command.
  * Takes a command structure as an argument.
+ * Forks a child process to execute the command and waits for it to complete.
+ * Updates the global status variable with the exit status of the command.
  */
 void	execute_command(t_cmd *cmd)
 {
@@ -106,11 +104,16 @@ void	execute_command(t_cmd *cmd)
 	}
 	else if (pid < 0)
 	{
-		perror("fork");
+		waitpid(pid, &status, 0);
+		if (status >= 0)
+			g_status = status;
+		else
+			g_status = 1;
 	}
 	else
 	{
-		waitpid(pid, &status, 0);
+		perror("fork");
+		g_status = 1;
 	}
 }
 

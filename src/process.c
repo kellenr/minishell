@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 17:32:36 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/03 15:21:53 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/06/08 19:38:39 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,9 @@ char	*process_input(const char *input)
 	{
 		if (*inp_ptr == '\'' || *inp_ptr == '\"')
 			handle_quotes(&inp_ptr, &res_ptr);
-		else
+		else if (valid_op(inp_ptr) != NONE)
 			handle_operator(&inp_ptr, &res_ptr);
-		if (*inp_ptr != '\'' && *inp_ptr != '\"' && valid_op(inp_ptr) == NONE)
+		else
 			*res_ptr++ = *inp_ptr++;
 	}
 	*res_ptr = '\0';
@@ -52,7 +52,11 @@ void	handle_quotes(const char **inp_ptr, char **res_ptr)
 	quote = **inp_ptr;
 	*(*res_ptr)++ = *(*inp_ptr)++;
 	while (**inp_ptr && **inp_ptr != quote)
+	{
+		if (**inp_ptr == '\\' && (*(*inp_ptr + 1) == quote || *(*inp_ptr + 1) == '\\'))
+			*(*res_ptr)++ = *(*inp_ptr)++; // Handle escaped quotes or backslashes
 		*(*res_ptr)++ = *(*inp_ptr)++;
+	}
 	if (**inp_ptr == quote)
 		*(*res_ptr)++ = *(*inp_ptr)++;
 }

@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 14:18:00 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/02 19:19:37 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/06/08 22:43:16 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ void	add_token(t_token **head, char *value)
  * Takes the input string as an argument.
  * Returns the head of the token list.
  */
-t_token	*tokenize(char *input)
+/* t_token	*tokenize(char *input)
 {
 	t_token	*head;
 	char	*token;
@@ -73,42 +73,120 @@ t_token	*tokenize(char *input)
 	token = ft_strtoke(pre_input, " ");
 	while (token)
 	{
-		cleaned_token = remove_quotes(token);
+		if (*token == '\'' || *token == '\"')
+			cleaned_token = remove_quotes(token);
+		else
+			cleaned_token = ft_strdup(token);
 		add_token(&head, cleaned_token);
 		free(cleaned_token);
 		token = ft_strtoke(NULL, " ");
 	}
 	free(pre_input);
 	return (head);
+} */
+
+/*
+ * Function to tokenize the input string into a linked list of tokens.
+ * Takes the input string as an argument.
+ * Returns the head of the token list.
+ */
+t_token	*tokenize(char *input)
+{
+	t_token	*head;
+	char	*token;
+	t_token	*temp;
+
+	head = NULL;
+	while (*input)
+	{
+		input = skip_spaces(input);
+		if (*input)
+		{
+			token = extract_token(&input);
+			if (!token)
+			{
+				free_tokens(head);
+				return (NULL);
+			}
+			add_token(&head, token);
+			free(token);
+		}
+		input = skip_spaces(input);
+	}
+	return (head);
 }
 
 /*
- * Function to convert a linked list of tokens to an array of strings.
- * Takes the head of the token list as an argument.
- * Returns an array of strings.
+ * Function to skip leading spaces in the input string.
+ * Takes the input string as an argument.
+ * Returns the new position in the input string.
  */
-/* char	**tokens_to_array(t_token *tokens)
+char	*skip_spaces(char *input)
 {
-	char	**array;
-	int		count;
-	t_token	*temp;
+	while (*input && ft_isspace(*input))
+		input++;
+	return (input);
+}
 
-	temp = tokens;
-	count = 0;
-	while (temp)
+/*
+ * Function to extract the next token from the input string.
+ * Takes a pointer to the input string as an argument and updates it.
+ * Returns the extracted token.
+ */
+char *extract_token(char **input)
+{
+	char	*start;
+	char	*token;
+	char	*cleaned_token;
+	char	quote_char;
+
+	start = *input;
+	if (**input == '\'' || **input == '\"')
 	{
-		count++;
-		temp = temp->next;
+		quote_char = *(*input)++;
+		while (**input && **input != quote_char)
+			(*input)++;
+		if (**input == '\0') // Unmatched quote detected
+			return (NULL);
+		if (**input)
+			(*input)++;
 	}
-	array = (char **)malloc(sizeof(char *) * (count + 1));
-	if (!array)
-		return (NULL);
-	count = 0;
-	while (tokens)
+	else
 	{
-		array[count++] = ft_strdup(tokens->value);
-		tokens = tokens->next;
+		while (**input && !ft_isspace(**input) && **input != '\'' && **input != '\"')
+			(*input)++;
 	}
-	array[count] = NULL;
-	return (array);
-} */
+	token = ft_strndup(start, *input - start);
+	cleaned_token = remove_quotes(token);
+	free(token);
+	return (cleaned_token);
+}
+
+/*
+ * Function to remove quotes from a token.
+ * Takes the token string as an argument.
+ * Returns a new string without the quotes.
+ */
+char	*remove_quotes(const char *token)
+{
+	char	*cleaned_token;
+	int		len;
+	int		i;
+	int		j;
+
+	len = ft_strlen(token);
+	if ((token[0] == '\'' || token[0] == '\"') && token[0] == token[len - 1])
+	{
+		cleaned_token = (char *)malloc(len - 1); // Allocate space for the token without outer quotes
+		if (!cleaned_token)
+			return (NULL);
+		i = 1; // Skip the opening quote
+		j = 0;
+		while (i < len - 1)
+			cleaned_token[j++] = token[i++];
+		cleaned_token[j] = '\0';
+	}
+	else
+		cleaned_token = ft_strndup(token, len);
+	return (cleaned_token);
+}
