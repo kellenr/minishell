@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 21:17:54 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/09 00:29:14 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/06/09 20:19:15 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ char	*get_dir(t_cmd *cmd, char *prev_dir)
 int	ft_cd(t_cmd *cmd)
 {
 	static char	*prev_dir = NULL;
-	char		cwd[1024];
+	char		cwd[MAX_TKS];
 	char		*target_dir;
 
 	target_dir = get_dir(cmd, prev_dir);
@@ -73,45 +73,3 @@ int	ft_cd(t_cmd *cmd)
 	prev_dir = ft_strdup(cwd);
 	return (EXIT_SUCCESS);
 }
-
-/* int	ft_cd(t_cmd *cmd)
-{
-	static char	*previous_dir = NULL;
-	char		cwd[1024];
-	char		*target_dir;
-
-	if (cmd->argc < 2 || ft_strcmp(cmd->tokens[1], "~") == 0)
-	{
-		target_dir = getenv("HOME");
-		if (!target_dir)
-		{
-			ft_printf("cd: HOME not set\n");
-			return (EXIT_FAILURE);
-		}
-	}
-	else if (ft_strcmp(cmd->tokens[1], "-") == 0)
-	{
-		if (!previous_dir)
-		{
-			ft_printf("cd: OLDPWD not set\n");
-			return (EXIT_FAILURE);
-		}
-		target_dir = previous_dir;
-		ft_printf("%s\n", previous_dir); // Print the previous directory
-	}
-	else
-		target_dir = cmd->tokens[1];
-	if (getcwd(cwd, sizeof(cwd)) == NULL)
-	{
-		perror("getcwd");
-		return (EXIT_FAILURE);
-	}
-	if (chdir(target_dir) != 0)
-	{
-		perror("cd");
-		return (EXIT_FAILURE);
-	}
-	free(previous_dir);
-	previous_dir = ft_strdup(cwd);
-	return (EXIT_SUCCESS);
-} */

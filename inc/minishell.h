@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 09:43:39 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/09 15:23:01 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/06/09 22:22:35 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 # include <signal.h> */
 
 /*  */
-# define MAX_TOKENS 1024
+# define MAX_TKS 1024
 
 /* COLOR intro */
 # define RT			"\033[0m"
@@ -137,6 +137,9 @@ char	*skip_spaces(char *input);
 int		is_number(const char *str);
 char	*get_dir(t_cmd *cmd, char *prev_dir);
 char	*search_path(const char *cmd);
+
+// char	*find_path(char *cmd, char **env);
+// char	*get_path(char *cmd, char **paths);
 
 /*                                   BUILT                                    */
 

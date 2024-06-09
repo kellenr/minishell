@@ -70,3 +70,32 @@ char *expand_env_var(const char *var)
 	}
 	return (ft_strdup(""));
 }
+
+/*
+ * Function to tokenize the input string into a linked list of tokens.
+ * Takes the input string as an argument.
+ * Returns the head of the token list.
+ */
+/* t_token	*tokenize(char *input)
+{
+	t_token	*head;
+	char	*token;
+	char	*pre_input;
+	char	*cleaned_token;
+
+	head = NULL;
+	pre_input = process_input(input);
+	token = ft_strtoke(pre_input, " ");
+	while (token)
+	{
+		if (*token == '\'' || *token == '\"')
+			cleaned_token = remove_quotes(token);
+		else
+			cleaned_token = ft_strdup(token);
+		add_token(&head, cleaned_token);
+		free(cleaned_token);
+		token = ft_strtoke(NULL, " ");
+	}
+	free(pre_input);
+	return (head);
+} */

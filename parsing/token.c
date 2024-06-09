@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 14:18:00 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/09 02:54:22 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/06/09 20:24:59 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,35 +55,6 @@ void	add_token(t_token **head, char *value)
 		temp->next = new;
 	}
 }
-
-/*
- * Function to tokenize the input string into a linked list of tokens.
- * Takes the input string as an argument.
- * Returns the head of the token list.
- */
-/* t_token	*tokenize(char *input)
-{
-	t_token	*head;
-	char	*token;
-	char	*pre_input;
-	char	*cleaned_token;
-
-	head = NULL;
-	pre_input = process_input(input);
-	token = ft_strtoke(pre_input, " ");
-	while (token)
-	{
-		if (*token == '\'' || *token == '\"')
-			cleaned_token = remove_quotes(token);
-		else
-			cleaned_token = ft_strdup(token);
-		add_token(&head, cleaned_token);
-		free(cleaned_token);
-		token = ft_strtoke(NULL, " ");
-	}
-	free(pre_input);
-	return (head);
-} */
 
 /*
  * Function to tokenize the input string into a linked list of tokens.

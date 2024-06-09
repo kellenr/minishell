@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 19:44:25 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/09 02:51:56 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/06/09 20:30:18 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,20 +75,3 @@ char	*skip_spaces(char *input)
 		input++;
 	return (input);
 }
-
-/*
- * Function to remove surrounding quotes from a string.
- * Takes a string with possible surrounding quotes.
- * Returns a new string with the quotes removed.
- */
-/* char	*remove_quotes(char *str)
-{
-	int len = ft_strlen(str);
-	if ((str[0] == '"' && str[len - 1] == '"') || \
-		(str[0] == '\'' && str[len - 1] == '\''))
-	{
-		char *new_str = ft_substr(str, 1, len - 2);
-		return (new_str);
-	}
-	return (ft_strdup(str));
-} */

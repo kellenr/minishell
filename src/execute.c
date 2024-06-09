@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 13:54:08 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/09 15:25:04 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/06/09 22:20:54 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ void	execute_command(t_cmd *cmd)
 	cmd_path = search_path(cmd->tokens[0]);
 	if (!cmd_path)
 	{
-		ft_printf("%s: command not found\n", cmd->tokens[0]);
+		ft_printf("msh: %s: command not found\n", cmd->tokens[0]);
 		g_status = 127;
 		return ;
 	}

@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 21:04:23 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/08 21:23:10 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/06/09 20:22:25 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	ft_exit(t_cmd *cmd)
 		}
 		else
 		{
-			ft_printf("exit: %s: numeric argument required\n", cmd->tokens[1]);
+			ft_printf("msh: exit: %s: numeric argument required\n", cmd->tokens[1]);
 			exit(255); // Common convention for invalid argument
 		}
 	}

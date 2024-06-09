@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 14:14:19 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/09 02:23:33 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/06/09 20:19:47 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	ft_env(t_cmd *cmd)
 	env = cmd->env;
 	while (*env)
 	{
-		printf("%s\n", *env);
+		ft_printf("%s\n", *env);
 		env++;
 	}
 }
