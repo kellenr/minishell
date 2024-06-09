@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 13:54:08 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/09 13:37:30 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/06/09 23:52:20 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	process_cmd(char *prompt)
 	if (!tokens)
 	{
 		ft_printf("Error: Unmatched quote detected\n");
-		g_status = 1;
+		// cmd->exit_status = 1;
 		return ;
 	}
 	cmd_tree = parse_tokens_to_ast(tokens);

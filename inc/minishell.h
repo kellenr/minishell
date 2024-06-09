@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 09:43:39 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/09 22:22:35 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/06/09 23:44:17 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ typedef struct s_cmd
 	char			**tokens;
 	char			**env;
 	int				argc;
+	int				exit_status;
 	struct s_cmd	*next;
 	struct s_cmd	*prev;
 }		t_cmd;
@@ -112,8 +113,6 @@ typedef struct s_token
 /* ************************************************************************** */
 /*                                 SOURCES                                    */
 /* ************************************************************************** */
-
-extern int	g_status;
 
 /*                               handel msg                                   */
 

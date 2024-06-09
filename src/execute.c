@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 13:54:08 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/09 22:20:54 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/06/09 23:43:29 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ void	execute_command(t_cmd *cmd)
 	if (!cmd_path)
 	{
 		ft_printf("msh: %s: command not found\n", cmd->tokens[0]);
-		g_status = 127;
+		cmd->exit_status = 127;
 		return ;
 	}
 	pid = fork();
@@ -117,13 +117,13 @@ void	execute_command(t_cmd *cmd)
 	{
 		waitpid(pid, &status, 0);
 		if (status >= 0)
-			g_status = status;
+			cmd->exit_status = status;
 		else
-			g_status = 1;
+			cmd->exit_status = 1;
 	}
 	else
 	{
 		perror("fork");
-		g_status = 1;
+		cmd->exit_status = 1;
 	}
 }
