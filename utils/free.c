@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 00:20:12 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/02 19:00:42 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/06/10 00:12:23 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,16 +33,16 @@ void	free_cmd(t_cmd *cmd)
 		}
 		free(cmd->tokens);
 	}
-	if (cmd->env)
-	{
-		i = 0;
-		while (cmd->env[i])
-		{
-			free(cmd->env[i]);
-			i++;
-		}
-		free(cmd->env);
-	}
+	// if (cmd->env)
+	// {
+	// 	i = 0;
+	// 	while (cmd->env[i])
+	// 	{
+	// 		free(cmd->env[i]);
+	// 		i++;
+	// 	}
+	// 	free(cmd->env);
+	// }
 	free(cmd);
 }
 

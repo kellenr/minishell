@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 13:54:08 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/09 23:52:20 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/06/10 00:38:53 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
  * Function to process a command prompt string.
  * Takes the prompt string as an argument.
  */
-void	process_cmd(char *prompt)
+void	process_cmd(char *prompt, t_msh *msh)
 {
 	char	*trimmed_prompt;
 	char	*preprocessed_input;
@@ -38,11 +38,11 @@ void	process_cmd(char *prompt)
 	if (!tokens)
 	{
 		ft_printf("Error: Unmatched quote detected\n");
-		// cmd->exit_status = 1;
+		msh->exit_status = 1;
 		return ;
 	}
 	cmd_tree = parse_tokens_to_ast(tokens);
-	execute_ast(cmd_tree);
+	execute_ast(cmd_tree, msh);
 }
 
 /*

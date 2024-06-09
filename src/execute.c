@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 13:54:08 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/09 23:43:29 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/06/10 00:41:03 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,13 +45,15 @@ void	populate_tokens_array(t_ast *root, char **tokens, int *index)
  * Function to execute commands represented by the AST.
  * Takes the root of the AST as an argument.
  */
-void	execute_ast(t_ast *root)
+void	execute_ast(t_ast *root, t_msh *msh)
 {
 	t_cmd	*cmd;
 
 	if (!root)
 		return ;
 	cmd = ast_to_cmd(root);
+	cmd->env = msh->env;
+	cmd->msh = msh;
 	if (is_builtin(cmd->cmd))
 	{
 		execute_builtin(cmd);
@@ -104,7 +106,7 @@ void	execute_command(t_cmd *cmd)
 	if (!cmd_path)
 	{
 		ft_printf("msh: %s: command not found\n", cmd->tokens[0]);
-		cmd->exit_status = 127;
+		cmd->msh->exit_status = 127;
 		return ;
 	}
 	pid = fork();
@@ -117,13 +119,13 @@ void	execute_command(t_cmd *cmd)
 	{
 		waitpid(pid, &status, 0);
 		if (status >= 0)
-			cmd->exit_status = status;
+			cmd->msh->exit_status = status;
 		else
-			cmd->exit_status = 1;
+			cmd->msh->exit_status = 1;
 	}
 	else
 	{
 		perror("fork");
-		cmd->exit_status = 1;
+		cmd->msh->exit_status = 1;
 	}
 }

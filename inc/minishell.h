@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 09:43:39 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/09 23:44:17 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/06/10 00:35:18 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,20 @@ typedef enum e_op
 }		t_op;
 
 /*
+ * Structure representing the minishell.
+ * The minishell structure is used to store information about the shell
+ * environment, such as environment variables and the exit status.
+ * Members:
+ * - env: Array of environment variables.
+ * - exit_status: The exit status of the last executed command.
+ */
+typedef struct s_msh
+{
+	char	**env;
+	int		exit_status;
+}		t_msh;
+
+/*
  * Structure representing a command to be executed.
  * The command structure is used to store detailed information about a command,
  * including its arguments and environment variables, for execution purposes.
@@ -69,6 +83,7 @@ typedef struct s_cmd
 {
 	char			*cmd;
 	char			**tokens;
+	t_msh			*msh;
 	char			**env;
 	int				argc;
 	int				exit_status;
@@ -117,7 +132,7 @@ typedef struct s_token
 /*                               handel msg                                   */
 
 void	ft_intro_art(void);
-void	receive_msg(void);
+void	receive_msg(t_msh *msh);
 char	*read_input(void);
 
 /*                                  utlis                                     */
@@ -166,8 +181,8 @@ char	*process_input(const char *input);
 void	handle_quotes(const char **inp_ptr, char **res_ptr);
 void	handle_operator(const char **inp_ptr, char **res_ptr);
 t_cmd	*ast_to_cmd(t_ast *root);
-void	process_cmd(char *prompt);
-void	execute_ast(t_ast *root);
+void	process_cmd(char *prompt, t_msh *msh);
+void	execute_ast(t_ast *root, t_msh *msh);
 void	execute_command(t_cmd *cmd);
 int		execute_builtin(t_cmd *cmd);
 void	setup_pipe(int *pipe_fd);
