@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 13:54:08 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/09 00:24:51 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/06/09 15:25:04 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,8 @@ void	populate_tokens_array(t_ast *root, char **tokens, int *index)
 {
 	if (!root)
 		return ;
-
 	tokens[*index] = ft_strdup(root->value);
- 	(*index)++;
-
+	(*index)++;
 	if (root->left)
 		populate_tokens_array(root->left, tokens, index);
 	if (root->right)
@@ -80,6 +78,8 @@ int	execute_builtin(t_cmd *cmd)
 		ft_echo(cmd);
 	else if (ft_strcmp(cmd->cmd, "cd") == 0)
 		ft_cd(cmd);
+	else if (ft_strcmp(cmd->cmd, "env") == 0)
+		ft_env(cmd);
 	return (0);
 }
 
@@ -93,17 +93,25 @@ void	execute_command(t_cmd *cmd)
 {
 	pid_t	pid;
 	int		status;
+	char	*cmd_path;
 
-	if (execute_builtin(cmd))
+	if (!cmd->tokens)
+	{
+		perror("tokend not found");
 		return ;
+	}
+	cmd_path = search_path(cmd->tokens[0]);
+	if (!cmd_path)
+	{
+		ft_printf("%s: command not found\n", cmd->tokens[0]);
+		g_status = 127;
+		return ;
+	}
 	pid = fork();
 	if (pid == 0)
 	{
-		if (execve(cmd->cmd, cmd->tokens, cmd->env) == -1)
-		{
+		if (execve(cmd_path, cmd->tokens, cmd->env) == -1)
 			perror("execve");
-			exit(EXIT_FAILURE);
-		}
 	}
 	else if (pid > 0)
 	{
@@ -119,4 +127,3 @@ void	execute_command(t_cmd *cmd)
 		g_status = 1;
 	}
 }
-

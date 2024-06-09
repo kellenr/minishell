@@ -1,10 +1,12 @@
+/* ************************************************************************** */
+/*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   operator.c                                         :+:      :+:    :+:   */
+/*   checks.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/28 15:37:35 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/02 15:08:34 by keramos-         ###   ########.fr       */
+/*   Created: 2024/06/09 02:52:41 by keramos-          #+#    #+#             */
+/*   Updated: 2024/06/09 02:52:46 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +35,6 @@ t_op	valid_op(const char *operator)
 		return (AND);
 	if (cmp_s(operator, "||") == 0)
 		return (OR);
-	// if (cmp_s(operator, "~") == 0)
-	// 	return (TILDE);
 	if (cmp_s(operator, "$") == 0)
 		return (DOLLAR);
 	return (NONE);
@@ -54,6 +54,8 @@ int	is_builtin(char *cmd)
 	if (ft_strcmp(cmd, "echo") == 0)
 		return (1);
 	if (ft_strcmp(cmd, "cd") == 0)
+		return (1);
+	if (ft_strcmp(cmd, "env") == 0)
 		return (1);
 	return (0);
 }

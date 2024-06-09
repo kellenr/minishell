@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 12:07:43 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/08 21:41:51 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/06/09 13:34:55 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
  * It helps maintain the state of the shell and ensures consistent behavior
  * when reporting or acting upon the last command's outcome.
  */
-int g_status = 0;
+int	g_status = 0;
 
 /* this function to continuously receive and process user input */
 void	receive_msg(void)

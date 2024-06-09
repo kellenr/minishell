@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 17:32:36 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/08 19:38:39 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/06/09 02:55:16 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,9 @@ void	handle_quotes(const char **inp_ptr, char **res_ptr)
 	*(*res_ptr)++ = *(*inp_ptr)++;
 	while (**inp_ptr && **inp_ptr != quote)
 	{
-		if (**inp_ptr == '\\' && (*(*inp_ptr + 1) == quote || *(*inp_ptr + 1) == '\\'))
-			*(*res_ptr)++ = *(*inp_ptr)++; // Handle escaped quotes or backslashes
+		if (**inp_ptr == '\\' && (*(*inp_ptr + 1) == quote \
+			|| *(*inp_ptr + 1) == '\\'))
+			*(*res_ptr)++ = *(*inp_ptr)++;
 		*(*res_ptr)++ = *(*inp_ptr)++;
 	}
 	if (**inp_ptr == quote)

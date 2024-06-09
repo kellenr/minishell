@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 13:54:08 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/08 22:34:13 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/06/09 13:37:30 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,10 +65,10 @@ t_cmd	*ast_to_cmd(t_ast *root)
 	if (!cmd->tokens)
 	{
 		free(cmd);
-		return NULL;
+		return (NULL);
 	}
 	populate_tokens_array(root, cmd->tokens, &index);
-	cmd->tokens[count] = NULL; // Null-terminate the tokens array
+	cmd->tokens[count] = NULL;
 	cmd->cmd = ft_strdup(root->value);
 	cmd->env = NULL;
 	cmd->argc = count;

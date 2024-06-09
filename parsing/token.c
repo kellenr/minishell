@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 14:18:00 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/08 23:19:18 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/06/09 02:54:22 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,23 +116,11 @@ t_token	*tokenize(char *input)
 }
 
 /*
- * Function to skip leading spaces in the input string.
- * Takes the input string as an argument.
- * Returns the new position in the input string.
- */
-char	*skip_spaces(char *input)
-{
-	while (*input && ft_isspace(*input))
-		input++;
-	return (input);
-}
-
-/*
  * Function to extract the next token from the input string.
  * Takes a pointer to the input string as an argument and updates it.
  * Returns the extracted token.
  */
-char *extract_token(char **input)
+char	*extract_token(char **input)
 {
 	char	*start;
 	char	*token;
@@ -145,7 +133,7 @@ char *extract_token(char **input)
 		quote_char = *(*input)++;
 		while (**input && **input != quote_char)
 			(*input)++;
-		if (**input == '\0') // Unmatched quote detected
+		if (**input == '\0')
 			return (NULL);
 		if (**input)
 			(*input)++;
@@ -176,10 +164,10 @@ char	*remove_quotes(const char *token)
 	len = ft_strlen(token);
 	if ((token[0] == '\'' || token[0] == '\"') && token[0] == token[len - 1])
 	{
-		cleaned_token = (char *)malloc(len - 1); // Allocate space for the token without outer quotes
+		cleaned_token = (char *)malloc(len - 1);
 		if (!cleaned_token)
 			return (NULL);
-		i = 1; // Skip the opening quote
+		i = 1;
 		j = 0;
 		while (i < len - 1)
 			cleaned_token[j++] = token[i++];

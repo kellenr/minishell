@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 19:44:25 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/08 20:29:40 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/06/09 02:51:56 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,18 @@ int	cmp_s(const char *str1, const char *str2)
 }
 
 /*
+ * Function to skip leading spaces in the input string.
+ * Takes the input string as an argument.
+ * Returns the new position in the input string.
+ */
+char	*skip_spaces(char *input)
+{
+	while (*input && ft_isspace(*input))
+		input++;
+	return (input);
+}
+
+/*
  * Function to remove surrounding quotes from a string.
  * Takes a string with possible surrounding quotes.
  * Returns a new string with the quotes removed.
@@ -80,4 +92,3 @@ int	cmp_s(const char *str1, const char *str2)
 	}
 	return (ft_strdup(str));
 } */
-
