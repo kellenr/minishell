@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 13:54:08 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/10 00:41:03 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/06/10 00:59:17 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ void	execute_command(t_cmd *cmd)
 		perror("tokend not found");
 		return ;
 	}
-	cmd_path = search_path(cmd->tokens[0]);
+	cmd_path = find_path(cmd->tokens[0], cmd->env);
 	if (!cmd_path)
 	{
 		ft_printf("msh: %s: command not found\n", cmd->tokens[0]);

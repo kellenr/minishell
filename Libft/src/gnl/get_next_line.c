@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 11:47:26 by keramos-          #+#    #+#             */
-/*   Updated: 2024/01/24 17:07:28 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/06/10 01:04:11 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ static int	find_line(char *buf, char **line)
 	flag_line = 0;
 	if (buf[i] == '\n')
 		flag_line = 1;
-	find_line = ft_calloc(i + flag_line + 1, 1);
+	find_line = ft_callocs(i + flag_line + 1, 1);
 	if (find_line == NULL)
 		return (-1);
 	while (j < i + flag_line)
@@ -47,7 +47,7 @@ static int	find_line(char *buf, char **line)
 		find_line[j] = buf[j];
 		j++;
 	}
-	*line = ft_strjoin(*line, find_line);
+	*line = ft_strjoins(*line, find_line);
 	if (*line == NULL)
 		return (-1);
 	copy_s2_in_s1(buf, &buf[i + flag_line]);

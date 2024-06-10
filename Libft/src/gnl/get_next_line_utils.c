@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 11:47:20 by keramos-          #+#    #+#             */
-/*   Updated: 2024/01/25 14:16:09 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/06/10 01:04:55 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-static size_t	ft_strlen(const char *s)
+static size_t	ft_strlens(const char *s)
 {
 	int		i;
 
@@ -24,7 +24,7 @@ static size_t	ft_strlen(const char *s)
 	return (i);
 }
 
-void	*ft_calloc(size_t nmemb, size_t size)
+void	*ft_callocs(size_t nmemb, size_t size)
 {
 	size_t			i;
 	unsigned char	*temp;
@@ -40,7 +40,7 @@ void	*ft_calloc(size_t nmemb, size_t size)
 	return (temp);
 }
 
-char	*ft_strjoin(char *s1, char *s2)
+char	*ft_strjoins(char *s1, char *s2)
 {
 	char	*newstring;
 	int		i;
@@ -50,7 +50,7 @@ char	*ft_strjoin(char *s1, char *s2)
 	n = 0;
 	if (s1 == NULL)
 		return (s2);
-	newstring = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
+	newstring = malloc(sizeof(char) * (ft_strlens(s1) + ft_strlens(s2) + 1));
 	if (!newstring)
 		return (free (s1), free (s2), NULL);
 	while (s1[i])

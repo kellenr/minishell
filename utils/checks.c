@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/09 02:52:41 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/09 02:52:46 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/06/10 02:21:05 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,6 @@ t_op	valid_op(const char *operator)
 		return (AND);
 	if (cmp_s(operator, "||") == 0)
 		return (OR);
-	if (cmp_s(operator, "$") == 0)
-		return (DOLLAR);
 	return (NONE);
 }
 

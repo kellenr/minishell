@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 09:43:39 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/10 00:35:18 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/06/10 02:46:02 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,7 @@ typedef enum e_op
 	REDIR_HERE_DOC,
 	REDIR_INPUT,
 	AND,
-	OR,
-	TILDE,
-	DOLLAR
+	OR
 }		t_op;
 
 /*
@@ -150,10 +148,10 @@ char	*remove_quotes(const char *token);
 char	*skip_spaces(char *input);
 int		is_number(const char *str);
 char	*get_dir(t_cmd *cmd, char *prev_dir);
-char	*search_path(const char *cmd);
+// char	*search_path(const char *cmd);
 
-// char	*find_path(char *cmd, char **env);
-// char	*get_path(char *cmd, char **paths);
+char	*find_path(char *cmd, char **env);
+char	*get_path(char *cmd, char **paths);
 
 /*                                   BUILT                                    */
 
@@ -193,5 +191,9 @@ void	close_pipe(int *pipe_fd);
 
 int		count_ast_nodes(t_ast *root);
 void	populate_tokens_array(t_ast *root, char **tokens, int *index);
+
+void	var_exp(t_ast *root, char **env);
+char	*expand_env_var(char *token, char **env);
+char	*get_env_value(char *var, char **env);
 
 #endif
