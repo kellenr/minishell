@@ -34,6 +34,7 @@ void	process_cmd(char *prompt, t_msh *msh)
 	preprocessed_input = process_input(trimmed_prompt);
 	free(trimmed_prompt);
 	tokens = tokenize(preprocessed_input);
+	token_var_exp(tokens, msh);
 	free(preprocessed_input);
 	if (!tokens)
 	{
@@ -42,7 +43,7 @@ void	process_cmd(char *prompt, t_msh *msh)
 		return ;
 	}
 	cmd_tree = parse_tokens_to_ast(tokens);
-	var_exp(cmd_tree, msh->env);
+	// var_exp(cmd_tree, msh->env);
 	execute_ast(cmd_tree, msh);
 }
 

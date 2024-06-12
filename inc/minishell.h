@@ -158,7 +158,7 @@ char	*get_path(char *cmd, char **paths);
 int		ft_echo(t_cmd *scmd);
 int		ft_pwd(void);
 int		ft_cd(t_cmd *cmd);
-void	ft_env(t_cmd *cmd);
+int 	ft_env(t_cmd *cmd);
 void	ft_exit(t_cmd *cmd);
 
 /*                                  Parsing                                   */
@@ -193,7 +193,8 @@ int		count_ast_nodes(t_ast *root);
 void	populate_tokens_array(t_ast *root, char **tokens, int *index);
 
 void	var_exp(t_ast *root, char **env);
-char	*expand_env_var(char *token, char **env);
+char	*expand_env_var(char *token, t_msh *msg);
 char	*get_env_value(char *var, char **env);
+void token_var_exp(t_token *head, t_msh *msh);
 
 #endif

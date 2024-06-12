@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 13:54:08 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/10 00:59:17 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/06/12 23:28:49 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void	execute_ast(t_ast *root, t_msh *msh)
 	cmd->msh = msh;
 	if (is_builtin(cmd->cmd))
 	{
-		execute_builtin(cmd);
+		cmd->msh->exit_status = execute_builtin(cmd);
 	}
 	else
 	{
@@ -75,14 +75,14 @@ int	execute_builtin(t_cmd *cmd)
 	if (ft_strcmp(cmd->cmd, "exit") == 0)
 		ft_exit(cmd);
 	else if (ft_strcmp(cmd->cmd, "pwd") == 0)
-		ft_pwd();
+		return ft_pwd();
 	else if (ft_strcmp(cmd->cmd, "echo") == 0)
-		ft_echo(cmd);
+		return ft_echo(cmd);
 	else if (ft_strcmp(cmd->cmd, "cd") == 0)
-		ft_cd(cmd);
+		return ft_cd(cmd);
 	else if (ft_strcmp(cmd->cmd, "env") == 0)
-		ft_env(cmd);
-	return (0);
+		return ft_env(cmd);
+	return (-1);
 }
 
 /*
@@ -118,8 +118,8 @@ void	execute_command(t_cmd *cmd)
 	else if (pid > 0)
 	{
 		waitpid(pid, &status, 0);
-		if (status >= 0)
-			cmd->msh->exit_status = status;
+		if (WIFEXITED(status))
+			cmd->msh->exit_status = WEXITSTATUS(status);
 		else
 			cmd->msh->exit_status = 1;
 	}

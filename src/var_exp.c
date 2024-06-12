@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 01:41:45 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/10 10:44:47 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/06/12 23:27:58 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,18 +16,32 @@
  * Function to expand environment variables.
  * Takes the command structure as an argument.
  */
-void	var_exp(t_ast *root, char **env)
+/* void	var_exp(t_ast *root, char **env) */
+/* { */
+
+
+/* 	if (!root) */
+/* 		return ; */
+/* 	if (root->value) */
+/* 	{ */
+/* 		root->value = expand_env_var(root->value, env); */
+/* 	} */
+/* 	var_exp(root->left, env); */
+/* 	var_exp(root->right, env); */
+/* } */
+
+/*
+ * Function to expand environment variables in a token list.
+ */
+void token_var_exp(t_token *head, t_msh *msh)
 {
-
-
-	if (!root)
+	if (!head)
 		return ;
-	if (root->value)
+	if (head->value)
 	{
-		root->value = expand_env_var(root->value, env);
+		head->value = expand_env_var(head->value, msh);
 	}
-	var_exp(root->left, env);
-	var_exp(root->right, env);
+	token_var_exp(head->next, msh);
 }
 
 /*
@@ -35,16 +49,19 @@ void	var_exp(t_ast *root, char **env)
  * Takes the token and the environment variables as arguments.
  * Returns the expanded token.
  */
-char	*expand_env_var(char *token, char **env)
+char	*expand_env_var(char *token, t_msh *msh)
 {
 	char *key;
 	char *value;
+
+	if (token[0] == '$' && token[1] == '?')
+		return ft_itoa(msh->exit_status);
 
 	if (token[0] != '$')
 		return (ft_strdup(token));
 
 	key = token + 1; // Skip the '$'
-	value = get_env_value(key, env);
+	value = get_env_value(key, msh->env);
 
 	if (value)
 		return (ft_strdup(value));

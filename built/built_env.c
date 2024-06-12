@@ -16,7 +16,7 @@
  * Function to print the environment variables.
  * Takes the command structure as an argument.
  */
-void	ft_env(t_cmd *cmd)
+int	ft_env(t_cmd *cmd)
 {
 	char	**env;
 
@@ -26,4 +26,5 @@ void	ft_env(t_cmd *cmd)
 		ft_printf("%s\n", *env);
 		env++;
 	}
+	return 0;
 }
