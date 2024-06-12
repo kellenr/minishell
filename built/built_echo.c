@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 21:20:52 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/09 20:19:28 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/06/13 00:10:59 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ bool	check_opt(char *s)
 int	ft_echo(t_cmd *scmd)
 {
 	bool	flg;
+	// char	*expanded;
 	int		i;
 
 	i = 1;
@@ -53,6 +54,9 @@ int	ft_echo(t_cmd *scmd)
 	}
 	while (scmd->tokens[i])
 	{
+		// expanded = expand_env_var(scmd->tokens[i], scmd->msh);
+		// ft_printf("%s", expanded);
+		// free(expanded);
 		ft_printf("%s", scmd->tokens[i]);
 		if (scmd->tokens[i + 1])
 			ft_printf(" ");

@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 09:43:39 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/10 02:46:02 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/06/13 00:29:08 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,7 +148,7 @@ char	*remove_quotes(const char *token);
 char	*skip_spaces(char *input);
 int		is_number(const char *str);
 char	*get_dir(t_cmd *cmd, char *prev_dir);
-// char	*search_path(const char *cmd);
+
 
 char	*find_path(char *cmd, char **env);
 char	*get_path(char *cmd, char **paths);
@@ -192,9 +192,12 @@ void	close_pipe(int *pipe_fd);
 int		count_ast_nodes(t_ast *root);
 void	populate_tokens_array(t_ast *root, char **tokens, int *index);
 
-void	var_exp(t_ast *root, char **env);
-char	*expand_env_var(char *token, t_msh *msg);
+//void	var_exp(t_ast *root, char **env);
+char	*expand_env_var(char *input, t_msh *msh);
+char	*expand_variable(const char *input, int *index, char *result, t_msh *msh);
+char	*process_literal(const char *input, int *index, char *result);
 char	*get_env_value(char *var, char **env);
-void token_var_exp(t_token *head, t_msh *msh);
+void	token_var_exp(t_token *head, t_msh *msh);
+char	*expand_single_var(char *token, t_msh *msh);
 
 #endif

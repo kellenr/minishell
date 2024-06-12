@@ -139,3 +139,69 @@ char *expand_env_var(const char *var)
 	free(path_env);
 	return NULL;
 } */
+
+/*
+ * Function to expand environment variables in a string.
+ * Takes the input string and the shell structure as arguments.
+ * Returns a new string with environment variables expanded.
+ */
+/* char	*expand_env_var(char *input, t_msh *msh)
+{
+	char	*result;
+	char	*expanded;
+	char	*tmp;
+	int		i;
+	int		j;
+
+	if (!input)
+		return (NULL);
+	result = ft_strdup("");
+	i = 0;
+	while (input[i])
+	{
+		if (input[i] == '$')
+		{
+			j = i + 1;
+			while (input[j] && (ft_isalnum(input[j]) || input[j] == '?' || input[j] == '_'))
+				j++;
+			char *var = ft_substr(input, i, j - i);
+			expanded = expand_single_var(var, msh);
+			tmp = ft_strjoin(result, expanded);
+			free(result);
+			free(expanded);
+			result = tmp;
+			free(var);
+			i = j;
+		}
+		else
+		{
+			j = i;
+			while (input[j] && input[j] != '$')
+				j++;
+			char *literal = ft_substr(input, i, j - i);
+			tmp = ft_strjoin(result, literal);
+			free(result);
+			free(literal);
+			result = tmp;
+			i = j;
+		}
+	}
+	return (result);
+} */
+
+/*
+ * Function to expand environment variables.
+ * Takes the command structure as an argument.
+ */
+/* void	var_exp(t_ast *root, char **env) */
+/* { */
+
+/* 	if (!root) */
+/* 		return ; */
+/* 	if (root->value) */
+/* 	{ */
+/* 		root->value = expand_env_var(root->value, env); */
+/* 	} */
+/* 	var_exp(root->left, env); */
+/* 	var_exp(root->right, env); */
+/* } */

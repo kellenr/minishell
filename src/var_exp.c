@@ -6,37 +6,21 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 01:41:45 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/12 23:27:58 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/06/13 00:34:33 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /*
- * Function to expand environment variables.
- * Takes the command structure as an argument.
+ * Function to expand environment variables in a list of tokens.
+ * Takes the head of the token list and the shell structure as arguments.
+ * Expands environment variables in each token's value.
  */
-/* void	var_exp(t_ast *root, char **env) */
-/* { */
-
-
-/* 	if (!root) */
-/* 		return ; */
-/* 	if (root->value) */
-/* 	{ */
-/* 		root->value = expand_env_var(root->value, env); */
-/* 	} */
-/* 	var_exp(root->left, env); */
-/* 	var_exp(root->right, env); */
-/* } */
-
-/*
- * Function to expand environment variables in a token list.
- */
-void token_var_exp(t_token *head, t_msh *msh)
+void	token_var_exp(t_token *head, t_msh *msh)
 {
 	if (!head)
-		return ;
+		return;
 	if (head->value)
 	{
 		head->value = expand_env_var(head->value, msh);
@@ -45,28 +29,81 @@ void token_var_exp(t_token *head, t_msh *msh)
 }
 
 /*
- * Function to expand a single environment variable.
- * Takes the token and the environment variables as arguments.
- * Returns the expanded token.
+ * Function to expand environment variables in a string.
+ * Takes the input string and the shell structure as arguments.
+ * Returns a new string with environment variables expanded.
  */
-char	*expand_env_var(char *token, t_msh *msh)
+char	*expand_env_var(char *input, t_msh *msh)
 {
-	char *key;
-	char *value;
+	char	*result;
+	int		i;
 
-	if (token[0] == '$' && token[1] == '?')
-		return ft_itoa(msh->exit_status);
+	if (!input)
+		return (NULL);
+	result = ft_strdup("");
+	i = 0;
+	while (input[i])
+	{
+		if (input[i] == '$')
+			result = expand_variable(input, &i, result, msh);
+		else
+			result = process_literal(input, &i, result);
+	}
+	return (result);
+}
 
-	if (token[0] != '$')
-		return (ft_strdup(token));
+/*
+ * Function to expand a variable in the input string.
+ * Takes the input string, the current index, the result string, and the shell structure.
+ * Returns the updated result string and updates the index.
+ */
+char	*expand_variable(const char *input, int *index, char *result, t_msh *msh)
+{
+	int j;
+	char *var;
+	char *expanded;
+	char *tmp;
 
-	key = token + 1; // Skip the '$'
-	value = get_env_value(key, msh->env);
+	j = *index + 1;
+	if (!input[j] || (!ft_isalnum(input[j]) && input[j] != '?' && input[j] != '_'))
+	{
+		tmp = ft_strjoin(result, "$");
+		free(result);
+		*index = j;
+		return tmp;
+	}
+	while (input[j] && (ft_isalnum(input[j]) || input[j] == '?' || input[j] == '_'))
+		j++;
+	var = ft_substr(input, *index, j - *index);
+	expanded = expand_single_var(var, msh);
+	tmp = ft_strjoin(result, expanded);
+	free(result);
+	free(expanded);
+	free(var);
+	*index = j;
+	return tmp;
+}
 
-	if (value)
-		return (ft_strdup(value));
+/*
+ * Function to process a literal part of the input string.
+ * Takes the input string, the current index, and the result string.
+ * Returns the updated result string and updates the index.
+ */
+char	*process_literal(const char *input, int *index, char *result)
+{
+	int j;
+	char *literal;
+	char *tmp;
 
-	return (ft_strdup(""));
+	j = *index;
+	while (input[j] && input[j] != '$')
+		j++;
+	literal = ft_substr(input, *index, j - *index);
+	tmp = ft_strjoin(result, literal);
+	free(result);
+	free(literal);
+	*index = j;
+	return tmp;
 }
 
 /*
@@ -83,4 +120,25 @@ char	*get_env_value(char *var, char **env)
 		env++;
 	}
 	return (NULL);
+}
+
+/*
+ * Function to expand a single environment variable.
+ * Takes the token and the shell structure as arguments.
+ * Returns the expanded value of the environment variable.
+ */
+char	*expand_single_var(char *token, t_msh *msh)
+{
+	char *key;
+	char *value;
+
+	if (ft_strcmp(token, "$?") == 0)
+		return (ft_itoa(msh->exit_status));
+	if (token[0] != '$')
+		return (ft_strdup(token));
+	key = token + 1;
+	value = get_env_value(key, msh->env);
+	if (value)
+		return (ft_strdup(value));
+	return (ft_strdup(""));
 }
