@@ -205,3 +205,46 @@ char *expand_env_var(const char *var)
 /* 	var_exp(root->left, env); */
 /* 	var_exp(root->right, env); */
 /* } */
+
+/*
+ * Function to expand a variable in the input string.
+ * Takes the input string, the current index, the result string, and the shell structure.
+ * Returns the updated result string and updates the index.
+ */
+char	*expand_variable(const char *input, int *index, char *result, t_msh *msh)
+{
+	int		j;
+	char	*var;
+	char	*expanded;
+	char	*tmp;
+	char	*suffix;
+
+	j = *index + 1;
+	if (input[j] == '?')
+	{
+		var = ft_substr(input, *index, 2); // Extract $?
+		expanded = expand_single_var(var, msh);
+		free(var);
+		j++; // Move past ?
+		while (input[j] && (ft_isalnum(input[j]) || input[j] == '?' || input[j] == '_' || input[j] == '$'))
+			j++;
+		suffix = ft_substr(input, *index + 2, j - (*index + 2)); // Extract suffix after $?
+		tmp = ft_strjoin(expanded, suffix);
+		free(expanded);
+		free(suffix);
+		tmp = ft_strjoin(result, tmp);
+		free(result);
+		*index = j;
+		return tmp;
+	}
+	while (input[j] && (ft_isalnum(input[j]) || input[j] == '?' || input[j] == '_'))
+		j++;
+	var = ft_substr(input, *index, j - *index);
+	expanded = expand_single_var(var, msh);
+	tmp = ft_strjoin(result, expanded);
+	free(result);
+	free(expanded);
+	free(var);
+	*index = j;
+	return tmp;
+}

@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 09:43:39 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/13 00:29:08 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/06/13 23:47:12 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,7 @@ typedef struct s_cmd
 typedef struct s_ast
 {
 	char			*value;
+	t_op 			op;
 	struct s_ast	*left;
 	struct s_ast	*right;
 }		t_ast;
@@ -167,7 +168,7 @@ t_token	*create_token(char *value);
 void	add_token(t_token **head, char *value);
 t_token	*tokenize(char *input);
 char	*extract_token(char **input);
-t_ast	*create_ast_node(char *value);
+t_ast	*create_ast_node(char *value, t_op op);
 t_ast	*init_ast(t_token **tokens);
 t_ast	*handle_non_operator(t_token **current_token, t_ast *current_node);
 t_ast	*handle_operator_ast(t_token **current_token, t_ast *root);
@@ -183,21 +184,26 @@ void	process_cmd(char *prompt, t_msh *msh);
 void	execute_ast(t_ast *root, t_msh *msh);
 void	execute_command(t_cmd *cmd);
 int		execute_builtin(t_cmd *cmd);
-void	setup_pipe(int *pipe_fd);
-void	execute_pipe(t_cmd *cmd);
-void	execute_left_pipe(t_cmd *cmd, int *pipe_fd);
-void	execute_right_pipe(t_cmd *cmd, int *pipe_fd);
-void	close_pipe(int *pipe_fd);
-
 int		count_ast_nodes(t_ast *root);
 void	populate_tokens_array(t_ast *root, char **tokens, int *index);
 
+/*                                    module                                  */
 //void	var_exp(t_ast *root, char **env);
-char	*expand_env_var(char *input, t_msh *msh);
-char	*expand_variable(const char *input, int *index, char *result, t_msh *msh);
+char	*exp_env_var(char *input, t_msh *msh);
+char	*exp_variable(const char *input, int *index, char *result, t_msh *msh);
 char	*process_literal(const char *input, int *index, char *result);
 char	*get_env_value(char *var, char **env);
 void	token_var_exp(t_token *head, t_msh *msh);
-char	*expand_single_var(char *token, t_msh *msh);
+char	*exp_single_var(char *token, t_msh *msh);
+char	*exp_special_var(const char *input, int *index, char *result, t_msh *msh);
+char	*exp_general_var(const char *input, int *index, char *result, t_msh *msh);
 
+void	execute_pipe(t_ast *root, t_msh *msh);
+
+// Redirection Handling Functions
+//void	handle_redirection(t_ast *root, t_msh *msh);
+
+// Background Execution Functions
+//void	handle_background(t_ast *root, t_msh *msh);
+void	print_ast(t_ast *root, int level, char *branch);
 #endif

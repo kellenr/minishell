@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 13:54:08 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/12 23:28:49 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/06/13 23:30:41 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,18 +51,27 @@ void	execute_ast(t_ast *root, t_msh *msh)
 
 	if (!root)
 		return ;
-	cmd = ast_to_cmd(root);
-	cmd->env = msh->env;
-	cmd->msh = msh;
-	if (is_builtin(cmd->cmd))
-	{
-		cmd->msh->exit_status = execute_builtin(cmd);
+	if (root->op == PIPE)
+		execute_pipe(root, msh);
+	else if (root->op == REDIR_APPEND || root->op == REDIR_REPLACE || root->op == REDIR_INPUT)
+		return ; //handle_redirection(root, msh);
+	else if (root->op == AND || root->op == OR)
+		return ; //handle_background(root, msh);
+ 	else
+ 	{
+		cmd = ast_to_cmd(root);
+		cmd->env = msh->env;
+		cmd->msh = msh;
+		if (is_builtin(cmd->cmd))
+		{
+			cmd->msh->exit_status = execute_builtin(cmd);
+		}
+		else
+		{
+			execute_command(cmd);
+		}
+		free_cmd(cmd);
 	}
-	else
-	{
-		execute_command(cmd);
-	}
-	free_cmd(cmd);
 }
 
 /*
