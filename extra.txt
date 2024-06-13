@@ -1,0 +1,207 @@
+
+
+/*
+ * Function to expand variables in a given string.
+ * Supports expansion of `~`, environment variables (`$VAR`), and the special variable `$?`.
+ */
+char *expand_variables(const char *str, int last_status)
+{
+	char *expanded_str = NULL;
+
+	if (!str)
+		return NULL;
+	if (str[0] == '~' && (str[1] == '/' || str[1] == '\0'))
+	{
+		const char *home = getenv("HOME");
+		if (home)
+		{
+			size_t len = strlen(home) + strlen(str);
+			expanded_str = malloc(len);
+			if (expanded_str)
+			{
+				strcpy(expanded_str, home);
+				strcat(expanded_str, str + 1);
+			}
+			return expanded_str;
+		}
+	}
+
+	// Handle environment variable expansion and special variable `$?`
+	if (str[0] == '$')
+	{
+		if (strcmp(str, "$?") == 0)
+		{
+			return expand_status_var(last_status);
+		}
+		else
+		{
+			return (expand_env_var(str + 1)); // Skip the `$` and get the env variable
+		}
+	}
+
+	return (ft_strdup(str));
+}
+
+/*
+ * Function to expand the special variable `$?`.
+ * Returns the exit status of the last executed command as a string.
+ */
+char *expand_status_var(int status)
+{
+	char *status_str = malloc(12); // Enough to hold an integer as a string
+	if (status_str)
+	{
+		snprintf(status_str, 12, "%d", status);
+	}
+	return status_str;
+}
+
+/*
+ * Function to expand environment variables.
+ * Takes the variable name as an argument and returns its value.
+ * If the variable is not set, returns an empty string.
+ */
+char *expand_env_var(const char *var)
+{
+	const char *value = getenv(var);
+	if (value)
+	{
+		return (ft_strdup(value));
+	}
+	return (ft_strdup(""));
+}
+
+/*
+ * Function to tokenize the input string into a linked list of tokens.
+ * Takes the input string as an argument.
+ * Returns the head of the token list.
+ */
+/* t_token	*tokenize(char *input)
+{
+	t_token	*head;
+	char	*token;
+	char	*pre_input;
+	char	*cleaned_token;
+
+	head = NULL;
+	pre_input = process_input(input);
+	token = ft_strtoke(pre_input, " ");
+	while (token)
+	{
+		if (*token == '\'' || *token == '\"')
+			cleaned_token = remove_quotes(token);
+		else
+			cleaned_token = ft_strdup(token);
+		add_token(&head, cleaned_token);
+		free(cleaned_token);
+		token = ft_strtoke(NULL, " ");
+	}
+	free(pre_input);
+	return (head);
+} */
+
+/*
+ * Function to search for a command in the PATH.
+ * Returns the full path to the command if found, otherwise NULL.
+ */
+/* char	*search_path(const char *cmd)
+{
+	char *path_env = getenv("PATH");
+	char *path = NULL;
+	char *dir = NULL;
+	size_t len;
+
+	if (!path_env)
+		return (NULL);
+	path_env = strdup(path_env);
+	if (!path_env)
+		return NULL;
+	dir = ft_strtoke(path_env, ":");
+	while (dir)
+	{
+		len = ft_strlen(dir) + ft_strlen(cmd) + 2;
+		path = malloc(len);
+		if (!path)
+		{
+			free(path_env);
+			return NULL;
+		}
+		snprintf(path, len, "%s/%s", dir, cmd);
+		if (access(path, X_OK) == 0)
+		{
+			free(path_env);
+			return path;
+		}
+		free(path);
+		path = NULL;
+		dir = ft_strtoke(NULL, ":");
+	}
+	free(path_env);
+	return NULL;
+} */
+
+/*
+ * Function to expand environment variables in a string.
+ * Takes the input string and the shell structure as arguments.
+ * Returns a new string with environment variables expanded.
+ */
+/* char	*expand_env_var(char *input, t_msh *msh)
+{
+	char	*result;
+	char	*expanded;
+	char	*tmp;
+	int		i;
+	int		j;
+
+	if (!input)
+		return (NULL);
+	result = ft_strdup("");
+	i = 0;
+	while (input[i])
+	{
+		if (input[i] == '$')
+		{
+			j = i + 1;
+			while (input[j] && (ft_isalnum(input[j]) || input[j] == '?' || input[j] == '_'))
+				j++;
+			char *var = ft_substr(input, i, j - i);
+			expanded = expand_single_var(var, msh);
+			tmp = ft_strjoin(result, expanded);
+			free(result);
+			free(expanded);
+			result = tmp;
+			free(var);
+			i = j;
+		}
+		else
+		{
+			j = i;
+			while (input[j] && input[j] != '$')
+				j++;
+			char *literal = ft_substr(input, i, j - i);
+			tmp = ft_strjoin(result, literal);
+			free(result);
+			free(literal);
+			result = tmp;
+			i = j;
+		}
+	}
+	return (result);
+} */
+
+/*
+ * Function to expand environment variables.
+ * Takes the command structure as an argument.
+ */
+/* void	var_exp(t_ast *root, char **env) */
+/* { */
+
+/* 	if (!root) */
+/* 		return ; */
+/* 	if (root->value) */
+/* 	{ */
+/* 		root->value = expand_env_var(root->value, env); */
+/* 	} */
+/* 	var_exp(root->left, env); */
+/* 	var_exp(root->right, env); */
+/* } */
