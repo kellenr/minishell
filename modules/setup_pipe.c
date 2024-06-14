@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   setup_pipe.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/09 14:35:09 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/13 23:36:04 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/06/14 13:54:49 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,6 @@ void	execute_pipe(t_ast *root, t_msh *msh)
 	int		pipefd[2];
 	pid_t	p1;
 	pid_t	p2;
-
-	print_ast(root, 4, "Root");
 
 	if (pipe(pipefd) == -1)
 		ft_error("pipe");
@@ -53,6 +51,3 @@ void	execute_pipe(t_ast *root, t_msh *msh)
 	waitpid(p2, NULL, 0);
 	return ;
 }
-
-
-

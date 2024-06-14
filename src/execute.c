@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 13:54:08 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/13 23:30:41 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/06/14 14:30:12 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ void	execute_ast(t_ast *root, t_msh *msh)
 {
 	t_cmd	*cmd;
 
+	//print_ast(root, 4, "Root");
 	if (!root)
 		return ;
 	if (root->op == PIPE)

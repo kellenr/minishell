@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   print_ast.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/13 23:14:16 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/13 23:32:28 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/06/14 13:43:48 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,13 @@ void print_ast(t_ast *root, int level, char *branch)
 
 	for (int i = 0; i < level; i++) printf("  ");
 	printf("%s─%s (%s)\n", branch, root->value, op_to_string(root->op));
+	// Indicate presence of left and right children
+	if (root->left || root->right)
+	{
+		printf(" [L: %s, R: %s] \n", \
+		root->left ? root->left->value : "NULL",\
+		root->right ? root->right->value : "NULL");
+	}
 
 	// Print left child
 	if (root->left) {

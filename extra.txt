@@ -248,3 +248,26 @@ char	*expand_variable(const char *input, int *index, char *result, t_msh *msh)
 	*index = j;
 	return tmp;
 }
+
+t_ast	*handle_operator_ast(t_token **current_token, t_ast *root)
+{
+	t_ast	*new_node;
+	t_ast	*current_right;
+
+	new_node = create_ast_node((*current_token)->value, (*current_token)->op);
+	new_node->left = root;
+	*current_token = (*current_token)->next;
+	if (*current_token)
+	{
+		new_node->right = create_ast_node((*current_token)->value, (*current_token)->op);
+		*current_token = (*current_token)->next;
+		current_right = new_node->right;
+		while (*current_token && (*current_token)->op == NONE)
+		{
+			current_right->right = create_ast_node((*current_token)->value, (*current_token)->op);
+			current_right = current_right->right;
+			*current_token = (*current_token)->next;
+		}
+	}
+	return (new_node);
+}
