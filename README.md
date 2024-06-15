@@ -19,7 +19,7 @@ A program capable of parsing a prompt and launching executables with arguments, 
 
 ### Prerequisites 📋
 
-- *CC*: Ensure you have GCC installed to compile the project.
+- *CC*: Ensure you have CC installed to compile the project.
 - *Make*: A make utility to build the project.
 - *Valgrind*: For checking memory leaks and ensuring there are no errors
 
