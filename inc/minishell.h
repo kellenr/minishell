@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 09:43:39 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/13 23:47:12 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/06/26 16:09:21 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -188,7 +188,6 @@ int		count_ast_nodes(t_ast *root);
 void	populate_tokens_array(t_ast *root, char **tokens, int *index);
 
 /*                                    module                                  */
-//void	var_exp(t_ast *root, char **env);
 char	*exp_env_var(char *input, t_msh *msh);
 char	*exp_variable(const char *input, int *index, char *result, t_msh *msh);
 char	*process_literal(const char *input, int *index, char *result);
@@ -198,6 +197,9 @@ char	*exp_single_var(char *token, t_msh *msh);
 char	*exp_special_var(const char *input, int *index, char *result, t_msh *msh);
 char	*exp_general_var(const char *input, int *index, char *result, t_msh *msh);
 
+/*                                    pipes                                  */
+pid_t	fork_first_child(t_ast *root, t_msh *msh, int pipefd[2]);
+pid_t	fork_second_child(t_ast *root, t_msh *msh, int pipefd[2]);
 void	execute_pipe(t_ast *root, t_msh *msh);
 
 // Redirection Handling Functions

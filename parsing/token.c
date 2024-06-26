@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 14:18:00 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/09 20:24:59 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/06/26 16:22:02 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,20 +99,20 @@ char	*extract_token(char **input)
 	char	quote_char;
 
 	start = *input;
-	if (**input == '\'' || **input == '\"')
+	while (**input && !ft_isspace(**input))
 	{
-		quote_char = *(*input)++;
-		while (**input && **input != quote_char)
-			(*input)++;
-		if (**input == '\0')
-			return (NULL);
-		if (**input)
-			(*input)++;
-	}
-	else
-	{
-		while (**input && !ft_isspace(**input) && **input != '\'' && **input != '\"')
-			(*input)++;
+		if (**input == '\'' || **input == '\"')
+		{
+			quote_char = *(*input)++;
+			while (**input && **input != quote_char)
+				(*input)++;
+			if (**input == '\0')
+				return (NULL);
+			if (**input)
+				(*input)++;
+		}
+		else
+				(*input)++;
 	}
 	token = ft_strndup(start, *input - start);
 	cleaned_token = remove_quotes(token);
@@ -127,24 +127,29 @@ char	*extract_token(char **input)
  */
 char	*remove_quotes(const char *token)
 {
-	char	*cleaned_token;
-	int		len;
+	char	*output;
+	int		in_single_quote;
+	int		in_double_quote;
 	int		i;
 	int		j;
 
-	len = ft_strlen(token);
-	if ((token[0] == '\'' || token[0] == '\"') && token[0] == token[len - 1])
+	i = 0;
+	j = 0;
+	in_single_quote = 0;
+	in_double_quote = 0;
+	output = (char *)malloc(ft_strlen(token) + 1);
+	if (!output)
+		return (NULL);
+	while (token[i] != '\0')
 	{
-		cleaned_token = (char *)malloc(len - 1);
-		if (!cleaned_token)
-			return (NULL);
-		i = 1;
-		j = 0;
-		while (i < len - 1)
-			cleaned_token[j++] = token[i++];
-		cleaned_token[j] = '\0';
+		if (token[i] == '\'' && !in_double_quote)
+			in_single_quote = !in_single_quote;
+		else if (token[i] == '"' && !in_single_quote)
+			in_double_quote = !in_double_quote;
+		else
+			output[j++] = token[i];
+		i++;
 	}
-	else
-		cleaned_token = ft_strndup(token, len);
-	return (cleaned_token);
+	output[j] = '\0';
+	return (output);
 }
