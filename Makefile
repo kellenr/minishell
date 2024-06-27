@@ -6,7 +6,7 @@
 #    By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/07 17:06:07 by keramos-          #+#    #+#              #
-#    Updated: 2024/06/13 23:15:50 by keramos-         ###   ########.fr        #
+#    Updated: 2024/06/27 16:56:33 by keramos-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -66,7 +66,7 @@ endef
 SRCS = minishell.c \
 	utils/input.c utils/intro_art.c utils/utils.c utils/checks.c \
 	utils/erro.c utils/free.c utils/print_ast.c \
-	parsing/ast.c parsing/token.c \
+	parsing/ast.c parsing/token.c parsing/handle_ast_op.c \
 	built/built_cd.c built/built_echo.c built/built_pwd.c built/built_exit.c \
 	built/built_env.c \
 	src/cmd_execute.c src/execute.c src/process.c src/path.c \

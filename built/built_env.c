@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 14:14:19 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/09 20:19:47 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/06/27 11:11:36 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,5 +26,5 @@ int	ft_env(t_cmd *cmd)
 		ft_printf("%s\n", *env);
 		env++;
 	}
-	return 0;
+	return (0);
 }

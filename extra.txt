@@ -310,3 +310,56 @@ void	execute_pipe(t_ast *root, t_msh *msh)
 	waitpid(p2, NULL, 0);
 	return ;
 }
+
+/*
+ * Function to handle operator tokens and update the AST.
+ * Takes the current token and the root of the AST as arguments.
+ * Returns the updated root of the AST.
+ */
+t_ast	*handle_operator_ast(t_token **current_token, t_ast *root)
+{
+	t_ast	*new_node;
+	t_ast	*current_right;
+	t_ast	*arg_node;
+	t_ast	*temp;
+
+	new_node = create_ast_node((*current_token)->value, (*current_token)->op);
+	new_node->left = root;
+	*current_token = (*current_token)->next;
+	if (*current_token)
+	{
+		new_node->right = create_ast_node((*current_token)->value, (*current_token)->op);
+		*current_token = (*current_token)->next;
+		current_right = new_node->right;
+		// Handle command arguments as left children
+		if (current_right->op == NONE && *current_token && (*current_token)->op == NONE)
+		{
+			current_right->left = create_ast_node((*current_token)->value, (*current_token)->op);
+			*current_token = (*current_token)->next;
+		}
+		// Continue handling remaining tokens
+		while (*current_token)
+		{
+			if ((*current_token)->op != NONE)
+			{
+				current_right->right = handle_operator_ast(current_token, current_right->right);
+				break ;
+			}
+			else
+			{
+				arg_node = create_ast_node((*current_token)->value, (*current_token)->op);
+				if (!current_right->left)
+					current_right->left = arg_node;
+				else
+				{
+					temp = current_right->left;
+					while (temp->right)
+						temp = temp->right;
+					temp->right = arg_node;
+				}
+				*current_token = (*current_token)->next;
+			}
+		}
+	}
+	return (new_node);
+}

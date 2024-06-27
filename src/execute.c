@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 13:54:08 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/14 14:30:12 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/06/27 16:58:34 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,28 +49,25 @@ void	execute_ast(t_ast *root, t_msh *msh)
 {
 	t_cmd	*cmd;
 
-	//print_ast(root, 4, "Root");
+	print_ast(root, 4, "Root");
 	if (!root)
 		return ;
 	if (root->op == PIPE)
 		execute_pipe(root, msh);
-	else if (root->op == REDIR_APPEND || root->op == REDIR_REPLACE || root->op == REDIR_INPUT)
+	else if (root->op == REDIR_APPEND || root->op == REDIR_REPLACE || \
+			root->op == REDIR_HERE_DOC || root->op == REDIR_INPUT)
 		return ; //handle_redirection(root, msh);
 	else if (root->op == AND || root->op == OR)
 		return ; //handle_background(root, msh);
- 	else
- 	{
+	else
+	{
 		cmd = ast_to_cmd(root);
 		cmd->env = msh->env;
 		cmd->msh = msh;
 		if (is_builtin(cmd->cmd))
-		{
 			cmd->msh->exit_status = execute_builtin(cmd);
-		}
 		else
-		{
 			execute_command(cmd);
-		}
 		free_cmd(cmd);
 	}
 }

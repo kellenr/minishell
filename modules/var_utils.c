@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   var_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/13 21:10:35 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/26 16:39:44 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/06/27 13:27:20 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 void	token_var_exp(t_token *head, t_msh *msh)
 {
 	if (!head)
-		return;
+		return ;
 	if (head->value)
 	{
 		head->value = exp_env_var(head->value, msh);
@@ -35,9 +35,9 @@ void	token_var_exp(t_token *head, t_msh *msh)
  */
 char	*process_literal(const char *input, int *index, char *result)
 {
-	int j;
-	char *literal;
-	char *tmp;
+	int		j;
+	char	*literal;
+	char	*tmp;
 
 	j = *index;
 	while (input[j] && input[j] != '$')
@@ -47,7 +47,7 @@ char	*process_literal(const char *input, int *index, char *result)
 	free(result);
 	free(literal);
 	*index = j;
-	return tmp;
+	return (tmp);
 }
 
 /*

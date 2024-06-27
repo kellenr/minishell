@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 09:43:39 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/26 16:09:21 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/06/27 17:11:14 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@
 # include <dirent.h>
 # include <signal.h> */
 
-/*  */
 # define MAX_TKS 1024
 
 /* COLOR intro */
@@ -103,7 +102,7 @@ typedef struct s_cmd
 typedef struct s_ast
 {
 	char			*value;
-	t_op 			op;
+	t_op			op;
 	struct s_ast	*left;
 	struct s_ast	*right;
 }		t_ast;
@@ -150,7 +149,6 @@ char	*skip_spaces(char *input);
 int		is_number(const char *str);
 char	*get_dir(t_cmd *cmd, char *prev_dir);
 
-
 char	*find_path(char *cmd, char **env);
 char	*get_path(char *cmd, char **paths);
 
@@ -159,7 +157,7 @@ char	*get_path(char *cmd, char **paths);
 int		ft_echo(t_cmd *scmd);
 int		ft_pwd(void);
 int		ft_cd(t_cmd *cmd);
-int 	ft_env(t_cmd *cmd);
+int		ft_env(t_cmd *cmd);
 void	ft_exit(t_cmd *cmd);
 
 /*                                  Parsing                                   */
@@ -173,6 +171,9 @@ t_ast	*init_ast(t_token **tokens);
 t_ast	*handle_non_operator(t_token **current_token, t_ast *current_node);
 t_ast	*handle_operator_ast(t_token **current_token, t_ast *root);
 t_ast	*parse_tokens_to_ast(t_token *tokens);
+t_ast	*create_operator_node(t_token **current_token, t_ast *ast_node);
+t_ast	*handle_child(t_token **current_token);
+void	handle_remaining_tokens(t_token **token, t_ast *right);
 
 /*                                    src                                     */
 

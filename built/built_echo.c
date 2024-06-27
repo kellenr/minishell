@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 21:20:52 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/13 22:24:19 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/06/27 11:14:52 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,6 @@ int	ft_echo(t_cmd *scmd)
 	}
 	while (scmd->tokens[i])
 	{
-
 		ft_printf("%s", scmd->tokens[i]);
 		if (scmd->tokens[i + 1])
 			ft_printf(" ");

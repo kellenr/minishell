@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   var_exp.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 01:41:45 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/26 16:40:48 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/06/27 13:26:27 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,14 +42,13 @@ char	*exp_env_var(char *input, t_msh *msh)
  * shell structure.
  * Returns the updated result string and updates the index.
  */
-char *exp_special_var(const char *input, int *index, char *result, t_msh *msh)
+char	*exp_special_var(const char *input, int *index, char *result, t_msh *msh)
 {
 	int		j;
 	char	*var;
 	char	*expanded;
 	char	*suffix;
 	char	*tmp;
-
 
 	j = *index + 2;
 	var = ft_substr(input, *index, 2);
@@ -62,11 +61,9 @@ char *exp_special_var(const char *input, int *index, char *result, t_msh *msh)
 	tmp = ft_strjoin(expanded, suffix);
 	free(expanded);
 	free(suffix);
-
 	expanded = ft_strjoin(result, tmp);
 	free(result);
 	free(tmp);
-
 	*index = j;
 	return (expanded);
 }
@@ -77,7 +74,7 @@ char *exp_special_var(const char *input, int *index, char *result, t_msh *msh)
  * shell structure.
  * Returns the updated result string and updates the index.
  */
-char *exp_general_var(const char *input, int *index, char *result, t_msh *msh)
+char	*exp_general_var(const char *input, int *index, char *result, t_msh *msh)
 {
 	int		j;
 	char	*var;
@@ -100,15 +97,15 @@ char *exp_general_var(const char *input, int *index, char *result, t_msh *msh)
 
 /*
  * Function to expand a variable in the input string.
- * Takes the input string, the current index, the result string, and the shell structure.
+ * Takes the input string, the current index, the result string,
+ * and the shell structure.
  * Returns the updated result string and updates the index.
  */
-char *exp_variable(const char *input, int *index, char *result, t_msh *msh)
+char	*exp_variable(const char *input, int *index, char *result, t_msh *msh)
 {
-	int j;
+	int	j;
 
 	j = *index + 1;
-
 	if (input[j] == '?')
 		return (exp_special_var(input, index, result, msh));
 	return (exp_general_var(input, index, result, msh));
@@ -121,8 +118,8 @@ char *exp_variable(const char *input, int *index, char *result, t_msh *msh)
  */
 char	*exp_single_var(char *token, t_msh *msh)
 {
-	char *key;
-	char *value;
+	char	*key;
+	char	*value;
 
 	if (ft_strcmp(token, "$?") == 0)
 		return (ft_itoa(msh->exit_status));
