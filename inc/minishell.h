@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 09:43:39 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/27 17:11:14 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/06/28 20:00:39 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,6 +120,7 @@ typedef struct s_token
 {
 	char			*value;
 	t_op			op;
+	int				quoted;
 	struct s_token	*next;
 }		t_token;
 
@@ -162,17 +163,17 @@ void	ft_exit(t_cmd *cmd);
 
 /*                                  Parsing                                   */
 
-t_token	*create_token(char *value);
-void	add_token(t_token **head, char *value);
+t_token	*create_token(char *value, int single);
+void	add_token(t_token **head, char *value, int single);
 t_token	*tokenize(char *input);
-char	*extract_token(char **input);
+char	*extract_token(char **input, int *single);
 t_ast	*create_ast_node(char *value, t_op op);
 t_ast	*init_ast(t_token **tokens);
 t_ast	*handle_non_operator(t_token **current_token, t_ast *current_node);
 t_ast	*handle_operator_ast(t_token **current_token, t_ast *root);
 t_ast	*parse_tokens_to_ast(t_token *tokens);
 t_ast	*create_operator_node(t_token **current_token, t_ast *ast_node);
-t_ast	*handle_child(t_token **current_token);
+t_ast	*handle_child(t_token **current_token, t_ast *current_right);
 void	handle_remaining_tokens(t_token **token, t_ast *right);
 
 /*                                    src                                     */

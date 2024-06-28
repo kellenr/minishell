@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 16:33:38 by fibarros          #+#    #+#             */
-/*   Updated: 2024/06/27 17:10:08 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/06/28 20:19:26 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,14 +31,9 @@ t_ast	*create_operator_node(t_token **current_token, t_ast *ast_node)
  * Takes the current token as an argument.
  * Returns the right child of the AST.
  */
-t_ast	*handle_child(t_token **current_token)
+t_ast	*handle_child(t_token **current_token, t_ast *current_right)
 {
-	t_ast	*current_right;
-
-	current_right = create_ast_node((*current_token)->value, \
-	(*current_token)->op);
-	*current_token = (*current_token)->next;
-	if (current_right->op == NONE && (*current_token)->op == NONE)
+	if (current_right->op == NONE && *current_token && (*current_token)->op == NONE)
 	{
 		current_right->left = create_ast_node((*current_token)->value, \
 		(*current_token)->op);
@@ -91,10 +86,12 @@ t_ast	*handle_operator_ast(t_token **current_token, t_ast *root)
 	t_ast	*current_right;
 
 	new_node = create_operator_node(current_token, root);
-	current_right = handle_child(current_token);
 	if (*current_token)
 	{
-		new_node->right = current_right;
+		new_node->right = create_ast_node((*current_token)->value, (*current_token)->op);
+		*current_token = (*current_token)->next;
+		current_right = new_node->right;
+		handle_child(current_token, current_right);
 		handle_remaining_tokens(current_token, current_right);
 	}
 	return (new_node);
