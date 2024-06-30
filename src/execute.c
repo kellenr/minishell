@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 13:54:08 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/27 16:58:34 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/07/01 00:11:06 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,11 +49,12 @@ void	execute_ast(t_ast *root, t_msh *msh)
 {
 	t_cmd	*cmd;
 
-	print_ast(root, 4, "Root");
+	ft_printf("command %d", count_commands(root));
+	// print_ast(root, 4, "Root");
 	if (!root)
 		return ;
 	if (root->op == PIPE)
-		execute_pipe(root, msh);
+		execute_pipes(root, msh);
 	else if (root->op == REDIR_APPEND || root->op == REDIR_REPLACE || \
 			root->op == REDIR_HERE_DOC || root->op == REDIR_INPUT)
 		return ; //handle_redirection(root, msh);

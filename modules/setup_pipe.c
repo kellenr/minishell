@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/09 14:35:09 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/27 14:02:27 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/07/01 00:33:13 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,17 @@
 /*
  * Function to execute a pipe command.
  */
-void	execute_pipe(t_ast *root, t_msh *msh)
+void	execute_pipes(t_ast *root, t_msh *msh)
 {
 	int		pipefd[2];
 	pid_t	p1;
 	pid_t	p2;
 
+	if (root->op != PIPE)
+	{
+		execute_ast(root, msh);
+		return;
+	}
 	if (pipe(pipefd) == -1)
 		ft_error("pipe");
 	p1 = fork_first_child(root, msh, pipefd);
@@ -73,3 +78,19 @@ pid_t	fork_second_child(t_ast *root, t_msh *msh, int pipefd[2])
 	}
 	return (p2);
 }
+
+// int count_commands(t_ast *root)
+// {
+// 	if (root == NULL)
+//         return 0;
+
+//     if (root->op == PIPE) {
+//         int left_count = count_commands(root->left);
+//         int right_count = count_commands(root->right);
+//         printf("PIPE node: left_count = %d, right_count = %d\n", left_count, right_count);
+//         return left_count + right_count;
+//     } else {
+//         printf("Command node: %s\n", root->value); // Assuming root->cmd is a string
+//         return 1;
+//     }
+// }

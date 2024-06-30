@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 16:33:38 by fibarros          #+#    #+#             */
-/*   Updated: 2024/06/28 20:19:26 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/07/01 00:24:44 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,13 +86,66 @@ t_ast	*handle_operator_ast(t_token **current_token, t_ast *root)
 	t_ast	*current_right;
 
 	new_node = create_operator_node(current_token, root);
-	if (*current_token)
+	while (*current_token && !is_operator((*current_token)->value))
 	{
 		new_node->right = create_ast_node((*current_token)->value, (*current_token)->op);
 		*current_token = (*current_token)->next;
-		current_right = new_node->right;
-		handle_child(current_token, current_right);
-		handle_remaining_tokens(current_token, current_right);
+		if(*current_token && !is_operator((*current_token)->value))
+		{
+			current_right = new_node->right;
+			handle_child(current_token, current_right);
+			handle_remaining_tokens(current_token, current_right);
+		}
 	}
 	return (new_node);
+}
+
+
+
+
+
+
+// t_ast	*handle_operator_ast(t_token **current_token, t_ast *root)
+// {
+// 	t_ast	*new_node;
+// 	t_ast	*current_right;
+
+// 	new_node = create_operator_node(current_token, root);
+// 	while (*current_token && !is_operator((*current_token)->value))
+// 	{
+// 		new_node->right = create_ast_node((*current_token)->value, (*current_token)->op);
+// 		*current_token = (*current_token)->next;
+// 		current_right = new_node->right;
+// 		handle_child(current_token, current_right);
+// 		handle_remaining_tokens(current_token, current_right);
+// 	}
+// 	return (new_node);
+// }
+
+
+// t_ast	*handle_operator_ast(t_token **current_token, t_ast *root)
+// {
+// 	t_ast	*new_node;
+// 	t_ast	*current_right;
+
+// 	new_node = create_operator_node(current_token, root);
+// 	while (*current_token && !is_operator((*current_token)->value))
+// 	{
+// 		new_node->right = create_ast_node((*current_token)->value, (*current_token)->op);
+// 		root = new_node;
+// 		*current_token = (*current_token)->next;
+// 		if (*current_token && !is_operator((*current_token)->value))
+// 		{
+// 			new_node->right = create_ast_node((*current_token)->value, (*current_token)->op);
+// 			current_right = new_node->right;
+// 			handle_child(current_token, current_right);
+// 			handle_remaining_tokens(current_token, current_right);
+// 		}
+// 	}
+// 	return (root);
+// }
+
+int	is_operator(const char *value)
+{
+    return (valid_op(value) != NONE);
 }
