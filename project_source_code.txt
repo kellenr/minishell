@@ -1,0 +1,1917 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    project_source_code.txt                            :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2024/05/25 21:17:54 by keramos-          #+#    #+#              #
+#    Updated: 2024/07/01 00:31:24 by keramos-         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
+#include "minishell.h"
+
+/*
+ * Function to get the target directory.
+ * Takes a command structure and a pointer to the previous directory.
+ * Returns the target directory or NULL if an error occurs.
+ */
+char	*get_dir(t_cmd *cmd, char *prev_dir)
+{
+	char	*home;
+
+	if (cmd->argc < 2 || ft_strcmp(cmd->tokens[1], "~") == 0)
+	{
+		home = getenv("HOME");
+		if (!home)
+		{
+			ft_printf("cd: HOME not set\n");
+			return (NULL);
+		}
+		return (home);
+	}
+	else if (ft_strcmp(cmd->tokens[1], "-") == 0)
+	{
+		if (!prev_dir)
+		{
+			ft_printf("cd: OLDPWD not set\n");
+			return (NULL);
+		}
+		ft_printf("%s\n", prev_dir);
+		return (prev_dir);
+	}
+	else
+		return (cmd->tokens[1]);
+}
+
+/*
+ * Function to change the directory.
+ * Takes a command structure as an argument.
+ * Handles special cases for 'cd ~' and 'cd -'.
+ */
+int	ft_cd(t_cmd *cmd)
+{
+	static char	*prev_dir = NULL;
+	char		cwd[MAX_TKS];
+	char		*target_dir;
+
+	target_dir = get_dir(cmd, prev_dir);
+	if (!target_dir)
+		return (EXIT_FAILURE);
+	if (getcwd(cwd, sizeof(cwd)) == NULL)
+	{
+		perror("getcwd");
+		return (EXIT_FAILURE);
+	}
+	if (chdir(target_dir) != 0)
+	{
+		perror("cd");
+		return (EXIT_FAILURE);
+	}
+	free(prev_dir);
+	prev_dir = ft_strdup(cwd);
+	return (EXIT_SUCCESS);
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   built_env.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/06/08 14:14:19 by keramos-          #+#    #+#             */
+/*   Updated: 2024/06/27 11:11:36 by keramos-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell.h"
+
+/*
+ * Function to print the environment variables.
+ * Takes the command structure as an argument.
+ */
+int	ft_env(t_cmd *cmd)
+{
+	char	**env;
+
+	env = cmd->env;
+	while (*env)
+	{
+		ft_printf("%s\n", *env);
+		env++;
+	}
+	return (0);
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   built_exit.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/06/08 21:04:23 by keramos-          #+#    #+#             */
+/*   Updated: 2024/06/27 11:13:12 by keramos-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell.h"
+
+/*
+ * Function to check if a string is a valid number.
+ * Returns 1 if valid, 0 otherwise.
+ */
+int	is_number(const char *str)
+{
+	int	i;
+
+	i = 0;
+	if (str[0] == '-' || str[0] == '+') // Handle optional sign
+		i++;
+	while (str[i])
+	{
+		if (!ft_isdigit(str[i]))
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
+/*
+ * Function to handle the exit command.
+ * Takes an array of arguments (argv) and the number of arguments (argc).
+ * If an argument is provided, it uses that as the exit status.
+ * If no argument is provided, it exits with the status of the last
+ * executed command.
+ */
+void	ft_exit(t_cmd *cmd)
+{
+	int	exit_status;
+
+	if (cmd->argc > 1)
+	{
+		if (is_number(cmd->tokens[1]))
+		{
+			exit_status = ft_atoi(cmd->tokens[1]);
+			exit(exit_status);
+		}
+		else
+		{
+			ft_printf("msh: exit: %s: numeric argument required\n", \
+				cmd->tokens[1]);
+			exit(255);
+		}
+	}
+	else
+	{
+		exit(cmd->msh->exit_status);
+	}
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   built_pwd.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/05/22 19:33:02 by keramos-          #+#    #+#             */
+/*   Updated: 2024/06/27 11:14:31 by keramos-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell.h"
+
+/*
+ * Function to print the current working directory.
+ * Uses getcwd to get the directory and prints it.
+ * Returns EXIT_SUCCESS on success.
+ */
+int	ft_pwd(void)
+{
+	char	*pwd;
+
+	pwd = getcwd(NULL, 0);
+	if (!pwd)
+	{
+		ft_error(P_R"Error."RT);
+	}
+	ft_printf("%s\n", pwd);
+	// free(pwd);
+	return (EXIT_SUCCESS);
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   built_echo.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/05/23 21:20:52 by keramos-          #+#    #+#             */
+/*   Updated: 2024/06/27 11:14:52 by keramos-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell.h"
+
+/*
+ * Function to check if a string is a valid option for the echo command.
+ * Validates the -n option where n can appear multiple times.
+ * Returns true if the string is a valid option, false otherwise.
+ */
+bool	check_opt(char *s)
+{
+	if (!*s)
+		return (false);
+	if (*s == '-' && *(s + 1))
+	{
+		s++;
+		while (*s == 'n')
+			s++;
+	}
+	if (*s)
+		return (false);
+	return (true);
+}
+
+/*
+ * Function to print arguments to the standard output.
+ * Handles the -n option to omit the trailing newline.
+ * Iterates through the arguments and prints them separated by spaces.
+ * Prints a newline at the end if the -n option is not specified.
+ * Returns 0 on completion.
+ */
+int	ft_echo(t_cmd *scmd)
+{
+	bool	flg;
+	int		i;
+
+	i = 1;
+	flg = false;
+	while (scmd->tokens[i] && check_opt(scmd->tokens[i]))
+	{
+		flg = true;
+		i++;
+	}
+	while (scmd->tokens[i])
+	{
+		ft_printf("%s", scmd->tokens[i]);
+		if (scmd->tokens[i + 1])
+			ft_printf(" ");
+		i++;
+	}
+	if (!flg)
+		ft_printf("\n");
+	return (0);
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/05/21 09:43:39 by keramos-          #+#    #+#             */
+/*   Updated: 2024/06/30 15:39:29 by keramos-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef MINISHELL_H
+# define MINISHELL_H
+
+# include "libft.h"
+# include <readline/readline.h>
+# include <readline/history.h>
+# include <stdbool.h>
+# include <sys/wait.h>
+
+/* # include <sys/types.h>
+# include <sys/stat.h>
+# include <dirent.h>
+# include <signal.h> */
+
+# define MAX_TKS 1024
+
+/* COLOR intro */
+# define RT			"\033[0m"
+# define P_G		"\033[38;2;186;255;201m"
+# define P_B		"\033[1;38;2;186;225;255m"
+# define P_L		"\033[38;2;255;186;255m"
+# define P_M		"\033[1;38;5;183m"
+# define P_P		"\033[1;38;2;255;209;220m"
+# define P_R		"\033[38;2;255;179;186m"
+
+// Enumeration for different operators
+typedef enum e_op
+{
+	NONE,
+	PIPE,
+	REDIR_APPEND,
+	REDIR_REPLACE,
+	REDIR_HERE_DOC,
+	REDIR_INPUT,
+	AND,
+	OR
+}		t_op;
+
+/*
+ * Structure representing the minishell.
+ * The minishell structure is used to store information about the shell
+ * environment, such as environment variables and the exit status.
+ * Members:
+ * - env: Array of environment variables.
+ * - exit_status: The exit status of the last executed command.
+ */
+typedef struct s_msh
+{
+	char	**env;
+	int		exit_status;
+}		t_msh;
+
+/*
+ * Structure representing a command to be executed.
+ * The command structure is used to store detailed information about a command,
+ * including its arguments and environment variables, for execution purposes.
+ * Members:
+ * - cmd: The command name (e.g., "echo").
+ * - tokens: Array of argument strings. This includes the command itself and
+ * its arguments.
+ * - env: Array of environment variables relevant to the command.
+ * - argc: The number of arguments in the tokens array.
+ * - next: Pointer to the next command in a pipeline. This is used to chain
+ * commands together.
+ * - prev: Pointer to the previous command in a pipeline.
+ */
+typedef struct s_cmd
+{
+	char			*cmd;
+	char			**tokens;
+	t_msh			*msh;
+	char			**env;
+	int				argc;
+	int				exit_status;
+	struct s_cmd	*next;
+	struct s_cmd	*prev;
+}		t_cmd;
+
+/*
+ * Structure representing a node in the Abstract Syntax Tree (AST).
+ * The AST is used to represent the hierarchical structure of commands
+ * and operators (such as pipes and redirections) in the shell input.
+ * Members:
+ * -The value of the node. This can be a cmd, an argument, or an op (e.g., "|").
+ * -Pointer to the left child node. This typically represents the l side of an op
+ * or a sub-cmd.
+ * -Pointer to the right child node. This typically represents the r side of an
+ * op or a sub-cmdd.
+ */
+typedef struct s_ast
+{
+	char			*value;
+	t_op			op;
+	struct s_ast	*left;
+	struct s_ast	*right;
+}		t_ast;
+
+/*
+ * Structure representing a token in the input string.
+ * Tokens are used to break down the input string into manageable parts
+ * (e.g., commands, arguments, operators) before constructing the AST.
+ * Members:
+ * -The value of the token. This can be a part of a command, an argument,
+ * or an operator.
+ * -Pointer to the next token in the linked list.
+ */
+typedef struct s_token
+{
+	char			*value;
+	t_op			op;
+	int				quoted;
+	struct s_token	*next;
+}		t_token;
+
+/* ************************************************************************** */
+/*                                 SOURCES                                    */
+/* ************************************************************************** */
+
+/*                               handel msg                                   */
+
+void	ft_intro_art(void);
+void	receive_msg(t_msh *msh);
+char	*read_input(void);
+
+/*                                  utlis                                     */
+
+int		ft_isspace(char c);
+char	*trim_whitespace(char *str);
+int		cmp_s(const char *str1, const char *str2);
+t_op	valid_op(const char *operator);
+int		is_builtin(char *cmd);
+void	ft_error(char *str);
+void	free_cmd(t_cmd *cmd);
+void	free_tokens(t_token *tokens);
+void	free_ast(t_ast *root);
+char	*remove_quotes(const char *token);
+char	*skip_spaces(char *input);
+int		is_number(const char *str);
+char	*get_dir(t_cmd *cmd, char *prev_dir);
+
+char	*find_path(char *cmd, char **env);
+char	*get_path(char *cmd, char **paths);
+
+/*                                   BUILT                                    */
+
+int		ft_echo(t_cmd *scmd);
+int		ft_pwd(void);
+int		ft_cd(t_cmd *cmd);
+int		ft_env(t_cmd *cmd);
+void	ft_exit(t_cmd *cmd);
+
+/*                                  Parsing                                   */
+
+t_token	*create_token(char *value, int single);
+void	add_token(t_token **head, char *value, int single);
+t_token	*tokenize(char *input);
+char	*extract_token(char **input, int *single);
+t_ast	*create_ast_node(char *value, t_op op);
+t_ast	*init_ast(t_token **tokens);
+t_ast	*handle_non_operator(t_token **current_token, t_ast *current_node);
+t_ast	*handle_operator_ast(t_token **current_token, t_ast *root);
+t_ast	*parse_tokens_to_ast(t_token *tokens);
+t_ast	*create_operator_node(t_token **current_token, t_ast *ast_node);
+t_ast	*handle_child(t_token **current_token, t_ast *current_right);
+void	handle_remaining_tokens(t_token **token, t_ast *right);
+
+/*                                    src                                     */
+
+char	*process_input(const char *input);
+void	handle_quotes(const char **inp_ptr, char **res_ptr);
+void	handle_operator(const char **inp_ptr, char **res_ptr);
+t_cmd	*ast_to_cmd(t_ast *root);
+void	process_cmd(char *prompt, t_msh *msh);
+void	execute_ast(t_ast *root, t_msh *msh);
+void	execute_command(t_cmd *cmd);
+int		execute_builtin(t_cmd *cmd);
+int		count_ast_nodes(t_ast *root);
+void	populate_tokens_array(t_ast *root, char **tokens, int *index);
+
+/*                                    module                                  */
+char	*exp_env_var(char *input, t_msh *msh);
+char	*exp_variable(const char *input, int *index, char *result, t_msh *msh);
+char	*process_literal(const char *input, int *index, char *result);
+char	*get_env_value(char *var, char **env);
+void	token_var_exp(t_token *head, t_msh *msh);
+char	*exp_single_var(char *token, t_msh *msh);
+char	*exp_special_var(const char *input, int *index, char *result, t_msh *msh);
+char	*exp_general_var(const char *input, int *index, char *result, t_msh *msh);
+
+/*                                    pipes                                  */
+pid_t	fork_first_child(t_ast *root, t_msh *msh, int pipefd[2]);
+pid_t	fork_second_child(t_ast *root, t_msh *msh, int pipefd[2]);
+void	execute_pipes(t_ast *root, t_msh *msh);
+
+t_ast *get_command(t_ast *root, int *current_index, int target_index);
+int count_commands(t_ast *root);
+
+// Redirection Handling Functions
+//void	handle_redirection(t_ast *root, t_msh *msh);
+
+// Background Execution Functions
+//void	handle_background(t_ast *root, t_msh *msh);
+void	print_ast(t_ast *root, int level, char *branch);
+void print_pipe(t_ast *node, int level, const char *label);
+#endif
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/05/22 12:07:43 by keramos-          #+#    #+#             */
+/*   Updated: 2024/06/10 00:31:05 by keramos-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell.h"
+
+/* this function to continuously receive and process user input */
+void	receive_msg(t_msh *msh)
+{
+	char	*prompt;
+
+	while (1)
+	{
+		prompt = read_input();
+		if (!prompt)
+		{
+			ft_printf("Exit\n");
+			break ;
+		}
+		process_cmd(prompt, msh);
+	}
+}
+
+int	main(int argc, char **argv, char **env)
+{
+	t_msh	msh;
+
+	(void)argv;
+	msh.env = env;
+	if (argc != 1)
+	{
+		ft_printf(P_R"💢\tThis program doesn't need arguments\n"RT);
+		exit(0);
+	}
+	ft_intro_art();
+	receive_msg(&msh);
+	return (0);
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ast.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/06/02 13:40:58 by keramos-          #+#    #+#             */
+/*   Updated: 2024/06/30 20:53:30 by keramos-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell.h"
+
+/*
+ * Function to create a new AST node.
+ * Takes the value of the node as an argument.
+ * Returns a pointer to the new AST node.
+ */
+t_ast	*create_ast_node(char *value, t_op op)
+{
+	t_ast	*node;
+
+	node = (t_ast *)malloc(sizeof(t_ast));
+	if (!node)
+		return (NULL);
+	node->value = ft_strdup(value);
+	node->op = op;
+	node->left = NULL;
+	node->right = NULL;
+	return (node);
+}
+
+/*
+ * Function to initialize the AST with the first token.
+ * Takes the head of the token list as an argument.
+ * Returns the root of the AST and advances the token pointer.
+ */
+t_ast	*init_ast(t_token **tokens)
+{
+	t_ast	*root;
+
+	if (!tokens || !*tokens)
+		return (NULL);
+	root = create_ast_node((*tokens)->value, (*tokens)->op);
+	*tokens = (*tokens)->next;
+	return (root);
+}
+
+/*
+ * Function to handle non-operator tokens and update the AST.
+ * Takes the current token and the current AST node as arguments.
+ * Returns the updated current AST node.
+ */
+t_ast	*handle_non_operator(t_token **current_token, t_ast *current_node)
+{
+	t_ast	*new_node;
+	t_ast	*temp;
+
+	new_node = create_ast_node((*current_token)->value, (*current_token)->op);
+	if (!current_node->left)
+		current_node->left = new_node;
+	else if (!current_node->right)
+		current_node->right = new_node;
+	else
+	{
+		temp = current_node->right;
+		while (temp->right)
+			temp = temp->right;
+		temp->right = new_node;
+	}
+	*current_token = (*current_token)->next;
+	return (current_node);
+}
+
+/*
+ * Function to parse tokens into an AST.
+ * Takes the head of the token list as an argument.
+ * Returns the root of the AST.
+ */
+t_ast	*parse_tokens_to_ast(t_token *tokens)
+{
+	t_ast	*root;
+	t_ast	*current_node;
+	t_token	*current_token;
+
+	root = init_ast(&tokens);
+	current_node = root;
+	current_token = tokens;
+	while (current_token)
+	{
+		if (current_token->op != NONE)
+			root = handle_operator_ast(&current_token, root);
+		else
+			current_node = handle_non_operator(&current_token, current_node);
+	}
+	return (root);
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   handle_ast_op.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/06/24 16:33:38 by fibarros          #+#    #+#             */
+/*   Updated: 2024/06/30 21:07:12 by keramos-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell.h"
+
+/*
+ * Function to create an operator node and update the AST.
+ * Returns the new operator node.
+ */
+t_ast	*create_operator_node(t_token **current_token, t_ast *ast_node)
+{
+	t_ast	*new_node;
+
+	new_node = create_ast_node((*current_token)->value, (*current_token)->op);
+	new_node->left = ast_node;
+	*current_token = (*current_token)->next;
+	return (new_node);
+}
+
+/*
+ * Function to handle child nodes and update the AST.
+ * Takes the current token as an argument.
+ * Returns the right child of the AST.
+ */
+t_ast	*handle_child(t_token **current_token, t_ast *current_right)
+{
+	if (current_right->op == NONE && *current_token && (*current_token)->op == NONE)
+	{
+		current_right->left = create_ast_node((*current_token)->value, \
+		(*current_token)->op);
+		*current_token = (*current_token)->next;
+	}
+	return (current_right);
+}
+
+/*
+ * Function to handle remaining tokens and update the AST.
+ * Takes the current token and the right child of the AST as arguments.
+ */
+void	handle_remaining_tokens(t_token **token, t_ast *right)
+{
+	t_ast	*arg_node;
+	t_ast	*temp;
+
+	while (*token)
+	{
+		if ((*token)->op != NONE)
+		{
+			right->right = handle_operator_ast(token, right->right);
+			break ;
+		}
+		else
+		{
+			arg_node = create_ast_node((*token)->value, (*token)->op);
+			if (!right->left)
+				right->left = arg_node;
+			else
+			{
+				temp = right->left;
+				while (temp->right)
+					temp = temp->right;
+				temp->right = arg_node;
+			}
+			*token = (*token)->next;
+		}
+	}
+}
+
+/*
+ * Function to handle operator tokens and update the AST.
+ * Takes the current token and the root of the AST as arguments.
+ * Returns the updated root of the AST.
+ */
+t_ast	*handle_operator_ast(t_token **current_token, t_ast *root)
+{
+	t_ast	*new_node;
+	t_ast	*current_right;
+
+	new_node = create_operator_node(current_token, root);
+	while (*current_token && !is_operator((*current_token)->value))
+	{
+		new_node->right = create_ast_node((*current_token)->value, (*current_token)->op);
+		*current_token = (*current_token)->next;
+		if(*current_token && !is_operator((*current_token)->value))
+		{
+			current_right = new_node->right;
+			handle_child(current_token, current_right);
+			handle_remaining_tokens(current_token, current_right);
+		}
+	}
+	return (new_node);
+}
+
+int	is_operator(const char *value)
+{
+	return (valid_op(value) != NONE);
+}
+
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   token.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/05/28 14:18:00 by keramos-          #+#    #+#             */
+/*   Updated: 2024/06/28 15:22:20 by keramos-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell.h"
+
+/*
+ * Function to create a new token.
+ * Takes the token value as an argument.
+ * Returns a pointer to the new token.
+ */
+t_token	*create_token(char *value, int single)
+{
+	t_token	*token;
+
+	token = (t_token *)malloc(sizeof(t_token));
+	if (!token)
+		return (NULL);
+	token->value = ft_strdup(value);
+	token->op = valid_op(value);
+	token->quoted = single;
+	token->next = NULL;
+	return (token);
+}
+
+/*
+ * Function to add a token to the end of the token list.
+ * Takes a pointer to the head of the list and the token value as arguments.
+ */
+void	add_token(t_token **head, char *value, int single)
+{
+	t_token	*new;
+	t_token	*temp;
+
+	new = create_token(value, single);
+	if (!new)
+		return ;
+	if (!*head)
+	{
+		*head = new;
+		return ;
+	}
+	else
+	{
+		temp = *head;
+		while (temp->next)
+			temp = temp->next;
+		temp->next = new;
+	}
+}
+
+/*
+ * Function to tokenize the input string into a linked list of tokens.
+ * Takes the input string as an argument.
+ * Returns the head of the token list.
+ */
+t_token	*tokenize(char *input)
+{
+	t_token	*head;
+	char	*token;
+	int		single;
+
+	head = NULL;
+	while (*input)
+	{
+		input = skip_spaces(input);
+		if (*input)
+		{
+			single = 0;
+			token = extract_token(&input, &single);
+			if (!token)
+			{
+				free_tokens(head);
+				return (NULL);
+			}
+			add_token(&head, token, single);
+			free(token);
+		}
+		input = skip_spaces(input);
+	}
+	return (head);
+}
+
+/*
+ * Function to extract the next token from the input string.
+ * Takes a pointer to the input string as an argument and updates it.
+ * Returns the extracted token.
+ */
+char	*extract_token(char **input, int *single)
+{
+	char	*start;
+	char	*token;
+	char	*cleaned_token;
+	char	quote_char;
+
+	start = *input;
+	while (**input && !ft_isspace(**input))
+	{
+		if (**input == '\'' || **input == '\"')
+		{
+			quote_char = *(*input)++;
+			if (quote_char == '\'')
+				*single = 1;
+			while (**input && **input != quote_char)
+				(*input)++;
+			if (**input == '\0')
+				return (NULL);
+			if (**input)
+				(*input)++;
+		}
+		else
+			(*input)++;
+	}
+	token = ft_strndup(start, *input - start);
+	cleaned_token = remove_quotes(token);
+	free(token);
+	return (cleaned_token);
+}
+
+/*
+ * Function to remove quotes from a token.
+ * Takes the token string as an argument.
+ * Returns a new string without the quotes.
+ */
+char	*remove_quotes(const char *token)
+{
+	char	*output;
+	int		in_single_quote;
+	int		in_double_quote;
+	int		i;
+	int		j;
+
+	i = 0;
+	j = 0;
+	in_single_quote = 0;
+	in_double_quote = 0;
+	output = (char *)malloc(ft_strlen(token) + 1);
+	if (!output)
+		return (NULL);
+	while (token[i] != '\0')
+	{
+		if (token[i] == '\'' && !in_double_quote)
+			in_single_quote = !in_single_quote;
+		else if (token[i] == '"' && !in_single_quote)
+			in_double_quote = !in_double_quote;
+		else
+			output[j++] = token[i];
+		i++;
+	}
+	output[j] = '\0';
+	return (output);
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   path.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/06/09 02:10:15 by keramos-          #+#    #+#             */
+/*   Updated: 2024/06/27 11:23:01 by keramos-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell.h"
+
+/*
+ * Function to search for a command in the PATH.
+ * Returns the full path to the command if found, otherwise NULL.
+ */
+char	*find_path(char *cmd, char **env)
+{
+	char	**path;
+	int		i;
+
+	i = 0;
+	path = NULL;
+	while (*env[i])
+	{
+		if (ft_strncmp("PATH=", env[i], 5) == 0)
+		{
+			path = ft_split(env[i] + 5, ':');
+			break ;
+		}
+		i++;
+	}
+	if (!path)
+		return (NULL);
+	return (get_path(cmd, path));
+}
+
+/*
+ * Function to get the full path of a command.
+ * Takes the command name and the paths as arguments.
+ * Returns the full path of the command.
+ */
+char	*get_path(char *cmd, char **paths)
+{
+	char	*path;
+	char	*tmp;
+	int		i;
+
+	i = 0;
+	if (access(cmd, X_OK) == 0)
+		return (cmd);
+	while (paths[i])
+	{
+		tmp = ft_strjoin(paths[i], "/");
+		path = ft_strjoin(tmp, cmd);
+		free(tmp);
+		if (access(path, X_OK) == 0)
+			return (path);
+		free(path);
+		i++;
+	}
+	return (NULL);
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   process.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/05/28 17:32:36 by keramos-          #+#    #+#             */
+/*   Updated: 2024/06/09 02:55:16 by keramos-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell.h"
+
+/*
+ * Function to preprocess the input string.
+ * Handles quotes and operators, preparing the input for tokenization.
+ */
+char	*process_input(const char *input)
+{
+	char		*result;
+	char		*res_ptr;
+	const char	*inp_ptr;
+
+	result = malloc(strlen(input) * 2);
+	if (!result)
+		return (NULL);
+	res_ptr = result;
+	inp_ptr = input;
+	while (*inp_ptr)
+	{
+		if (*inp_ptr == '\'' || *inp_ptr == '\"')
+			handle_quotes(&inp_ptr, &res_ptr);
+		else if (valid_op(inp_ptr) != NONE)
+			handle_operator(&inp_ptr, &res_ptr);
+		else
+			*res_ptr++ = *inp_ptr++;
+	}
+	*res_ptr = '\0';
+	return (result);
+}
+
+/*
+ * Function to handle quoted strings in the input.
+ * Copies the quoted content to the result pointer, handling escape characters
+ * if necessary.
+ */
+void	handle_quotes(const char **inp_ptr, char **res_ptr)
+{
+	char	quote;
+
+	quote = **inp_ptr;
+	*(*res_ptr)++ = *(*inp_ptr)++;
+	while (**inp_ptr && **inp_ptr != quote)
+	{
+		if (**inp_ptr == '\\' && (*(*inp_ptr + 1) == quote \
+			|| *(*inp_ptr + 1) == '\\'))
+			*(*res_ptr)++ = *(*inp_ptr)++;
+		*(*res_ptr)++ = *(*inp_ptr)++;
+	}
+	if (**inp_ptr == quote)
+		*(*res_ptr)++ = *(*inp_ptr)++;
+}
+
+/*
+ * Function to handle operators in the input.
+ * Surrounds operators with spaces to make tokenization easier.
+ */
+void	handle_operator(const char **inp_ptr, char **res_ptr)
+{
+	t_op	op;
+
+	op = valid_op(*inp_ptr);
+	if (op != NONE)
+	{
+		*(*res_ptr)++ = ' ';
+		while (**inp_ptr && !ft_isspace(**inp_ptr) && **inp_ptr != '\0')
+		{
+			*(*res_ptr)++ = *(*inp_ptr)++;
+		}
+		*(*res_ptr)++ = ' ';
+	}
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   execute.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/05/22 13:54:08 by keramos-          #+#    #+#             */
+/*   Updated: 2024/06/30 15:57:35 by keramos-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell.h"
+
+/*
+ * Function to count the number of nodes in the AST.
+ * Takes the root of the AST as an argument.
+ * Returns the number of nodes.
+ */
+int	count_ast_nodes(t_ast *root)
+{
+	if (!root)
+		return (0);
+	return (1 + count_ast_nodes(root->left) + count_ast_nodes(root->right));
+}
+
+/*
+ * Function to populate the tokens array from an AST.
+ * Takes the root of the AST and the tokens array as arguments.
+ * Returns the number of tokens.
+ */
+void	populate_tokens_array(t_ast *root, char **tokens, int *index)
+{
+	if (!root)
+		return ;
+	tokens[*index] = ft_strdup(root->value);
+	(*index)++;
+	if (root->left)
+		populate_tokens_array(root->left, tokens, index);
+	if (root->right)
+		populate_tokens_array(root->right, tokens, index);
+}
+
+/*
+ * Function to execute commands represented by the AST.
+ * Takes the root of the AST as an argument.
+ */
+void	execute_ast(t_ast *root, t_msh *msh)
+{
+	t_cmd	*cmd;
+
+	ft_printf("command %d", count_commands(root));
+	print_ast(root, 4, "Root");
+	if (!root)
+		return ;
+	if (root->op == PIPE)
+		execute_pipes(root, msh);
+	else if (root->op == REDIR_APPEND || root->op == REDIR_REPLACE || \
+			root->op == REDIR_HERE_DOC || root->op == REDIR_INPUT)
+		return ; //handle_redirection(root, msh);
+	else if (root->op == AND || root->op == OR)
+		return ; //handle_background(root, msh);
+	else
+	{
+		cmd = ast_to_cmd(root);
+		cmd->env = msh->env;
+		cmd->msh = msh;
+		if (is_builtin(cmd->cmd))
+			cmd->msh->exit_status = execute_builtin(cmd);
+		else
+			execute_command(cmd);
+		free_cmd(cmd);
+	}
+}
+
+/*
+ * Function to execute built-in commands.
+ * Takes a command structure as an argument.
+ * Executes the built-in command if recognized.
+ */
+int	execute_builtin(t_cmd *cmd)
+{
+	if (ft_strcmp(cmd->cmd, "exit") == 0)
+		ft_exit(cmd);
+	else if (ft_strcmp(cmd->cmd, "pwd") == 0)
+		return ft_pwd();
+	else if (ft_strcmp(cmd->cmd, "echo") == 0)
+		return ft_echo(cmd);
+	else if (ft_strcmp(cmd->cmd, "cd") == 0)
+		return ft_cd(cmd);
+	else if (ft_strcmp(cmd->cmd, "env") == 0)
+		return ft_env(cmd);
+	return (-1);
+}
+
+/*
+ * Function to execute a command.
+ * Takes a command structure as an argument.
+ * Forks a child process to execute the command and waits for it to complete.
+ * Updates the global status variable with the exit status of the command.
+ */
+void	execute_command(t_cmd *cmd)
+{
+	pid_t	pid;
+	int		status;
+	char	*cmd_path;
+
+	if (!cmd->tokens)
+	{
+		perror("tokend not found");
+		return ;
+	}
+	cmd_path = find_path(cmd->tokens[0], cmd->env);
+	if (!cmd_path)
+	{
+		ft_printf("msh: %s: command not found\n", cmd->tokens[0]);
+		cmd->msh->exit_status = 127;
+		return ;
+	}
+	pid = fork();
+	if (pid == 0)
+	{
+		if (execve(cmd_path, cmd->tokens, cmd->env) == -1)
+			perror("execve");
+	}
+	else if (pid > 0)
+	{
+		waitpid(pid, &status, 0);
+		if (WIFEXITED(status))
+			cmd->msh->exit_status = WEXITSTATUS(status);
+		else
+			cmd->msh->exit_status = 1;
+	}
+	else
+	{
+		perror("fork");
+		cmd->msh->exit_status = 1;
+	}
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cmd_execute.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/05/22 13:54:08 by keramos-          #+#    #+#             */
+/*   Updated: 2024/06/28 16:05:18 by keramos-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell.h"
+
+/*
+ * Function to process a command prompt string.
+ * Takes the prompt string as an argument.
+ */
+void	process_cmd(char *prompt, t_msh *msh)
+{
+	char	*trimmed_prompt;
+	char	*preprocessed_input;
+	t_token	*tokens;
+	t_ast	*cmd_tree;
+
+	if (!prompt || !*prompt)
+		return ;
+	trimmed_prompt = trim_whitespace(prompt);
+	if (!*trimmed_prompt)
+	{
+		free(trimmed_prompt);
+		return ;
+	}
+	preprocessed_input = process_input(trimmed_prompt);
+	free(trimmed_prompt);
+	tokens = tokenize(preprocessed_input);
+	token_var_exp(tokens, msh);
+	free(preprocessed_input);
+	if (!tokens)
+	{
+		ft_printf("Error: Unmatched quote detected\n");
+		msh->exit_status = 1;
+		return ;
+	}
+	cmd_tree = parse_tokens_to_ast(tokens);
+	execute_ast(cmd_tree, msh);
+}
+
+/*
+ * Function to create a command structure from an AST node.
+ * Takes the AST node as an argument.
+ * Returns a pointer to the created command structure.
+ */
+t_cmd	*ast_to_cmd(t_ast *root)
+{
+	t_cmd	*cmd;
+	int		count;
+	int		index;
+
+	index = 0;
+	count = count_ast_nodes(root);
+	cmd = (t_cmd *)malloc(sizeof(t_cmd));
+	if (!cmd)
+		return (NULL);
+	cmd->tokens = (char **)malloc(sizeof(char *) * (count + 1));
+	if (!cmd->tokens)
+	{
+		free(cmd);
+		return (NULL);
+	}
+	populate_tokens_array(root, cmd->tokens, &index);
+	cmd->tokens[count] = NULL;
+	cmd->cmd = ft_strdup(root->value);
+	cmd->env = NULL;
+	cmd->argc = count;
+	cmd->next = NULL;
+	cmd->prev = NULL;
+	return (cmd);
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   checks.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/06/09 02:52:41 by keramos-          #+#    #+#             */
+/*   Updated: 2024/06/10 02:21:05 by keramos-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell.h"
+
+/*
+ * Function to check if a value is a valid operator.
+ * Takes the token value as an argument.
+ * Returns the corresponding operator enum.
+ */
+t_op	valid_op(const char *operator)
+{
+	if (!operator)
+		return (NONE);
+	if (cmp_s(operator, "|") == 0)
+		return (PIPE);
+	if (cmp_s(operator, ">>") == 0)
+		return (REDIR_APPEND);
+	if (cmp_s(operator, ">") == 0)
+		return (REDIR_REPLACE);
+	if (cmp_s(operator, "<<") == 0)
+		return (REDIR_HERE_DOC);
+	if (cmp_s(operator, "<") == 0)
+		return (REDIR_INPUT);
+	if (cmp_s(operator, "&&") == 0)
+		return (AND);
+	if (cmp_s(operator, "||") == 0)
+		return (OR);
+	return (NONE);
+}
+
+/*
+ * Function to check if a command is a built-in command.
+ * Takes the command name as an argument.
+ * Returns 1 if the command is a built-in, 0 otherwise.
+ */
+int	is_builtin(char *cmd)
+{
+	if (ft_strcmp(cmd, "exit") == 0)
+		return (1);
+	if (ft_strcmp(cmd, "pwd") == 0)
+		return (1);
+	if (ft_strcmp(cmd, "echo") == 0)
+		return (1);
+	if (ft_strcmp(cmd, "cd") == 0)
+		return (1);
+	if (ft_strcmp(cmd, "env") == 0)
+		return (1);
+	return (0);
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   handle_erro.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/05/22 13:19:54 by keramos-          #+#    #+#             */
+/*   Updated: 2024/05/28 22:25:58 by keramos-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell.h"
+
+/*
+ * Function to print an error message and exit the program.
+ * Takes an error message as an argument and prints it before exiting.
+ */
+void	ft_error(char *str)
+{
+	ft_printf("%s\n", str);
+	exit(EXIT_FAILURE);
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   free.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/05/28 00:20:12 by keramos-          #+#    #+#             */
+/*   Updated: 2024/06/10 00:12:23 by keramos-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell.h"
+
+/*
+ * Function to free the memory allocated for a command structure.
+ * Frees each argument string and the tokens array, then frees the command
+ * structure itself.
+ */
+void	free_cmd(t_cmd *cmd)
+{
+	int	i;
+
+	if (cmd->cmd)
+		free(cmd->cmd);
+	if (cmd->tokens)
+	{
+		i = 0;
+		while (cmd->tokens[i])
+		{
+			free(cmd->tokens[i]);
+			i++;
+		}
+		free(cmd->tokens);
+	}
+	// if (cmd->env)
+	// {
+	// 	i = 0;
+	// 	while (cmd->env[i])
+	// 	{
+	// 		free(cmd->env[i]);
+	// 		i++;
+	// 	}
+	// 	free(cmd->env);
+	// }
+	free(cmd);
+}
+
+/*
+ * Function to free the list of tokens.
+ * Takes the head of the token list as an argument.
+ */
+void	free_tokens(t_token *tokens)
+{
+	t_token	*temp;
+
+	while (tokens)
+	{
+		temp = tokens;
+		tokens = tokens->next;
+		free(temp->value);
+		free(temp);
+	}
+}
+
+/*
+ * Function to free the AST.
+ * Takes the root of the AST as an argument.
+ */
+void	free_ast(t_ast *root)
+{
+	if (!root)
+		return ;
+	free_ast(root->left);
+	free_ast(root->right);
+	free(root->value);
+	free(root);
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   input.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/05/23 18:34:23 by keramos-          #+#    #+#             */
+/*   Updated: 2024/06/02 14:17:46 by keramos-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell.h"
+
+/*
+*Read input:
+*	This function use the readline function and let us give a name to or prompt.
+*	and then we verifies that input points to some memory location (input).
+*	and then we check if the value pointed to by input is not zero
+*	Essentially, it verifies that input is not an empty string (*input).
+ */
+char	*read_input(void)
+{
+	char	*input;
+
+	input = readline(P_L "🌸 Minishel" RT "-> ");
+	if (input && *input)
+		add_history(input);
+	return (input);
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   intro_art.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/05/22 15:39:02 by keramos-          #+#    #+#             */
+/*   Updated: 2024/06/09 14:32:39 by keramos-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell.h"
+
+/* Function to display the introductory ASCII art and welcome message */
+void	ft_intro_art(void)
+{
+	ft_printf("\n" P_P \
+"\t                    /^--^\\     /^--^\\     /^--^\\ \n" \
+"\t                    \\____/     \\____/     \\____/ \n" \
+"\t                   /      \\   /      \\   /      \\ \n" \
+"\t                  |        | |        | |        | \n" \
+"\t                   \\__  __/   \\__  __/   \\__  __/ \n" \
+"\t|^|^|^|^|^|^|^|^|^|^|^\\ \\^|^|^|^/ /^|^|^|^|^\\ \\^|^|^|^|^|^|^|^|^|^| \n" \
+"\t| | | | | | | | | | | |\\ \\| | |/ /| | | | | | \\ \\ | | | | | | | | | \n" \
+"\t######################/ /######\\ \\###########/ /################### \n" \
+"\t| | | | | | | | | | | \\/| | | | \\/| | | | | |\\/ | | | | | | | | | | \n" \
+"\t|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_| \n" \
+"\t███╗   ███╗██╗███╗   ██╗██╗███████╗██╗  ██╗███████╗██╗     ██╗ \n" \
+"\t████╗ ████║██║████╗  ██║██║██╔════╝██║  ██║██╔════╝██║     ██║ \n" \
+"\t██╔████╔██║██║██╔██╗ ██║██║███████╗███████║█████╗  ██║     ██║ \n" \
+"\t██║╚██╔╝██║██║██║╚██╗██║██║╚════██║██╔══██║██╔══╝  ██║     ██║ \n" \
+"\t██║ ╚═╝ ██║██║██║ ╚████║██║███████║██║  ██║███████╗███████╗███████╗ \n" \
+"\t╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝╚═╝╚══════╝╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝ \n" \
+"\t                  Welcome to our Project MINISHELL                  \n\n" \
+"\t        "RT P_M"       By: fibarros                By: keramos- "RT P_P"\n" \
+"\t      ────────────────────── {.⋅ ✯&&✯ ⋅.}───────────────────────     \n" \
+	"\n" RT);
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/05/25 19:44:25 by keramos-          #+#    #+#             */
+/*   Updated: 2024/06/09 20:30:18 by keramos-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell.h"
+
+/*
+ * Function to check if a character is a whitespace character.
+ * Returns 1 if the character is a whitespace character, 0 otherwise.
+ */
+int	ft_isspace(char c)
+{
+	if (c == ' ' || c == '\t' || c == '\n' || c == '\v'
+		|| c == '\f' || c == '\r')
+		return (1);
+	return (0);
+}
+
+/*
+ * Function to trim leading and trailing whitespace from a string.
+ * Returns a pointer to the trimmed string.
+ * Note: This function modifies the input string.
+ */
+char	*trim_whitespace(char *str)
+{
+	char	*end;
+
+	while (ft_isspace(*str))
+		str++;
+	if (*str == 0)
+		return (str);
+	end = str + ft_strlen(str) - 1;
+	while (end > str && ft_isspace(*end))
+		end--;
+	*(end + 1) = '\0';
+	return (str);
+}
+
+/*
+ * Function to compare two strings for equality.
+ * Returns 0 if the strings are equal, a non-zero value otherwise.
+ */
+int	cmp_s(const char *str1, const char *str2)
+{
+	size_t	i;
+
+	if ((str1 && !str2) || (!str1 && str2))
+		return (1);
+	i = 0;
+	while (str1[i] || str2[i])
+	{
+		if (str1[i] != str2[i])
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
+/*
+ * Function to skip leading spaces in the input string.
+ * Takes the input string as an argument.
+ * Returns the new position in the input string.
+ */
+char	*skip_spaces(char *input)
+{
+	while (*input && ft_isspace(*input))
+		input++;
+	return (input);
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   print_ast.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: keramos- <keramos-@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/06/13 23:14:16 by keramos-          #+#    #+#             */
+/*   Updated: 2024/06/14 13:43:48 by keramos-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell.h"
+
+const char *op_to_string(t_op op)
+{
+	switch (op) {
+		case NONE: return "NONE";
+		case PIPE: return "PIPE";
+		case REDIR_APPEND: return "REDIR_APPEND";
+		case REDIR_REPLACE: return "REDIR_REPLACE";
+		case REDIR_HERE_DOC: return "REDIR_HERE_DOC";
+		case REDIR_INPUT: return "REDIR_INPUT";
+		case AND: return "AND";
+		case OR: return "OR";
+		default: return "UNKNOWN";
+	}
+}
+
+void print_ast(t_ast *root, int level, char *branch)
+{
+	if (!root) return;
+
+	for (int i = 0; i < level; i++) printf("  ");
+	printf("%s─%s (%s)\n", branch, root->value, op_to_string(root->op));
+	// Indicate presence of left and right children
+	if (root->left || root->right)
+	{
+		printf(" [L: %s, R: %s] \n", \
+		root->left ? root->left->value : "NULL",\
+		root->right ? root->right->value : "NULL");
+	}
+
+	// Print left child
+	if (root->left) {
+		print_ast(root->left, level + 1, "L");
+	}
+
+	// Print right child
+	if (root->right) {
+		print_ast(root->right, level + 1, "R");
+	}
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   setup_pipe.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/06/09 14:35:09 by keramos-          #+#    #+#             */
+/*   Updated: 2024/06/30 20:07:17 by keramos-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell.h"
+
+/*
+ * Function to execute a pipe command.
+ */
+void	execute_pipes(t_ast *root, t_msh *msh)
+{
+	int		pipefd[2];
+	pid_t	p1;
+	pid_t	p2;
+
+	if (root->op != PIPE)
+	{
+		execute_ast(root, msh);
+		return;
+	}
+	if (pipe(pipefd) == -1)
+		ft_error("pipe");
+	p1 = fork_first_child(root, msh, pipefd);
+	p2 = fork_second_child(root, msh, pipefd);
+	close(pipefd[0]);
+	close(pipefd[1]);
+	waitpid(p1, NULL, 0);
+	waitpid(p2, NULL, 0);
+	return ;
+}
+
+/*
+ * Function to fork the first child process.
+ */
+pid_t	fork_first_child(t_ast *root, t_msh *msh, int pipefd[2])
+{
+	pid_t	p1;
+
+	p1 = fork();
+	if (p1 == -1)
+		ft_error("fork p1");
+	if (p1 == 0)
+	{
+		dup2(pipefd[1], STDOUT_FILENO);
+		close(pipefd[0]);
+		close(pipefd[1]);
+		execute_ast(root->left, msh);
+		exit(msh->exit_status);
+	}
+	return (p1);
+}
+
+/*
+ * Function to fork the second child process.
+ */
+pid_t	fork_second_child(t_ast *root, t_msh *msh, int pipefd[2])
+{
+	pid_t	p2;
+
+	p2 = fork();
+	if (p2 == -1)
+		ft_error("fork p2");
+	if (p2 == 0)
+	{
+		dup2(pipefd[0], STDIN_FILENO);
+		close(pipefd[0]);
+		close(pipefd[1]);
+		execute_ast(root->right, msh);
+		exit(msh->exit_status);
+	}
+	return (p2);
+}
+
+int count_commands(t_ast *root)
+{
+	if (root == NULL)
+        return 0;
+
+    if (root->op == PIPE) {
+        int left_count = count_commands(root->left);
+        int right_count = count_commands(root->right);
+        printf("PIPE node: left_count = %d, right_count = %d\n", left_count, right_count);
+        return left_count + right_count;
+    } else {
+        printf("Command node: %s\n", root->value); // Assuming root->cmd is a string
+        return 1;
+    }
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   var_exp.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/06/10 01:41:45 by keramos-          #+#    #+#             */
+/*   Updated: 2024/06/28 14:46:08 by keramos-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell.h"
+
+/*
+ * Function to expand environment variables in a string.
+ * Takes the input string and the shell structure as arguments.
+ * Returns a new string with environment variables expanded.
+ */
+char	*exp_env_var(char *input, t_msh *msh)
+{
+	char	*result;
+	int		i;
+
+	if (!input)
+		return (NULL);
+	result = ft_strdup("");
+	i = 0;
+	while (input[i])
+	{
+		if (input[i] == '$')
+			result = exp_variable(input, &i, result, msh);
+		else
+			result = process_literal(input, &i, result);
+	}
+	return (result);
+}
+
+/*
+ * Function to handle the special variable $? and any following suffix.
+ * Takes the input string, the current index, the result string, and the
+ * shell structure.
+ * Returns the updated result string and updates the index.
+ */
+char	*exp_special_var(const char *input, int *index, char *result, t_msh *msh)
+{
+	int		j;
+	char	*var;
+	char	*expanded;
+	char	*suffix;
+	char	*tmp;
+
+	j = *index + 2;
+	var = ft_substr(input, *index, 2);
+	expanded = exp_single_var(var, msh);
+	free(var);
+	while (input[j] && (ft_isalnum(input[j]) || input[j] == '?' \
+			|| input[j] == '_' || input[j] == '$'))
+		j++;
+	suffix = ft_substr(input, *index + 2, j - (*index + 2));
+	tmp = ft_strjoin(expanded, suffix);
+	free(expanded);
+	free(suffix);
+	expanded = ft_strjoin(result, tmp);
+	free(result);
+	free(tmp);
+	*index = j;
+	return (expanded);
+}
+
+/*
+ * Function to handle the general case of variable expansion.
+ * Takes the input string, the current index, the result string, and the
+ * shell structure.
+ * Returns the updated result string and updates the index.
+ */
+char	*exp_general_var(const char *input, int *index, char *result, t_msh *msh)
+{
+	int		j;
+	char	*var;
+	char	*expanded;
+	char	*tmp;
+
+	j = *index + 1;
+	while (input[j] && (ft_isalnum(input[j]) || input[j] == '?' \
+			|| input[j] == '_'))
+		j++;
+	var = ft_substr(input, *index, j - *index);
+	expanded = exp_single_var(var, msh);
+	tmp = ft_strjoin(result, expanded);
+	free(result);
+	free(expanded);
+	free(var);
+	*index = j;
+	return (tmp);
+}
+
+/*
+ * Function to expand a variable in the input string.
+ * Takes the input string, the current index, the result string,
+ * and the shell structure.
+ * Returns the updated result string and updates the index.
+ */
+char	*exp_variable(const char *input, int *index, char *result, t_msh *msh)
+{
+	int	j;
+
+	j = *index + 1;
+	if (input[j] == '?')
+		return (exp_special_var(input, index, result, msh));
+	return (exp_general_var(input, index, result, msh));
+}
+
+/*
+ * Function to expand a single environment variable.
+ * Takes the token and the shell structure as arguments.
+ * Returns the expanded value of the environment variable.
+ */
+char	*exp_single_var(char *token, t_msh *msh)
+{
+	char	*key;
+	char	*value;
+
+	if (ft_strcmp(token, "$?") == 0)
+		return (ft_itoa(msh->exit_status));
+	if (token[0] != '$')
+		return (ft_strdup(token));
+	key = token + 1;
+	value = get_env_value(key, msh->env);
+	if (value)
+		return (ft_strdup(value));
+	return (ft_strdup(""));
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   var_utils.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/06/13 21:10:35 by keramos-          #+#    #+#             */
+/*   Updated: 2024/06/28 15:20:31 by keramos-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell.h"
+
+/*
+ * Function to expand environment variables in a list of tokens.
+ * Takes the head of the token list and the shell structure as arguments.
+ * Expands environment variables in each token's value.
+ */
+void	token_var_exp(t_token *head, t_msh *msh)
+{
+
+
+	if (!head)
+		return ;
+	if (head->value && !head->quoted)
+	{
+		head->value = exp_env_var(head->value, msh);
+	}
+	token_var_exp(head->next, msh);
+}
+
+/*
+ * Function to process a literal part of the input string.
+ * Takes the input string, the current index, and the result string.
+ * Returns the updated result string and updates the index.
+ */
+char	*process_literal(const char *input, int *index, char *result)
+{
+	int j;
+	char *literal;
+	char *tmp;
+
+	j = *index;
+	while (input[j] && input[j] != '$')
+		j++;
+	literal = ft_substr(input, *index, j - *index);
+	tmp = ft_strjoin(result, literal);
+	free(result);
+	free(literal);
+	*index = j;
+	return (tmp);
+}
+
+/*
+ * Function to get the value of an environment variable.
+ * Takes the variable and the environment variables as arguments.
+ * Returns the value of the variable.
+ */
+char	*get_env_value(char *var, char **env)
+{
+	while (*env)
+	{
+		if (ft_strncmp(*env, var, ft_strlen(var)) == 0 && \
+				(*env)[ft_strlen(var)] == '=')
+			return (*env + ft_strlen(var) + 1);
+		env++;
+	}
+	return (NULL);
+}

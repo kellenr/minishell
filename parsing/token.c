@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 14:18:00 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/09 20:24:59 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/06/28 15:22:20 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
  * Takes the token value as an argument.
  * Returns a pointer to the new token.
  */
-t_token	*create_token(char *value)
+t_token	*create_token(char *value, int single)
 {
 	t_token	*token;
 
@@ -26,6 +26,7 @@ t_token	*create_token(char *value)
 		return (NULL);
 	token->value = ft_strdup(value);
 	token->op = valid_op(value);
+	token->quoted = single;
 	token->next = NULL;
 	return (token);
 }
@@ -34,12 +35,12 @@ t_token	*create_token(char *value)
  * Function to add a token to the end of the token list.
  * Takes a pointer to the head of the list and the token value as arguments.
  */
-void	add_token(t_token **head, char *value)
+void	add_token(t_token **head, char *value, int single)
 {
 	t_token	*new;
 	t_token	*temp;
 
-	new = create_token(value);
+	new = create_token(value, single);
 	if (!new)
 		return ;
 	if (!*head)
@@ -65,6 +66,7 @@ t_token	*tokenize(char *input)
 {
 	t_token	*head;
 	char	*token;
+	int		single;
 
 	head = NULL;
 	while (*input)
@@ -72,13 +74,14 @@ t_token	*tokenize(char *input)
 		input = skip_spaces(input);
 		if (*input)
 		{
-			token = extract_token(&input);
+			single = 0;
+			token = extract_token(&input, &single);
 			if (!token)
 			{
 				free_tokens(head);
 				return (NULL);
 			}
-			add_token(&head, token);
+			add_token(&head, token, single);
 			free(token);
 		}
 		input = skip_spaces(input);
@@ -91,7 +94,7 @@ t_token	*tokenize(char *input)
  * Takes a pointer to the input string as an argument and updates it.
  * Returns the extracted token.
  */
-char	*extract_token(char **input)
+char	*extract_token(char **input, int *single)
 {
 	char	*start;
 	char	*token;
@@ -99,19 +102,21 @@ char	*extract_token(char **input)
 	char	quote_char;
 
 	start = *input;
-	if (**input == '\'' || **input == '\"')
+	while (**input && !ft_isspace(**input))
 	{
-		quote_char = *(*input)++;
-		while (**input && **input != quote_char)
-			(*input)++;
-		if (**input == '\0')
-			return (NULL);
-		if (**input)
-			(*input)++;
-	}
-	else
-	{
-		while (**input && !ft_isspace(**input) && **input != '\'' && **input != '\"')
+		if (**input == '\'' || **input == '\"')
+		{
+			quote_char = *(*input)++;
+			if (quote_char == '\'')
+				*single = 1;
+			while (**input && **input != quote_char)
+				(*input)++;
+			if (**input == '\0')
+				return (NULL);
+			if (**input)
+				(*input)++;
+		}
+		else
 			(*input)++;
 	}
 	token = ft_strndup(start, *input - start);
@@ -127,24 +132,29 @@ char	*extract_token(char **input)
  */
 char	*remove_quotes(const char *token)
 {
-	char	*cleaned_token;
-	int		len;
+	char	*output;
+	int		in_single_quote;
+	int		in_double_quote;
 	int		i;
 	int		j;
 
-	len = ft_strlen(token);
-	if ((token[0] == '\'' || token[0] == '\"') && token[0] == token[len - 1])
+	i = 0;
+	j = 0;
+	in_single_quote = 0;
+	in_double_quote = 0;
+	output = (char *)malloc(ft_strlen(token) + 1);
+	if (!output)
+		return (NULL);
+	while (token[i] != '\0')
 	{
-		cleaned_token = (char *)malloc(len - 1);
-		if (!cleaned_token)
-			return (NULL);
-		i = 1;
-		j = 0;
-		while (i < len - 1)
-			cleaned_token[j++] = token[i++];
-		cleaned_token[j] = '\0';
+		if (token[i] == '\'' && !in_double_quote)
+			in_single_quote = !in_single_quote;
+		else if (token[i] == '"' && !in_single_quote)
+			in_double_quote = !in_double_quote;
+		else
+			output[j++] = token[i];
+		i++;
 	}
-	else
-		cleaned_token = ft_strndup(token, len);
-	return (cleaned_token);
+	output[j] = '\0';
+	return (output);
 }

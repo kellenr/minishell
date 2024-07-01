@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/09 02:10:15 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/10 01:06:09 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/06/27 11:23:01 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,4 +63,3 @@ char	*get_path(char *cmd, char **paths)
 	}
 	return (NULL);
 }
-
