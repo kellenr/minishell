@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 13:54:08 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/01 00:11:06 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/07/01 00:40:33 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	execute_ast(t_ast *root, t_msh *msh)
 {
 	t_cmd	*cmd;
 
-	ft_printf("command %d", count_commands(root));
+	//ft_printf("command %d", count_commands(root));
 	// print_ast(root, 4, "Root");
 	if (!root)
 		return ;
