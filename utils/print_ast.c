@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   print_ast.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/13 23:14:16 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/14 13:43:48 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/07/04 14:12:12 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ const char *op_to_string(t_op op)
 	}
 }
 
-void print_ast(t_ast *root, int level, char *branch)
+/* void print_ast(t_ast *root, int level, char *branch)
 {
 	if (!root) return;
 
@@ -50,4 +50,37 @@ void print_ast(t_ast *root, int level, char *branch)
 	if (root->right) {
 		print_ast(root->right, level + 1, "R");
 	}
+} */
+
+void print_ast_helper(t_ast *node, int level)
+{
+    if (node == NULL) return;
+    for (int i = 0; i < level; i++) printf("  ");
+
+    if (node->op == PIPE) {
+        printf("|- PIPE\n");
+    } else {
+        printf("|- Command: %s\n", node->command);
+        for (int i = 0; node->args && node->args[i] != NULL; i++) {
+            for (int j = 0; j < level + 1; j++) printf("  ");
+            printf("|- Arg: %s\n", node->args[i]);
+        }
+    }
+
+    if (node->left != NULL) {
+        for (int i = 0; i < level; i++) printf("  ");
+        printf("|- Left:\n");
+        print_ast_helper(node->left, level + 1);
+    }
+    if (node->right != NULL) {
+        for (int i = 0; i < level; i++) printf("  ");
+        printf("|- Right:\n");
+        print_ast_helper(node->right, level + 1);
+    }
+}
+
+void print_ast(t_ast *node)
+{
+	printf("AST:\n");
+	print_ast_helper(node, 0);
 }

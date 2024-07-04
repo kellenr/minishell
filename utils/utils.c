@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 19:44:25 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/09 20:30:18 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/07/04 14:10:56 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,4 +74,16 @@ char	*skip_spaces(char *input)
 	while (*input && ft_isspace(*input))
 		input++;
 	return (input);
+}
+
+char *safe_strdup(const char *s)
+{
+	if (!s) return (NULL);
+
+	size_t len = strlen(s) + 1;
+	char *dest = malloc(len);
+	if (!dest)
+		ft_error("safe_strdup: malloc failed");
+	memcpy(dest, s, len);
+	return (dest);
 }

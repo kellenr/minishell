@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 13:54:08 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/01 00:40:33 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/07/03 14:15:55 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	populate_tokens_array(t_ast *root, char **tokens, int *index)
 {
 	if (!root)
 		return ;
-	tokens[*index] = ft_strdup(root->value);
+	tokens[*index] = ft_strdup(root->command);
 	(*index)++;
 	if (root->left)
 		populate_tokens_array(root->left, tokens, index);
@@ -49,8 +49,6 @@ void	execute_ast(t_ast *root, t_msh *msh)
 {
 	t_cmd	*cmd;
 
-	//ft_printf("command %d", count_commands(root));
-	// print_ast(root, 4, "Root");
 	if (!root)
 		return ;
 	if (root->op == PIPE)

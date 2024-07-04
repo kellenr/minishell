@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 13:54:08 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/28 16:05:18 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/07/03 15:04:02 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ void	process_cmd(char *prompt, t_msh *msh)
 		return ;
 	}
 	cmd_tree = parse_tokens_to_ast(tokens);
+	//print_ast(cmd_tree);
 	execute_ast(cmd_tree, msh);
 }
 
@@ -55,22 +56,28 @@ t_cmd	*ast_to_cmd(t_ast *root)
 {
 	t_cmd	*cmd;
 	int		count;
-	int		index;
+	int		i;
 
-	index = 0;
-	count = count_ast_nodes(root);
-	cmd = (t_cmd *)malloc(sizeof(t_cmd));
+	i = 0;
+	cmd = malloc(sizeof(t_cmd));
 	if (!cmd)
 		return (NULL);
+	count = 0;
+	while (root->args[count] != NULL)
+		count++;
 	cmd->tokens = (char **)malloc(sizeof(char *) * (count + 1));
 	if (!cmd->tokens)
 	{
 		free(cmd);
 		return (NULL);
 	}
-	populate_tokens_array(root, cmd->tokens, &index);
+	while (i < count)
+	{
+		cmd->tokens[i] = ft_strdup(root->args[i]);
+		i++;
+	}
 	cmd->tokens[count] = NULL;
-	cmd->cmd = ft_strdup(root->value);
+	cmd->cmd = ft_strdup(root->command);
 	cmd->env = NULL;
 	cmd->argc = count;
 	cmd->next = NULL;

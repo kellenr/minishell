@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/13 21:10:35 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/28 15:20:31 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/07/03 17:02:51 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,6 @@
  */
 void	token_var_exp(t_token *head, t_msh *msh)
 {
-
-
 	if (!head)
 		return ;
 	if (head->value && !head->quoted)

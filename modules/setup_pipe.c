@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/09 14:35:09 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/01 01:31:03 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/07/03 15:03:32 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,18 +79,23 @@ pid_t	fork_second_child(t_ast *root, t_msh *msh, int pipefd[2])
 	return (p2);
 }
 
-// int count_commands(t_ast *root)
-// {
-// 	if (root == NULL)
-//         return 0;
+int count_commands(t_ast *root)
+{
+	int	left_count;
+	int	right_count;
 
-//     if (root->op == PIPE) {
-//         int left_count = count_commands(root->left);
-//         int right_count = count_commands(root->right);
-//         printf("PIPE node: left_count = %d, right_count = %d\n", left_count, right_count);
-//         return left_count + right_count;
-//     } else {
-//         printf("Command node: %s\n", root->value); // Assuming root->cmd is a string
-//         return 1;
-//     }
-// }
+	if (root == NULL)
+		return (0);
+	if (root->op == PIPE)
+	{
+		left_count = count_commands(root->left);
+		right_count = count_commands(root->right);
+		printf("PIPE node: left_count = %d, right_count = %d\n", left_count, right_count);
+		return (left_count + right_count);
+	}
+	else
+	{
+		printf("Command node: %s\n", root->command);
+		return (1);
+	}
+}

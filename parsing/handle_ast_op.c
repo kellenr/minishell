@@ -6,73 +6,30 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 16:33:38 by fibarros          #+#    #+#             */
-/*   Updated: 2024/07/01 01:10:02 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/07/04 14:05:22 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*
- * Function to create an operator node and update the AST.
- * Returns the new operator node.
- */
-t_ast	*create_operator_node(t_token **current_token, t_ast *ast_node)
+t_ast *handle_operator_pipe_ast(t_token **current_token, t_ast *root)
 {
-	t_ast	*new_node;
+	t_ast *pipe_node;
 
-	new_node = create_ast_node((*current_token)->value, (*current_token)->op);
-	new_node->left = ast_node;
-	*current_token = (*current_token)->next;
-	return (new_node);
-}
+	pipe_node = malloc(sizeof(t_ast));
+	if (!pipe_node)
+		ft_error("malloc failed");
 
-/*
- * Function to handle child nodes and update the AST.
- * Takes the current token as an argument.
- * Returns the right child of the AST.
- */
-t_ast	*handle_child(t_token **current_token, t_ast *current_right)
-{
-	if (current_right->op == NONE && *current_token && (*current_token)->op == NONE)
-	{
-		current_right->left = create_ast_node((*current_token)->value, \
-		(*current_token)->op);
-		*current_token = (*current_token)->next;
-	}
-	return (current_right);
-}
+	pipe_node->op = PIPE;
+	pipe_node->left = root;
+	pipe_node->right = NULL;
+	pipe_node->command = NULL;
+	pipe_node->args = NULL;
 
-/*
- * Function to handle remaining tokens and update the AST.
- * Takes the current token and the right child of the AST as arguments.
- */
-void	handle_remaining_tokens(t_token **token, t_ast *right)
-{
-	t_ast	*arg_node;
-	t_ast	*temp;
+	(*current_token) = (*current_token)->next;
+	pipe_node->right = init_ast(current_token);
 
-	while (*token)
-	{
-		if ((*token)->op != NONE)
-		{
-			right->right = handle_operator_ast(token, right->right);
-			break ;
-		}
-		else
-		{
-			arg_node = create_ast_node((*token)->value, (*token)->op);
-			if (!right->left)
-				right->left = arg_node;
-			else
-			{
-				temp = right->left;
-				while (temp->right)
-					temp = temp->right;
-				temp->right = arg_node;
-			}
-			*token = (*token)->next;
-		}
-	}
+	return (pipe_node);
 }
 
 /*
@@ -82,117 +39,11 @@ void	handle_remaining_tokens(t_token **token, t_ast *right)
  */
 t_ast	*handle_operator_ast(t_token **current_token, t_ast *root)
 {
-	t_ast	*new_node;
-	t_ast	*current_right;
-
-	new_node = create_operator_node(current_token, root);
-	while (*current_token && !is_operator((*current_token)->value))
-	{
-		new_node->right = create_ast_node((*current_token)->value, (*current_token)->op);
-		*current_token = (*current_token)->next;
-		if(*current_token && !is_operator((*current_token)->value))
-		{
-			current_right = new_node->right;
-			handle_child(current_token, current_right);
-			handle_remaining_tokens(current_token, current_right);
-		}
-	}
-	return (new_node);
+	if (current_token && *current_token && (*current_token)->op == PIPE)
+		return (handle_operator_pipe_ast(current_token, root));
+	else
+		return (NULL);
 }
-
-// t_ast	*handle_operator_ast(t_token **current_token, t_ast *root)
-// {
-//     t_ast	*new_node;
-//     t_ast	*current_right;
-
-//     // Create the first operator node
-//     new_node = create_operator_node(current_token, root);
-
-//     while (*current_token)
-//     {
-//         if (is_operator((*current_token)->value))
-//         {
-//             // Create a new operator node
-//             t_ast *operator_node = create_operator_node(current_token, root);
-//             operator_node->left = new_node; // Set the left child of the operator to the current node
-//             new_node = operator_node; // Update the new node to the latest operator
-
-//             *current_token = (*current_token)->next; // Move to the next token
-
-//             // If next token is not an operator, process it
-//             if (*current_token && !is_operator((*current_token)->value))
-//             {
-//                 new_node->right = create_ast_node((*current_token)->value, (*current_token)->op);
-//                 *current_token = (*current_token)->next;
-
-//                 if (*current_token && !is_operator((*current_token)->value))
-//                 {
-//                     current_right = new_node->right;
-//                     handle_child(current_token, current_right);
-//                     handle_remaining_tokens(current_token, current_right);
-//                 }
-//             }
-//         }
-//         else
-//         {
-//             // Create a new AST node for the current token
-//             new_node->right = create_ast_node((*current_token)->value, (*current_token)->op);
-//             *current_token = (*current_token)->next;
-
-//             if (*current_token && !is_operator((*current_token)->value))
-//             {
-//                 current_right = new_node->right;
-//                 handle_child(current_token, current_right);
-//                 handle_remaining_tokens(current_token, current_right);
-//             }
-//         }
-//     }
-
-//     return new_node;
-// }
-
-
-
-
-// t_ast	*handle_operator_ast(t_token **current_token, t_ast *root)
-// {
-// 	t_ast	*new_node;
-// 	t_ast	*current_right;
-
-// 	new_node = create_operator_node(current_token, root);
-// 	while (*current_token && !is_operator((*current_token)->value))
-// 	{
-// 		new_node->right = create_ast_node((*current_token)->value, (*current_token)->op);
-// 		*current_token = (*current_token)->next;
-// 		current_right = new_node->right;
-// 		handle_child(current_token, current_right);
-// 		handle_remaining_tokens(current_token, current_right);
-// 	}
-// 	return (new_node);
-// }
-
-
-// t_ast	*handle_operator_ast(t_token **current_token, t_ast *root)
-// {
-// 	t_ast	*new_node;
-// 	t_ast	*current_right;
-
-// 	new_node = create_operator_node(current_token, root);
-// 	while (*current_token && !is_operator((*current_token)->value))
-// 	{
-// 		new_node->right = create_ast_node((*current_token)->value, (*current_token)->op);
-// 		root = new_node;
-// 		*current_token = (*current_token)->next;
-// 		if (*current_token && !is_operator((*current_token)->value))
-// 		{
-// 			new_node->right = create_ast_node((*current_token)->value, (*current_token)->op);
-// 			current_right = new_node->right;
-// 			handle_child(current_token, current_right);
-// 			handle_remaining_tokens(current_token, current_right);
-// 		}
-// 	}
-// 	return (root);
-// }
 
 int	is_operator(const char *value)
 {

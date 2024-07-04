@@ -6,7 +6,7 @@
 #    By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/07 17:06:07 by keramos-          #+#    #+#              #
-#    Updated: 2024/06/27 16:56:33 by keramos-         ###   ########.fr        #
+#    Updated: 2024/07/04 14:20:23 by keramos-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -105,26 +105,6 @@ $(NAME): $(OBJS) $(LIBFT)
 End :
 	@echo "${PINK}Minishell...${RT}";
 	@echo "${CHECK} successfully compiled!         🎉$(RT)";
-
-# **************************************************************************** #
-#                                NORMINETTE                                    #
-# **************************************************************************** #
-
-norm:
-	$(call print_libs,"Norminette check started...")
-	@for file in $$(find Libft src inc -type f -name '*.c' -o -name '*.h'); do \
-		dirname=$$(basename $$(dirname $$file)); \
-		if [ "$$prev_dir" != "$$dirname" ]; then \
-			echo "${AQUA_L}Checking Directory: $$dirname${RT}"; \
-			prev_dir=$$dirname; \
-		fi; \
-		basefile=$$(basename $$file); \
-		result=$$(norminette $$file); \
-		echo "$$result" | awk '/Error|Warning/ {print "${ORG}" $$0 "${RT}"}'; \
-		if ! echo "$$result" | grep -q "Error\|Warning"; then \
-			echo "✅            $$basefile ${AQUA} OK${RT}"; \
-		fi; \
-	done
 
 # **************************************************************************** #
 #                                clean RULES                                   #

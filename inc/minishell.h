@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 09:43:39 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/30 23:39:52 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/07/04 13:52:43 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 # include <signal.h> */
 
 # define MAX_TKS 1024
+# define MAX_ARGUMENTS 10
 
 /* COLOR intro */
 # define RT			"\033[0m"
@@ -101,7 +102,8 @@ typedef struct s_cmd
  */
 typedef struct s_ast
 {
-	char			*value;
+	char 			*command;
+	char 			**args;
 	t_op			op;
 	struct s_ast	*left;
 	struct s_ast	*right;
@@ -167,14 +169,10 @@ t_token	*create_token(char *value, int single);
 void	add_token(t_token **head, char *value, int single);
 t_token	*tokenize(char *input);
 char	*extract_token(char **input, int *single);
-t_ast	*create_ast_node(char *value, t_op op);
-t_ast	*init_ast(t_token **tokens);
+t_ast	*init_ast(t_token **current_token);
 t_ast	*handle_non_operator(t_token **current_token, t_ast *current_node);
 t_ast	*handle_operator_ast(t_token **current_token, t_ast *root);
 t_ast	*parse_tokens_to_ast(t_token *tokens);
-t_ast	*create_operator_node(t_token **current_token, t_ast *ast_node);
-t_ast	*handle_child(t_token **current_token, t_ast *current_right);
-void	handle_remaining_tokens(t_token **token, t_ast *right);
 
 /*                                    src                                     */
 
@@ -213,6 +211,8 @@ int	is_operator(const char *value);
 
 // Background Execution Functions
 //void	handle_background(t_ast *root, t_msh *msh);
-void	print_ast(t_ast *root, int level, char *branch);
-void print_pipe(t_ast *node, int level, const char *label);
+void	print_ast(t_ast *node);
+void	print_pipe(t_ast *node, int level, const char *label);
+
+char	*safe_strdup(const char *s);
 #endif
