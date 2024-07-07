@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 21:04:23 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/10 00:42:18 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/06/27 11:13:12 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,28 +18,30 @@
  */
 int	is_number(const char *str)
 {
-	int i = 0;
+	int	i;
 
+	i = 0;
 	if (str[0] == '-' || str[0] == '+') // Handle optional sign
 		i++;
 	while (str[i])
 	{
 		if (!ft_isdigit(str[i]))
-			return 0;
+			return (0);
 		i++;
 	}
-	return 1;
+	return (1);
 }
 
 /*
  * Function to handle the exit command.
  * Takes an array of arguments (argv) and the number of arguments (argc).
  * If an argument is provided, it uses that as the exit status.
- * If no argument is provided, it exits with the status of the last executed command.
+ * If no argument is provided, it exits with the status of the last
+ * executed command.
  */
 void	ft_exit(t_cmd *cmd)
 {
-	int exit_status;
+	int	exit_status;
 
 	if (cmd->argc > 1)
 	{
@@ -50,7 +52,8 @@ void	ft_exit(t_cmd *cmd)
 		}
 		else
 		{
-			ft_printf("msh: exit: %s: numeric argument required\n", cmd->tokens[1]);
+			ft_printf("msh: exit: %s: numeric argument required\n", \
+				cmd->tokens[1]);
 			exit(255);
 		}
 	}

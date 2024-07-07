@@ -6,7 +6,7 @@
 #    By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/07 17:06:07 by keramos-          #+#    #+#              #
-#    Updated: 2024/06/10 02:30:20 by keramos-         ###   ########.fr        #
+#    Updated: 2024/07/04 14:20:23 by keramos-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -65,12 +65,12 @@ endef
 
 SRCS = minishell.c \
 	utils/input.c utils/intro_art.c utils/utils.c utils/checks.c \
-	utils/erro.c utils/free.c \
-	parsing/ast.c parsing/token.c \
+	utils/erro.c utils/free.c utils/print_ast.c \
+	parsing/ast.c parsing/token.c parsing/handle_ast_op.c \
 	built/built_cd.c built/built_echo.c built/built_pwd.c built/built_exit.c \
 	built/built_env.c \
-	src/cmd_execute.c src/execute.c src/process.c src/path.c src/setup_pipe.c \
-	src/var_exp.c
+	src/cmd_execute.c src/execute.c src/process.c src/path.c \
+	modules/var_exp.c modules/var_utils.c modules/setup_pipe.c
 
 OBJS = $(SRCS:.c=.o)
 
@@ -105,26 +105,6 @@ $(NAME): $(OBJS) $(LIBFT)
 End :
 	@echo "${PINK}Minishell...${RT}";
 	@echo "${CHECK} successfully compiled!         🎉$(RT)";
-
-# **************************************************************************** #
-#                                NORMINETTE                                    #
-# **************************************************************************** #
-
-norm:
-	$(call print_libs,"Norminette check started...")
-	@for file in $$(find Libft src inc -type f -name '*.c' -o -name '*.h'); do \
-		dirname=$$(basename $$(dirname $$file)); \
-		if [ "$$prev_dir" != "$$dirname" ]; then \
-			echo "${AQUA_L}Checking Directory: $$dirname${RT}"; \
-			prev_dir=$$dirname; \
-		fi; \
-		basefile=$$(basename $$file); \
-		result=$$(norminette $$file); \
-		echo "$$result" | awk '/Error|Warning/ {print "${ORG}" $$0 "${RT}"}'; \
-		if ! echo "$$result" | grep -q "Error\|Warning"; then \
-			echo "✅            $$basefile ${AQUA} OK${RT}"; \
-		fi; \
-	done
 
 # **************************************************************************** #
 #                                clean RULES                                   #

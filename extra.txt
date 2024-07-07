@@ -205,3 +205,161 @@ char *expand_env_var(const char *var)
 /* 	var_exp(root->left, env); */
 /* 	var_exp(root->right, env); */
 /* } */
+
+/*
+ * Function to expand a variable in the input string.
+ * Takes the input string, the current index, the result string, and the shell structure.
+ * Returns the updated result string and updates the index.
+ */
+char	*expand_variable(const char *input, int *index, char *result, t_msh *msh)
+{
+	int		j;
+	char	*var;
+	char	*expanded;
+	char	*tmp;
+	char	*suffix;
+
+	j = *index + 1;
+	if (input[j] == '?')
+	{
+		var = ft_substr(input, *index, 2); // Extract $?
+		expanded = expand_single_var(var, msh);
+		free(var);
+		j++; // Move past ?
+		while (input[j] && (ft_isalnum(input[j]) || input[j] == '?' || input[j] == '_' || input[j] == '$'))
+			j++;
+		suffix = ft_substr(input, *index + 2, j - (*index + 2)); // Extract suffix after $?
+		tmp = ft_strjoin(expanded, suffix);
+		free(expanded);
+		free(suffix);
+		tmp = ft_strjoin(result, tmp);
+		free(result);
+		*index = j;
+		return tmp;
+	}
+	while (input[j] && (ft_isalnum(input[j]) || input[j] == '?' || input[j] == '_'))
+		j++;
+	var = ft_substr(input, *index, j - *index);
+	expanded = expand_single_var(var, msh);
+	tmp = ft_strjoin(result, expanded);
+	free(result);
+	free(expanded);
+	free(var);
+	*index = j;
+	return tmp;
+}
+
+t_ast	*handle_operator_ast(t_token **current_token, t_ast *root)
+{
+	t_ast	*new_node;
+	t_ast	*current_right;
+
+	new_node = create_ast_node((*current_token)->value, (*current_token)->op);
+	new_node->left = root;
+	*current_token = (*current_token)->next;
+	if (*current_token)
+	{
+		new_node->right = create_ast_node((*current_token)->value, (*current_token)->op);
+		*current_token = (*current_token)->next;
+		current_right = new_node->right;
+		while (*current_token && (*current_token)->op == NONE)
+		{
+			current_right->right = create_ast_node((*current_token)->value, (*current_token)->op);
+			current_right = current_right->right;
+			*current_token = (*current_token)->next;
+		}
+	}
+	return (new_node);
+}
+/*
+ * Function to execute the command on both sides of the pipe.
+ * Takes the command structure and the pipe file descriptor as arguments.
+ */
+void	execute_pipe(t_ast *root, t_msh *msh)
+{
+	int		pipefd[2];
+	pid_t	p1;
+	pid_t	p2;
+
+	if (pipe(pipefd) == -1)
+		ft_error("pipe");
+
+	if ((p1 = fork()) == -1)
+		ft_error("fork p1");
+	if (p1 == 0)
+	{
+		dup2(pipefd[1], STDOUT_FILENO);
+		close(pipefd[0]);
+		close(pipefd[1]);
+		execute_ast(root->left, msh);
+		exit(msh->exit_status);
+	}
+	if ((p2 = fork()) == -1)
+		ft_error("fork p2");
+	if (p2 == 0)
+	{
+		dup2(pipefd[0], STDIN_FILENO);
+		close(pipefd[0]);
+		close(pipefd[1]);
+		execute_ast(root->right, msh);
+		exit(msh->exit_status);
+	}
+	close(pipefd[0]);
+	close(pipefd[1]);
+	waitpid(p1, NULL, 0);
+	waitpid(p2, NULL, 0);
+	return ;
+}
+
+/*
+ * Function to handle operator tokens and update the AST.
+ * Takes the current token and the root of the AST as arguments.
+ * Returns the updated root of the AST.
+ */
+t_ast	*handle_operator_ast(t_token **current_token, t_ast *root)
+{
+	t_ast	*new_node;
+	t_ast	*current_right;
+	t_ast	*arg_node;
+	t_ast	*temp;
+
+	new_node = create_ast_node((*current_token)->value, (*current_token)->op);
+	new_node->left = root;
+	*current_token = (*current_token)->next;
+	if (*current_token)
+	{
+		new_node->right = create_ast_node((*current_token)->value, (*current_token)->op);
+		*current_token = (*current_token)->next;
+		current_right = new_node->right;
+		// Handle command arguments as left children
+		if (current_right->op == NONE && *current_token && (*current_token)->op == NONE)
+		{
+			current_right->left = create_ast_node((*current_token)->value, (*current_token)->op);
+			*current_token = (*current_token)->next;
+		}
+		// Continue handling remaining tokens
+		while (*current_token)
+		{
+			if ((*current_token)->op != NONE)
+			{
+				current_right->right = handle_operator_ast(current_token, current_right->right);
+				break ;
+			}
+			else
+			{
+				arg_node = create_ast_node((*current_token)->value, (*current_token)->op);
+				if (!current_right->left)
+					current_right->left = arg_node;
+				else
+				{
+					temp = current_right->left;
+					while (temp->right)
+						temp = temp->right;
+					temp->right = arg_node;
+				}
+				*current_token = (*current_token)->next;
+			}
+		}
+	}
+	return (new_node);
+}

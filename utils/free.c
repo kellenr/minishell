@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 00:20:12 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/10 00:12:23 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/07/04 14:15:02 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,16 +33,6 @@ void	free_cmd(t_cmd *cmd)
 		}
 		free(cmd->tokens);
 	}
-	// if (cmd->env)
-	// {
-	// 	i = 0;
-	// 	while (cmd->env[i])
-	// 	{
-	// 		free(cmd->env[i]);
-	// 		i++;
-	// 	}
-	// 	free(cmd->env);
-	// }
 	free(cmd);
 }
 
@@ -69,10 +59,32 @@ void	free_tokens(t_token *tokens)
  */
 void	free_ast(t_ast *root)
 {
+	int i;
+
 	if (!root)
-		return ;
+		return;
+	printf("Freeing node at %p\n", (void *)root);
 	free_ast(root->left);
 	free_ast(root->right);
-	free(root->value);
+	if (root->command)
+	{
+		printf("Freeing command at %p: %s\n", (void *)root->command, root->command);
+		free(root->command);
+		root->command = NULL;
+	}
+	if (root->args)
+	{
+		i = 0;
+		while (root->args[i])
+		{
+			printf("Freeing arg at %p: %s\n", (void *)root->args[i], root->args[i]);
+			free(root->args[i]);
+			i++;
+		}
+		printf("Freeing args array at %p\n", (void *)root->args);
+		free(root->args);
+	}
+	printf("Freeing root node at %p\n", (void *)root);
 	free(root);
+	root = NULL;
 }

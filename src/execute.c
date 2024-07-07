@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 13:54:08 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/12 23:28:49 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/07/03 14:15:55 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	populate_tokens_array(t_ast *root, char **tokens, int *index)
 {
 	if (!root)
 		return ;
-	tokens[*index] = ft_strdup(root->value);
+	tokens[*index] = ft_strdup(root->command);
 	(*index)++;
 	if (root->left)
 		populate_tokens_array(root->left, tokens, index);
@@ -51,18 +51,24 @@ void	execute_ast(t_ast *root, t_msh *msh)
 
 	if (!root)
 		return ;
-	cmd = ast_to_cmd(root);
-	cmd->env = msh->env;
-	cmd->msh = msh;
-	if (is_builtin(cmd->cmd))
-	{
-		cmd->msh->exit_status = execute_builtin(cmd);
-	}
+	if (root->op == PIPE)
+		execute_pipes(root, msh);
+	else if (root->op == REDIR_APPEND || root->op == REDIR_REPLACE || \
+			root->op == REDIR_HERE_DOC || root->op == REDIR_INPUT)
+		return ; //handle_redirection(root, msh);
+	else if (root->op == AND || root->op == OR)
+		return ; //handle_background(root, msh);
 	else
 	{
-		execute_command(cmd);
+		cmd = ast_to_cmd(root);
+		cmd->env = msh->env;
+		cmd->msh = msh;
+		if (is_builtin(cmd->cmd))
+			cmd->msh->exit_status = execute_builtin(cmd);
+		else
+			execute_command(cmd);
+		free_cmd(cmd);
 	}
-	free_cmd(cmd);
 }
 
 /*
