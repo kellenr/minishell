@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 19:33:02 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/27 11:14:31 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/07/07 16:51:38 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,5 @@ int	ft_pwd(void)
 		ft_error(P_R"Error."RT);
 	}
 	ft_printf("%s\n", pwd);
-	// free(pwd);
 	return (EXIT_SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 09:43:39 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/07 15:51:50 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/07/07 17:07:25 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,8 @@ typedef enum e_op
 	NONE,
 	PIPE,
 	REDIR_INPUT,
-	REDIR_APPEND,
 	REDIR_REPLACE,
+	REDIR_APPEND,
 	REDIR_HERE_DOC,
 	AND,
 	OR
@@ -121,8 +121,8 @@ typedef struct s_cmd
  */
 typedef struct s_ast
 {
-	char 			*command;
-	char 			**args;
+	char			*command;
+	char			**args;
 	t_op			op;
 	t_redir			*redir;
 	struct s_ast	*left;
@@ -214,22 +214,21 @@ char	*process_literal(const char *input, int *index, char *result);
 char	*get_env_value(char *var, char **env);
 void	token_var_exp(t_token *head, t_msh *msh);
 char	*exp_single_var(char *token, t_msh *msh);
-char	*exp_special_var(const char *input, int *index, char *result, t_msh *msh);
-char	*exp_general_var(const char *input, int *index, char *result, t_msh *msh);
+char	*exp_special_var(const char *input, int *index, char *rst, t_msh *msh);
+char	*exp_general_var(const char *input, int *index, char *rst, t_msh *msh);
 
 /*                                    pipes                                  */
 pid_t	fork_first_child(t_ast *root, t_msh *msh, int pipefd[2]);
 pid_t	fork_second_child(t_ast *root, t_msh *msh, int pipefd[2]);
 void	execute_pipes(t_ast *root, t_msh *msh);
 
-t_ast *get_command(t_ast *root, int *current_index, int target_index);
-int count_commands(t_ast *root);
-int	is_operator(const char *value);
+// t_ast	*get_command(t_ast *root, int *current_index, int target_index);
+int		count_commands(t_ast *root);
 
 // Redirection Handling Functions
 void	handle_redirection(t_ast *root, t_msh *msh);
 t_ast	*handle_operator_redir_ast(t_token **current_token, t_ast *root);
-int		handle_heredoc(const char *delimiter);
+//int		handle_heredoc(const char *delimiter);
 t_redir	*init_redir(void);
 
 // Background Execution Functions
@@ -238,5 +237,4 @@ void	print_ast(t_ast *node);
 void	print_pipe(t_ast *node, int level, const char *label);
 
 char	*safe_strdup(const char *s);
-void remove_quotes_tokens(t_token *head);
 #endif

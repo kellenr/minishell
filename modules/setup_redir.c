@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 18:37:49 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/07 15:36:41 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/07/07 16:30:33 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ void	handle_redirection(t_ast *root, t_msh *msh)
 			msh->exit_status = 1;
 			return ;
 		}
-
 		saved_stdin = dup(STDIN_FILENO);
 		if (saved_stdin == -1)
 		{
@@ -44,7 +43,6 @@ void	handle_redirection(t_ast *root, t_msh *msh)
 			close(fd);
 			return ;
 		}
-
 		dup2(fd, STDIN_FILENO);
 		close(fd);
 		execute_ast(root->left, msh);
