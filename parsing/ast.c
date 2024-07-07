@@ -12,6 +12,7 @@
 
 #include "minishell.h"
 
+
 /*
  * Function to initialize a redirection structure.
  * Returns a pointer to the newly initialized redirection structure.

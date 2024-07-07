@@ -94,5 +94,3 @@ t_ast	*handle_operator_ast(t_token **current_token, t_ast *root)
 	}
 	return (NULL);
 }
-
-

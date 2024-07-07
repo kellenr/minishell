@@ -70,7 +70,6 @@ void	execute_ast(t_ast *root, t_msh *msh)
 			execute_command(cmd);
 		free_cmd(cmd);
 	}
-	//printf("Finished executing AST node: command=%s\n", root->command);  // Debug statement
 }
 
 /*
