@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 21:04:23 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/27 11:13:12 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/07/07 15:28:33 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	is_number(const char *str)
 	int	i;
 
 	i = 0;
-	if (str[0] == '-' || str[0] == '+') // Handle optional sign
+	if (str[0] == '-' || str[0] == '+')
 		i++;
 	while (str[i])
 	{

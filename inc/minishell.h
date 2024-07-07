@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 09:43:39 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/04 13:52:43 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/07/07 15:51:50 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include "libft.h"
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <fcntl.h>
 # include <stdbool.h>
 # include <sys/wait.h>
 
@@ -41,13 +42,31 @@ typedef enum e_op
 {
 	NONE,
 	PIPE,
+	REDIR_INPUT,
 	REDIR_APPEND,
 	REDIR_REPLACE,
 	REDIR_HERE_DOC,
-	REDIR_INPUT,
 	AND,
 	OR
 }		t_op;
+
+/*
+ * Structure representing a redirection.
+ * The redirection structure is used to store information about redirections
+ * in the shell input, such as input/output files and here-doc delimiters.
+ * Members:
+ * - input_file: The name of the input file for '<' redirection.
+ * - output_file: The name of the output file for '>' redirection.
+ * - append_file: The name of the append file for '>>' redirection.
+ * - here_doc_delim: The delimiter for '<<' redirection.
+ */
+typedef struct s_redir
+{
+	char	*input_file;
+	char	*output_file;
+	char	*append_file;
+	char	*here_doc_delim;
+}		t_redir;
 
 /*
  * Structure representing the minishell.
@@ -105,6 +124,7 @@ typedef struct s_ast
 	char 			*command;
 	char 			**args;
 	t_op			op;
+	t_redir			*redir;
 	struct s_ast	*left;
 	struct s_ast	*right;
 }		t_ast;
@@ -151,7 +171,7 @@ char	*remove_quotes(const char *token);
 char	*skip_spaces(char *input);
 int		is_number(const char *str);
 char	*get_dir(t_cmd *cmd, char *prev_dir);
-
+void	print_with_escapes(const char *str);
 char	*find_path(char *cmd, char **env);
 char	*get_path(char *cmd, char **paths);
 
@@ -207,7 +227,10 @@ int count_commands(t_ast *root);
 int	is_operator(const char *value);
 
 // Redirection Handling Functions
-//void	handle_redirection(t_ast *root, t_msh *msh);
+void	handle_redirection(t_ast *root, t_msh *msh);
+t_ast	*handle_operator_redir_ast(t_token **current_token, t_ast *root);
+int		handle_heredoc(const char *delimiter);
+t_redir	*init_redir(void);
 
 // Background Execution Functions
 //void	handle_background(t_ast *root, t_msh *msh);
@@ -215,4 +238,5 @@ void	print_ast(t_ast *node);
 void	print_pipe(t_ast *node, int level, const char *label);
 
 char	*safe_strdup(const char *s);
+void remove_quotes_tokens(t_token *head);
 #endif

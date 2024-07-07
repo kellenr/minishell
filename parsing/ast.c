@@ -6,12 +6,31 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 13:40:58 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/04 14:00:18 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/07/05 20:02:12 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+/*
+ * Function to initialize a redirection structure.
+ * Returns a pointer to the newly initialized redirection structure.
+ */
+t_redir	*init_redir(void)
+{
+	t_redir	*redir;
+
+	redir = (t_redir *)malloc(sizeof(t_redir));
+	if (!redir) {
+		ft_error("init_redir: malloc failed");
+		return (NULL);
+	}
+	redir->input_file = NULL;
+	redir->output_file = NULL;
+	redir->append_file = NULL;
+	redir->here_doc_delim = NULL;
+	return (redir);
+}
 
 /*
  * Function to initialize an AST node.
@@ -35,6 +54,7 @@ t_ast *init_ast(t_token **current_token)
 	node->left = NULL;
 	node->right = NULL;
 	node->op = NONE;
+	node->redir = NULL;
 	if (*current_token && (*current_token)->op == NONE)
 	{
 		node->command = safe_strdup((*current_token)->value);
@@ -116,6 +136,12 @@ t_ast	*parse_tokens_to_ast(t_token *tokens)
 	while (current_token != NULL)
 	{
 		if (current_token->op == PIPE)
+		{
+			root = handle_operator_ast(&current_token, root);
+			current_node = root->right;
+		}
+		else if (current_token->op == REDIR_APPEND || current_token->op == REDIR_REPLACE || \
+				current_token->op == REDIR_HERE_DOC || current_token->op == REDIR_INPUT)
 		{
 			root = handle_operator_ast(&current_token, root);
 			current_node = root->right;

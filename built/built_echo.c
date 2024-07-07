@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 21:20:52 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/27 11:14:52 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/07/07 15:59:54 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,38 @@ bool	check_opt(char *s)
 	if (*s == '-' && *(s + 1))
 	{
 		s++;
-		while (*s == 'n')
+		while (*s == 'n' || *s == 'e')
 			s++;
 	}
 	if (*s)
 		return (false);
 	return (true);
+}
+
+/*
+ * Function to print a string with escape sequences.
+ */
+void	print_with_escapes(const char *str)
+{
+	while (*str)
+	{
+		if (*str == '\\' && *(str + 1))
+		{
+			str++;
+			if (*str == 'n')
+				ft_printf("\n");
+			else if (*str == 't')
+				ft_printf("\t");
+			else
+			{
+				ft_printf("\\");
+				ft_printf("%c", *str);
+			}
+		}
+		else
+			ft_printf("%c", *str);
+		str++;
+	}
 }
 
 /*
@@ -42,18 +68,26 @@ bool	check_opt(char *s)
 int	ft_echo(t_cmd *scmd)
 {
 	bool	flg;
+	bool	eflg;
 	int		i;
 
 	i = 1;
 	flg = false;
+	eflg = false;
 	while (scmd->tokens[i] && check_opt(scmd->tokens[i]))
 	{
-		flg = true;
+		if (scmd->tokens[i][1] == 'n')
+			flg = true;
+		else if (scmd->tokens[i][1] == 'e')
+			eflg = true;
 		i++;
 	}
 	while (scmd->tokens[i])
 	{
-		ft_printf("%s", scmd->tokens[i]);
+		if (eflg)
+			print_with_escapes(scmd->tokens[i]);
+		else
+			ft_printf("%s", scmd->tokens[i]);
 		if (scmd->tokens[i + 1])
 			ft_printf(" ");
 		i++;

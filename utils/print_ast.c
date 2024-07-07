@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/13 23:14:16 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/04 14:12:12 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/07/07 15:25:34 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,29 +54,53 @@ const char *op_to_string(t_op op)
 
 void print_ast_helper(t_ast *node, int level)
 {
-    if (node == NULL) return;
-    for (int i = 0; i < level; i++) printf("  ");
+	if (node == NULL) return;
+	for (int i = 0; i < level; i++) printf("  ");
 
-    if (node->op == PIPE) {
-        printf("|- PIPE\n");
-    } else {
-        printf("|- Command: %s\n", node->command);
-        for (int i = 0; node->args && node->args[i] != NULL; i++) {
-            for (int j = 0; j < level + 1; j++) printf("  ");
-            printf("|- Arg: %s\n", node->args[i]);
-        }
-    }
+	if (node->op == PIPE) {
+		printf("|- PIPE\n");
+	}else if (node->op == REDIR_INPUT) {
+		printf("|- <\n");
+	} else if (node->op == REDIR_REPLACE) {
+		printf("|- >\n");
+	} else {
+		printf("|- Command: %s\n", node->command);
+		for (int i = 0; node->args && node->args[i] != NULL; i++) {
+			for (int j = 0; j < level + 1; j++) printf("  ");
+			printf("|- Arg: %s\n", node->args[i]);
+		}
+	}
 
-    if (node->left != NULL) {
-        for (int i = 0; i < level; i++) printf("  ");
-        printf("|- Left:\n");
-        print_ast_helper(node->left, level + 1);
-    }
-    if (node->right != NULL) {
-        for (int i = 0; i < level; i++) printf("  ");
-        printf("|- Right:\n");
-        print_ast_helper(node->right, level + 1);
-    }
+	if (node->left != NULL) {
+		for (int i = 0; i < level; i++) printf("  ");
+		printf("|- Left:\n");
+		print_ast_helper(node->left, level + 1);
+		if (node->redir) {
+			if (node->redir->input_file != NULL) {
+				for (int i = 0; i < level + 1; i++) printf("  ");
+				printf("|- Input File: %s\n", node->redir->input_file);
+			}
+			if (node->redir->output_file != NULL) {
+				for (int i = 0; i < level + 1; i++) printf("  ");
+				printf("|- Output File: %s\n", node->redir->output_file);
+			}
+		}
+	}
+	if (node->right != NULL) {
+		for (int i = 0; i < level; i++) printf("  ");
+		printf("|- Right:\n");
+		print_ast_helper(node->right, level + 1);
+		if (node->redir) {
+			if (node->redir->input_file != NULL) {
+				for (int i = 0; i < level + 1; i++) printf("  ");
+				printf("|- Input File: %s\n", node->redir->input_file);
+			}
+			if (node->redir->output_file != NULL) {
+				for (int i = 0; i < level + 1; i++) printf("  ");
+				printf("|- Output File: %s\n", node->redir->output_file);
+			}
+		}
+	}
 }
 
 void print_ast(t_ast *node)

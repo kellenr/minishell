@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 13:54:08 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/03 14:15:55 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/07/06 14:37:18 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,11 +51,12 @@ void	execute_ast(t_ast *root, t_msh *msh)
 
 	if (!root)
 		return ;
+	//printf("Executing AST node: command=%s\n", root->command);  // Debug statement
 	if (root->op == PIPE)
 		execute_pipes(root, msh);
 	else if (root->op == REDIR_APPEND || root->op == REDIR_REPLACE || \
 			root->op == REDIR_HERE_DOC || root->op == REDIR_INPUT)
-		return ; //handle_redirection(root, msh);
+		handle_redirection(root, msh);
 	else if (root->op == AND || root->op == OR)
 		return ; //handle_background(root, msh);
 	else
@@ -69,6 +70,7 @@ void	execute_ast(t_ast *root, t_msh *msh)
 			execute_command(cmd);
 		free_cmd(cmd);
 	}
+	//printf("Finished executing AST node: command=%s\n", root->command);  // Debug statement
 }
 
 /*

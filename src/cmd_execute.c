@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 13:54:08 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/03 15:04:02 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/07/07 15:27:58 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void	process_cmd(char *prompt, t_msh *msh)
 		return ;
 	}
 	cmd_tree = parse_tokens_to_ast(tokens);
-	//print_ast(cmd_tree);
+	print_ast(cmd_tree);
 	execute_ast(cmd_tree, msh);
 }
 
