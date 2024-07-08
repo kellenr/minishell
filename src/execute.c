@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 13:54:08 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/06 14:37:18 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/07/08 17:02:58 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ void	execute_ast(t_ast *root, t_msh *msh)
 		cmd = ast_to_cmd(root);
 		cmd->env = msh->env;
 		cmd->msh = msh;
+		cmd->msh->exit_status = 0;
 		if (is_builtin(cmd->cmd))
 			cmd->msh->exit_status = execute_builtin(cmd);
 		else

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_ast_op.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 16:33:38 by fibarros          #+#    #+#             */
-/*   Updated: 2024/07/07 14:53:34 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/07/08 15:24:02 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,16 +62,16 @@ t_ast	*handle_operator_redir_ast(t_token **current_token, t_ast *root)
 		redir_node->redir->output_file = ft_strdup((*current_token)->value);
 		(*current_token) = (*current_token)->next;
 	}
-	// else if (redir_node->op == REDIR_APPEND)
-	// {
-	// 	redir_node->redir->append_file = ft_strdup((*current_token)->value);
-	// 	(*current_token) = (*current_token)->next;
-	// }
-	// else if (redir_node->op == REDIR_HERE_DOC)
-	// {
-	// 	redir_node->redir->here_doc_delim = ft_strdup((*current_token)->value);
-	// 	(*current_token) = (*current_token)->next;
-	// }
+	else if (redir_node->op == REDIR_APPEND)
+	{
+		redir_node->redir->append_file = ft_strdup((*current_token)->value);
+		(*current_token) = (*current_token)->next;
+	}
+	else if (redir_node->op == REDIR_HERE_DOC)
+	{
+		redir_node->redir->here_doc_delim = ft_strdup((*current_token)->value);
+		(*current_token) = (*current_token)->next;
+	}
 	else
 		redir_node->right = init_ast(current_token);
 	return (redir_node);

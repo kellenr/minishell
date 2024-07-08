@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   setup_redir.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 18:37:49 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/07 16:30:33 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/07/08 16:41:09 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,12 +73,31 @@ void	handle_redirection(t_ast *root, t_msh *msh)
 		dup2(saved_stdout, STDOUT_FILENO);
 		close(saved_stdout);
 	}
-	// else if (root->op == REDIR_APPEND)
-	// 	fd = open(root->redir->append_file, O_WRONLY | O_APPEND | O_CREAT, 0777);
+	else if (root->op == REDIR_APPEND)
+	{
+		fd = open(root->redir->append_file, O_WRONLY | O_CREAT | O_APPEND, 0777);
+		if (fd == -1)
+		{
+			perror("open");
+			msh->exit_status = 1;
+			return;
+		}
+		saved_stdout = dup(STDOUT_FILENO);
+		if (saved_stdout == -1)
+		{
+			perror("dup");
+			msh->exit_status = 1;
+			close(fd);
+			return;
+		}
+		dup2(fd, STDOUT_FILENO);
+		close(fd);
+		execute_ast(root->left, msh);
+		dup2(saved_stdout, STDOUT_FILENO);
+		close(saved_stdout);
+	}
 	// else if (root->op == REDIR_HERE_DOC)
 	// 	fd = handle_heredoc(root->redir->here_doc_delim);
-	//printf("Redirection handled: op=%d\n", root->op);  // Debug statement
-
 }
 
 // int	handle_heredoc(const char *delimiter)

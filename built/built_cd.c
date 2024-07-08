@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   built_cd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 21:17:54 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/09 20:19:15 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/07/08 17:18:08 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,11 @@ int	ft_cd(t_cmd *cmd)
 	char		cwd[MAX_TKS];
 	char		*target_dir;
 
+	if (cmd->argc > 2)
+	{
+		ft_printf("cd: too many arguments\n");
+		return (EXIT_FAILURE);
+	}
 	target_dir = get_dir(cmd, prev_dir);
 	if (!target_dir)
 		return (EXIT_FAILURE);
