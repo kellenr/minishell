@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 09:43:39 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/04 13:52:43 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/07/08 14:52:51 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,16 @@ typedef enum e_op
 	OR
 }		t_op;
 
+/*env list*/
+
+typedef struct s_env
+{
+	char			*name;
+	char			*value;
+	struct s_env	*next;
+}		t_env;
+
+
 /*
  * Structure representing the minishell.
  * The minishell structure is used to store information about the shell
@@ -82,6 +92,7 @@ typedef struct s_cmd
 	char			*cmd;
 	char			**tokens;
 	t_msh			*msh;
+	t_env			*env_list;
 	char			**env;
 	int				argc;
 	int				exit_status;
@@ -102,8 +113,8 @@ typedef struct s_cmd
  */
 typedef struct s_ast
 {
-	char 			*command;
-	char 			**args;
+	char			*command;
+	char			**args;
 	t_op			op;
 	struct s_ast	*left;
 	struct s_ast	*right;
@@ -154,6 +165,16 @@ char	*get_dir(t_cmd *cmd, char *prev_dir);
 
 char	*find_path(char *cmd, char **env);
 char	*get_path(char *cmd, char **paths);
+
+/*									ENV										  */
+void	*init_env(t_cmd *cmd, char **envp);
+int		init_arr_and_list(t_cmd *cmd, char **envp);
+t_env	*create_env_node(const char *env_str);
+void	add_env_node(t_env **env_list, t_env *node);
+int		array_len(char **arr);
+void	free_env(t_cmd *cmd);
+void	free_env_list(t_env *env_list);
+
 
 /*                                   BUILT                                    */
 
