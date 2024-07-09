@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 09:43:39 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/08 14:52:51 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/07/09 11:48:03 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -223,9 +223,9 @@ pid_t	fork_first_child(t_ast *root, t_msh *msh, int pipefd[2]);
 pid_t	fork_second_child(t_ast *root, t_msh *msh, int pipefd[2]);
 void	execute_pipes(t_ast *root, t_msh *msh);
 
-t_ast *get_command(t_ast *root, int *current_index, int target_index);
-int count_commands(t_ast *root);
-int	is_operator(const char *value);
+t_ast	*get_command(t_ast *root, int *current_index, int target_index);
+int		count_commands(t_ast *root);
+int		is_operator(const char *value);
 
 // Redirection Handling Functions
 //void	handle_redirection(t_ast *root, t_msh *msh);
@@ -236,4 +236,13 @@ void	print_ast(t_ast *node);
 void	print_pipe(t_ast *node, int level, const char *label);
 
 char	*safe_strdup(const char *s);
+
+//////////// 	TEST	////////
+void	print_tokens(char **tokens);
+//void print_env_list(t_env *env_list);
+// void test_create_env_node();
+// void test_add_env_node();
+// void test_init_arr_and_list();
+// void test_init_env();
+
 #endif

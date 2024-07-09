@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 16:48:37 by fibarros          #+#    #+#             */
-/*   Updated: 2024/07/08 14:49:55 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/07/08 16:48:13 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ void	add_env_node(t_env **env_list, t_env *node)
 {
 	t_env	*current;
 
-	if (!env_list)
+	if (!*env_list)
 		*env_list = node;
 	else
 	{
@@ -94,4 +94,5 @@ void	add_env_node(t_env **env_list, t_env *node)
 			current = current->next;
 		current->next = node;
 	}
+
 }

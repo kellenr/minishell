@@ -1,24 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   erro.c                                             :+:      :+:    :+:   */
+/*   ft_strcat.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/22 13:19:54 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/09 14:59:51 by fibarros         ###   ########.fr       */
+/*   Created: 2024/07/09 14:46:35 by fibarros          #+#    #+#             */
+/*   Updated: 2024/07/09 14:47:25 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
-
-/*
- * Function to print an error message and exit the program.
- * Takes an error message as an argument and prints it before exiting.
- */
-void	ft_error(char *str)
+char	*ft_strcat(char *dest, char *src)
 {
-	ft_putstr_fd(str, 2);
-	// ft_printf("%s\n", str);
-	exit(EXIT_FAILURE);
+	char	*temp;
+
+	temp = dest;
+	while (*dest)
+		dest++;
+	while (*src)
+		*dest++ = *src++;
+	*dest = '\0';
+	return (temp);
 }

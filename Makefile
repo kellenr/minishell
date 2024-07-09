@@ -6,7 +6,7 @@
 #    By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/07 17:06:07 by keramos-          #+#    #+#              #
-#    Updated: 2024/07/08 14:53:56 by fibarros         ###   ########.fr        #
+#    Updated: 2024/07/09 11:47:39 by fibarros         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -68,7 +68,7 @@ SRCS = minishell.c \
 	utils/erro.c utils/free.c utils/print_ast.c utils/init_env.c utils/init_env_utils.c \
 	parsing/ast.c parsing/token.c parsing/handle_ast_op.c \
 	built/built_cd.c built/built_echo.c built/built_pwd.c built/built_exit.c \
-	built/built_env.c \
+	built/built_env.c built/export_utils.c built/built_export.c \
 	src/cmd_execute.c src/execute.c src/process.c src/path.c \
 	modules/var_exp.c modules/var_utils.c modules/setup_pipe.c
 
@@ -125,3 +125,18 @@ fclean: clean
 re: fclean all
 
 .PHONY: all clean fclean re
+
+
+# **************************************************************************** #
+#                                TEST		                                   #
+# **************************************************************************** #
+
+TEST_SRCS = test.c utils/init_env.c utils/init_env_utils.c utils/free.c utils/utils.c utils/erro.c
+TEST_OBJS = $(TEST_SRCS:.c=.o)
+
+test: CFLAGS += -DTEST_MODE  # Define TEST_MODE for test compilation
+test: clean $(LIBFT) test.o $(TEST_OBJS)
+	@echo "Compiling test program..."
+	@$(CC) $(INCLUDES) $(CFLAGS) $(TEST_OBJS) $(LIBFT) $(RL_LIB) -o test
+	# @echo "Running test program..."
+	# @./test

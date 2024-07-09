@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+         #
+#    By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/17 13:38:57 by keramos-          #+#    #+#              #
-#    Updated: 2024/06/10 02:11:01 by keramos-         ###   ########.fr        #
+#    Updated: 2024/07/09 14:47:19 by fibarros         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -63,7 +63,7 @@ LIBFT_FILES = isalpha isdigit isalnum \
 		putchar_fd putendl_fd putnbr_fd \
 		putstr_fd split strchr \
 		strdup striteri strjoin \
-		strlcat strlcpy strlen \
+		strlcat strlcpy strlen strcpy strcat \
 		strmapi strncmp strnstr \
 		strrchr strtrim substr \
 		tolower toupper\

@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 11:30:43 by fibarros          #+#    #+#             */
-/*   Updated: 2024/07/08 14:50:17 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/07/08 16:33:39 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,5 +47,14 @@ void	free_env_list(t_env *env_list)
 		free(current->value);
 		free(current);
 		current = current->next;
+	}
+}
+
+void	print_env_list(t_env *env_list)
+{
+	while (env_list)
+	{
+		printf("%s=%s\n", env_list->name, env_list->value);
+		env_list = env_list->next;
 	}
 }
