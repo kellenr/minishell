@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 13:54:08 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/09 11:50:51 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/07/10 10:56:16 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,8 @@ int	execute_builtin(t_cmd *cmd)
 		return (ft_cd(cmd));
 	else if (ft_strcmp(cmd->cmd, "env") == 0)
 		return (ft_env(cmd));
+	else if (ft_strcmp(cmd->cmd, "export") == 0)
+		return (ft_export(cmd));
 	return (-1);
 }
 

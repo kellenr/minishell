@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 09:43:39 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/09 11:48:03 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/07/10 11:54:09 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,6 +183,18 @@ int		ft_pwd(void);
 int		ft_cd(t_cmd *cmd);
 int		ft_env(t_cmd *cmd);
 void	ft_exit(t_cmd *cmd);
+int		ft_export(t_cmd *cmd);
+
+/*									BUILT UTILS								  */
+int		check_valid_token(char *token, char *error_message);
+int		is_valid_export(char *token);
+t_env	*sort_env_list(t_env *env_list);
+void	swap(t_env *a, t_env *b);
+void	list_bubble_sort(t_env *head);
+void	print_export(t_env *env_list);
+void	handle_export_vars(t_cmd *cmd, char *arg);
+t_env	*find_env_var(t_env *env_list, char *var);
+void	add_env_var(t_env **env_list, char *name, char *value);
 
 /*                                  Parsing                                   */
 
@@ -238,7 +250,7 @@ void	print_pipe(t_ast *node, int level, const char *label);
 char	*safe_strdup(const char *s);
 
 //////////// 	TEST	////////
-void	print_tokens(char **tokens);
+// void	print_tokens(char **tokens);
 //void print_env_list(t_env *env_list);
 // void test_create_env_node();
 // void test_add_env_node();
