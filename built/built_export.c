@@ -6,11 +6,19 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 16:57:00 by fibarros          #+#    #+#             */
-/*   Updated: 2024/07/10 15:12:34 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/07/10 16:55:49 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+/*
+ * Export function that handles exporting environment variables.
+ * If no arguments are provided (`cmd->argc == 1`), prints all environment variables.
+ * Otherwise, iterates through each argument to update or add environment variables.
+ * Updates both the command's environment list (`cmd->env_list`) and the shell's environment (`cmd->msh->env`).
+ * Returns 0 on success, -1 on error.
+ */
 
 int	ft_export(t_cmd *cmd)
 {
@@ -26,7 +34,8 @@ int	ft_export(t_cmd *cmd)
 	i = 1;
 	while (i < cmd->argc)
 	{
-		handle_export_vars(cmd, cmd->tokens[i]);
+		if (is_valid_export(cmd->tokens[i]))
+			handle_export_vars(cmd, cmd->tokens[i]);
 		i++;
 	}
 	if (update_env_msh(cmd->msh, cmd->env_list) != 0)

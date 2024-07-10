@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 09:43:39 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/10 15:08:07 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/07/10 17:05:40 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -190,6 +190,7 @@ int		ft_cd(t_cmd *cmd);
 int		ft_env(t_cmd *cmd);
 void	ft_exit(t_cmd *cmd);
 int		ft_export(t_cmd *cmd);
+int		ft_unset(t_cmd *cmd);
 
 /*									BUILT UTILS								  */
 int		check_valid_token(char *token, char *error_message);
@@ -201,6 +202,9 @@ void	print_export(t_env *env_list);
 void	handle_export_vars(t_cmd *cmd, char *arg);
 t_env	*find_env_var(t_env *env_list, char *var);
 void	add_env_var(t_env **env_list, char *name, char *value);
+int		is_valid_unset(char *token);
+int		check_valid_unset_token(char *token, char *error_message);
+void	remove_env_var(t_env **env_list, char *name);
 
 /*                                  Parsing                                   */
 

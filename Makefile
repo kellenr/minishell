@@ -6,7 +6,7 @@
 #    By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/07 17:06:07 by keramos-          #+#    #+#              #
-#    Updated: 2024/07/10 15:02:09 by fibarros         ###   ########.fr        #
+#    Updated: 2024/07/10 17:04:39 by fibarros         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -68,7 +68,7 @@ SRCS = minishell.c \
 	utils/erro.c utils/free.c utils/print_ast.c utils/init_env.c utils/init_env_utils.c \
 	parsing/ast.c parsing/token.c parsing/handle_ast_op.c \
 	built/built_cd.c built/built_echo.c built/built_pwd.c built/built_exit.c \
-	built/built_env.c built/export_utils.c built/built_export.c \
+	built/built_env.c built/export_utils.c built/built_export.c built/built_unset.c \
 	src/cmd_execute.c src/execute.c src/process.c src/path.c \
 	modules/var_exp.c modules/var_utils.c modules/setup_pipe.c
 
