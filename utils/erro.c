@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 13:19:54 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/09 14:59:51 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/07/10 13:56:42 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
  */
 void	ft_error(char *str)
 {
-	ft_putstr_fd(str, 2);
+	ft_putendl_fd(str, 2);
 	// ft_printf("%s\n", str);
 	exit(EXIT_FAILURE);
 }

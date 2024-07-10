@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 09:43:39 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/10 11:54:09 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/07/10 15:08:07 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,6 +165,12 @@ char	*get_dir(t_cmd *cmd, char *prev_dir);
 
 char	*find_path(char *cmd, char **env);
 char	*get_path(char *cmd, char **paths);
+
+int		update_env_msh(t_msh *msh, t_env *env_list);
+char	**list_to_array(t_env *env_list);
+char	**populate_env_array(t_env *env_list, char **env_array, int list_size);
+void	free_array(char **arr, int size);
+int		init_msh(char **env, t_msh *msh);
 
 /*									ENV										  */
 void	*init_env(t_cmd *cmd, char **envp);

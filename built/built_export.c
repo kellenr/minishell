@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 16:57:00 by fibarros          #+#    #+#             */
-/*   Updated: 2024/07/10 12:10:51 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/07/10 15:12:34 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,11 @@ int	ft_export(t_cmd *cmd)
 	{
 		handle_export_vars(cmd, cmd->tokens[i]);
 		i++;
+	}
+	if (update_env_msh(cmd->msh, cmd->env_list) != 0)
+	{
+		perror("Error updating msh env");
+		return (-1);
 	}
 	return (0);
 }
