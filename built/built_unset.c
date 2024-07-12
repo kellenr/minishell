@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 15:21:51 by fibarros          #+#    #+#             */
-/*   Updated: 2024/07/10 17:04:16 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/07/12 11:29:25 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,8 @@
 
 int	ft_unset(t_cmd *cmd)
 {
-	t_env	*env_list;
 	int		i;
 
-	env_list = cmd->env_list;
 	if (cmd->argc == 1)
 	{
 		ft_error("unset: not enough arguments");
@@ -27,7 +25,7 @@ int	ft_unset(t_cmd *cmd)
 	while (i < cmd->argc)
 	{
 		if (is_valid_unset(cmd->tokens[i]))
-			remove_env_var(&env_list, cmd->tokens[i]);
+			remove_env_var(&(cmd->env_list), cmd->tokens[i]);
 		i++;
 	}
 	if (update_env_msh(cmd->msh, cmd->env_list) != 0)
