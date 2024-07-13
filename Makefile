@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+         #
+#    By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/07 17:06:07 by keramos-          #+#    #+#              #
-#    Updated: 2024/07/04 14:20:23 by keramos-         ###   ########.fr        #
+#    Updated: 2024/07/10 17:04:39 by fibarros         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -64,11 +64,11 @@ endef
 # **************************************************************************** #
 
 SRCS = minishell.c \
-	utils/input.c utils/intro_art.c utils/utils.c utils/checks.c \
-	utils/erro.c utils/free.c utils/print_ast.c \
+	utils/input.c utils/intro_art.c utils/utils.c utils/checks.c utils/utils_v2.c \
+	utils/erro.c utils/free.c utils/print_ast.c utils/init_env.c utils/init_env_utils.c \
 	parsing/ast.c parsing/token.c parsing/handle_ast_op.c \
 	built/built_cd.c built/built_echo.c built/built_pwd.c built/built_exit.c \
-	built/built_env.c \
+	built/built_env.c built/export_utils.c built/built_export.c built/built_unset.c \
 	src/cmd_execute.c src/execute.c src/process.c src/path.c \
 	modules/var_exp.c modules/var_utils.c modules/setup_pipe.c
 
@@ -125,3 +125,18 @@ fclean: clean
 re: fclean all
 
 .PHONY: all clean fclean re
+
+
+# **************************************************************************** #
+#                                TEST		                                   #
+# **************************************************************************** #
+
+TEST_SRCS = test.c utils/init_env.c utils/init_env_utils.c utils/free.c utils/utils.c utils/erro.c
+TEST_OBJS = $(TEST_SRCS:.c=.o)
+
+test: CFLAGS += -DTEST_MODE  # Define TEST_MODE for test compilation
+test: clean $(LIBFT) test.o $(TEST_OBJS)
+	@echo "Compiling test program..."
+	@$(CC) $(INCLUDES) $(CFLAGS) $(TEST_OBJS) $(LIBFT) $(RL_LIB) -o test
+	# @echo "Running test program..."
+	# @./test

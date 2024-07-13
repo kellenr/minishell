@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 13:34:20 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/10 02:10:37 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/07/09 14:47:07 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,8 @@ void	ft_striteri(char *s, void (*f)(unsigned int, char*));
 int		ft_atoi(const char *str);
 int		ft_toupper(int c);
 int		ft_tolower(int c);
+char	*ft_strcpy(char *dest, const char *src);
+char	*ft_strcat(char *dest, char *src);
 
 /* ************************************************************************** */
 /*                                 PRINTF                                     */

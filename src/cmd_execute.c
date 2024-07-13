@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_execute.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 13:54:08 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/03 15:04:02 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/07/08 14:22:41 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@ t_cmd	*ast_to_cmd(t_ast *root)
 	cmd->tokens[count] = NULL;
 	cmd->cmd = ft_strdup(root->command);
 	cmd->env = NULL;
+	cmd->env_list = NULL;
 	cmd->argc = count;
 	cmd->next = NULL;
 	cmd->prev = NULL;
