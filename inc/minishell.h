@@ -16,6 +16,7 @@
 # include "libft.h"
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <fcntl.h>
 # include <stdbool.h>
 # include <sys/wait.h>
 
@@ -41,10 +42,10 @@ typedef enum e_op
 {
 	NONE,
 	PIPE,
-	REDIR_APPEND,
-	REDIR_REPLACE,
-	REDIR_HERE_DOC,
 	REDIR_INPUT,
+	REDIR_REPLACE,
+	REDIR_APPEND,
+	REDIR_HERE_DOC,
 	AND,
 	OR
 }		t_op;
@@ -58,6 +59,24 @@ typedef struct s_env
 	struct s_env	*next;
 }		t_env;
 
+
+/*
+ * Structure representing a redirection.
+ * The redirection structure is used to store information about redirections
+ * in the shell input, such as input/output files and here-doc delimiters.
+ * Members:
+ * - input_file: The name of the input file for '<' redirection.
+ * - output_file: The name of the output file for '>' redirection.
+ * - append_file: The name of the append file for '>>' redirection.
+ * - here_doc_delim: The delimiter for '<<' redirection.
+ */
+typedef struct s_redir
+{
+	char	*input_file;
+	char	*output_file;
+	char	*append_file;
+	char	*here_doc_delim;
+}		t_redir;
 
 /*
  * Structure representing the minishell.
@@ -116,6 +135,7 @@ typedef struct s_ast
 	char			*command;
 	char			**args;
 	t_op			op;
+	t_redir			*redir;
 	struct s_ast	*left;
 	struct s_ast	*right;
 }		t_ast;
@@ -162,7 +182,7 @@ char	*remove_quotes(const char *token);
 char	*skip_spaces(char *input);
 int		is_number(const char *str);
 char	*get_dir(t_cmd *cmd, char *prev_dir);
-
+void	print_with_escapes(const char *str);
 char	*find_path(char *cmd, char **env);
 char	*get_path(char *cmd, char **paths);
 
@@ -237,8 +257,8 @@ char	*process_literal(const char *input, int *index, char *result);
 char	*get_env_value(char *var, char **env);
 void	token_var_exp(t_token *head, t_msh *msh);
 char	*exp_single_var(char *token, t_msh *msh);
-char	*exp_special_var(const char *input, int *index, char *result, t_msh *msh);
-char	*exp_general_var(const char *input, int *index, char *result, t_msh *msh);
+char	*exp_special_var(const char *input, int *index, char *rst, t_msh *msh);
+char	*exp_general_var(const char *input, int *index, char *rst, t_msh *msh);
 
 /*                                    pipes                                  */
 pid_t	fork_first_child(t_ast *root, t_msh *msh, int pipefd[2]);
@@ -250,7 +270,10 @@ int		count_commands(t_ast *root);
 int		is_operator(const char *value);
 
 // Redirection Handling Functions
-//void	handle_redirection(t_ast *root, t_msh *msh);
+void	handle_redirection(t_ast *root, t_msh *msh);
+t_ast	*handle_operator_redir_ast(t_token **current_token, t_ast *root);
+//int		handle_heredoc(const char *delimiter);
+t_redir	*init_redir(void);
 
 // Background Execution Functions
 //void	handle_background(t_ast *root, t_msh *msh);

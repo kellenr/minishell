@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 14:18:00 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/28 15:22:20 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/07/04 15:09:08 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,6 +123,7 @@ char	*extract_token(char **input, int *single)
 	cleaned_token = remove_quotes(token);
 	free(token);
 	return (cleaned_token);
+	return (token);
 }
 
 /*

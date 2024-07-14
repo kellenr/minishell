@@ -70,7 +70,8 @@ SRCS = minishell.c \
 	built/built_cd.c built/built_echo.c built/built_pwd.c built/built_exit.c \
 	built/built_env.c built/export_utils.c built/built_export.c built/built_unset.c \
 	src/cmd_execute.c src/execute.c src/process.c src/path.c \
-	modules/var_exp.c modules/var_utils.c modules/setup_pipe.c
+	modules/var_exp.c modules/var_utils.c modules/setup_pipe.c \
+	modules/setup_redir.c
 
 OBJS = $(SRCS:.c=.o)
 

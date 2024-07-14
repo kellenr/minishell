@@ -53,11 +53,12 @@ void	execute_ast(t_ast *root, t_msh *msh)
 
 	if (!root)
 		return ;
+	//printf("Executing AST node: command=%s\n", root->command);  // Debug statement
 	if (root->op == PIPE)
 		execute_pipes(root, msh);
 	else if (root->op == REDIR_APPEND || root->op == REDIR_REPLACE || \
 			root->op == REDIR_HERE_DOC || root->op == REDIR_INPUT)
-		return ; //handle_redirection(root, msh);
+		handle_redirection(root, msh);
 	else if (root->op == AND || root->op == OR)
 		return ; //handle_background(root, msh);
 	else

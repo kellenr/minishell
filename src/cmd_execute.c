@@ -43,7 +43,7 @@ void	process_cmd(char *prompt, t_msh *msh)
 		return ;
 	}
 	cmd_tree = parse_tokens_to_ast(tokens);
-	//print_ast(cmd_tree);
+	print_ast(cmd_tree);
 	execute_ast(cmd_tree, msh);
 }
 
