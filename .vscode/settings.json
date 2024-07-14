@@ -1,0 +1,12 @@
+{
+	"files.associations": {
+		"minishell.h": "c",
+		"types.h": "c"
+	},
+	"editor.tabSize": 4,
+	"editor.insertSpaces": false,
+	"editor.renderWhitespace": "all",
+	"files.trimTrailingWhitespace": true,
+	"editor.detectIndentation": false,
+	"files.insertFinalNewline": true
+}
