@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 13:54:08 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/03 14:15:55 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/07/12 11:18:03 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,8 @@ void	populate_tokens_array(t_ast *root, char **tokens, int *index)
 /*
  * Function to execute commands represented by the AST.
  * Takes the root of the AST as an argument.
+ * 
+ * EDIT: added the new initialization of the environment in the command struct
  */
 void	execute_ast(t_ast *root, t_msh *msh)
 {
@@ -51,18 +53,20 @@ void	execute_ast(t_ast *root, t_msh *msh)
 
 	if (!root)
 		return ;
+	//printf("Executing AST node: command=%s\n", root->command);  // Debug statement
 	if (root->op == PIPE)
 		execute_pipes(root, msh);
 	else if (root->op == REDIR_APPEND || root->op == REDIR_REPLACE || \
 			root->op == REDIR_HERE_DOC || root->op == REDIR_INPUT)
-		return ; //handle_redirection(root, msh);
+		handle_redirection(root, msh);
 	else if (root->op == AND || root->op == OR)
 		return ; //handle_background(root, msh);
 	else
 	{
 		cmd = ast_to_cmd(root);
-		cmd->env = msh->env;
+		// print_tokens(cmd->tokens);
 		cmd->msh = msh;
+		init_env(cmd, msh->env);
 		if (is_builtin(cmd->cmd))
 			cmd->msh->exit_status = execute_builtin(cmd);
 		else
@@ -81,13 +85,17 @@ int	execute_builtin(t_cmd *cmd)
 	if (ft_strcmp(cmd->cmd, "exit") == 0)
 		ft_exit(cmd);
 	else if (ft_strcmp(cmd->cmd, "pwd") == 0)
-		return ft_pwd();
+		return (ft_pwd());
 	else if (ft_strcmp(cmd->cmd, "echo") == 0)
-		return ft_echo(cmd);
+		return (ft_echo(cmd));
 	else if (ft_strcmp(cmd->cmd, "cd") == 0)
-		return ft_cd(cmd);
+		return (ft_cd(cmd));
 	else if (ft_strcmp(cmd->cmd, "env") == 0)
-		return ft_env(cmd);
+		return (ft_env(cmd));
+	else if (ft_strcmp(cmd->cmd, "export") == 0)
+		return (ft_export(cmd));
+	else if (ft_strcmp(cmd->cmd, "unset") == 0)
+		return (ft_unset(cmd));
 	return (-1);
 }
 

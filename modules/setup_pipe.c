@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/09 14:35:09 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/03 15:03:32 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/07/07 17:04:41 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,25 +77,4 @@ pid_t	fork_second_child(t_ast *root, t_msh *msh, int pipefd[2])
 		exit(msh->exit_status);
 	}
 	return (p2);
-}
-
-int count_commands(t_ast *root)
-{
-	int	left_count;
-	int	right_count;
-
-	if (root == NULL)
-		return (0);
-	if (root->op == PIPE)
-	{
-		left_count = count_commands(root->left);
-		right_count = count_commands(root->right);
-		printf("PIPE node: left_count = %d, right_count = %d\n", left_count, right_count);
-		return (left_count + right_count);
-	}
-	else
-	{
-		printf("Command node: %s\n", root->command);
-		return (1);
-	}
 }
