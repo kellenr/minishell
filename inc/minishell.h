@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 09:43:39 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/10 17:05:40 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/07/15 14:15:27 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -281,6 +281,14 @@ void	print_ast(t_ast *node);
 void	print_pipe(t_ast *node, int level, const char *label);
 
 char	*safe_strdup(const char *s);
+
+/*									REDIR UTILS								*/
+void	handle_input_redir(t_ast *root, t_msh *msh);
+void	handle_output_replace(t_ast *root, t_msh *msh);
+void	handle_output_append(t_ast *root, t_msh *msh);
+int		handle_fd_redirection(int fd, int target_fd);
+
+
 
 //////////// 	TEST	////////
 // void	print_tokens(char **tokens);

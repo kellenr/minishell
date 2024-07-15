@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ast.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 13:40:58 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/05 20:02:12 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/07/15 14:38:05 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,8 @@ t_redir	*init_redir(void)
 	t_redir	*redir;
 
 	redir = (t_redir *)malloc(sizeof(t_redir));
-	if (!redir) {
+	if (!redir)
+	{
 		ft_error("init_redir: malloc failed");
 		return (NULL);
 	}
@@ -99,7 +100,7 @@ t_ast	*handle_non_operator(t_token **current_token, t_ast *current_node)
 	else
 	{
 		argc = 0;
-		while(current_node->args[argc] != NULL && argc < MAX_ARGUMENTS)
+		while (current_node->args[argc] != NULL && argc < MAX_ARGUMENTS)
 			argc++;
 		if (argc < MAX_ARGUMENTS)
 		{

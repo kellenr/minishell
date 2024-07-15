@@ -6,7 +6,7 @@
 #    By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/07 17:06:07 by keramos-          #+#    #+#              #
-#    Updated: 2024/07/10 17:04:39 by fibarros         ###   ########.fr        #
+#    Updated: 2024/07/15 14:16:01 by fibarros         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -71,7 +71,7 @@ SRCS = minishell.c \
 	built/built_env.c built/export_utils.c built/built_export.c built/built_unset.c \
 	src/cmd_execute.c src/execute.c src/process.c src/path.c \
 	modules/var_exp.c modules/var_utils.c modules/setup_pipe.c \
-	modules/setup_redir.c
+	modules/setup_redir.c modules/redir_utils.c
 
 OBJS = $(SRCS:.c=.o)
 
