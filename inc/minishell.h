@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 09:43:39 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/15 14:15:27 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/07/16 16:51:33 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,6 @@ typedef struct s_env
 	char			*value;
 	struct s_env	*next;
 }		t_env;
-
 
 /*
  * Structure representing a redirection.
@@ -274,6 +273,8 @@ void	handle_redirection(t_ast *root, t_msh *msh);
 t_ast	*handle_operator_redir_ast(t_token **current_token, t_ast *root);
 //int		handle_heredoc(const char *delimiter);
 t_redir	*init_redir(void);
+void	handle_heredoc(t_ast *root, t_msh *msh);
+
 
 // Background Execution Functions
 //void	handle_background(t_ast *root, t_msh *msh);
@@ -287,7 +288,9 @@ void	handle_input_redir(t_ast *root, t_msh *msh);
 void	handle_output_replace(t_ast *root, t_msh *msh);
 void	handle_output_append(t_ast *root, t_msh *msh);
 int		handle_fd_redirection(int fd, int target_fd);
-
+void	redirect_and_execute(int fd, int std_fd, t_ast *root, t_msh *msh);
+int		open_tmp_file(void);
+// void	init_node(t_ast *node, t_token **token, t_ast *root);
 
 
 //////////// 	TEST	////////

@@ -6,12 +6,11 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 13:40:58 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/15 14:38:05 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/07/16 16:50:55 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
 
 /*
  * Function to initialize a redirection structure.
@@ -86,7 +85,7 @@ t_ast *init_ast(t_token **current_token)
  */
 t_ast	*handle_non_operator(t_token **current_token, t_ast *current_node)
 {
-	int argc;
+	int	argc;
 
 	if (current_node->command == NULL)
 	{
@@ -132,9 +131,9 @@ t_ast	*parse_tokens_to_ast(t_token *tokens)
 	t_ast	*current_node;
 	t_token	*current_token;
 
-	root 			= NULL;
-	current_node 	= NULL;
-	current_token 	= tokens;
+	root = NULL;
+	current_node = NULL;
+	current_token = tokens;
 	while (current_token != NULL)
 	{
 		if (current_token->op == PIPE)
@@ -142,8 +141,10 @@ t_ast	*parse_tokens_to_ast(t_token *tokens)
 			root = handle_operator_ast(&current_token, root);
 			current_node = root->right;
 		}
-		else if (current_token->op == REDIR_APPEND || current_token->op == REDIR_REPLACE || \
-				current_token->op == REDIR_HERE_DOC || current_token->op == REDIR_INPUT)
+		else if (current_token->op == REDIR_APPEND || \
+				current_token->op == REDIR_REPLACE || \
+				current_token->op == REDIR_HERE_DOC || \
+				current_token->op == REDIR_INPUT)
 		{
 			root = handle_operator_ast(&current_token, root);
 			current_node = root->right;

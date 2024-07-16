@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 18:37:49 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/15 14:17:44 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/07/16 16:39:06 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,55 @@ void	handle_redirection(t_ast *root, t_msh *msh)
 		handle_output_replace(root, msh);
 	else if (root->op == REDIR_APPEND)
 		handle_output_append(root, msh);
-	// else if (root->op == REDIR_HERE_DOC)
-	// 	handle_heredoc(root->redir->here_doc_delim);
+	else if (root->op == REDIR_HERE_DOC)
+		handle_heredoc(root->redir->here_doc_delim, msh);
 }
 
-// int	handle_heredoc(const char *delimiter)
-// {
-// }
+
+void	handle_heredoc(t_ast *root, t_msh *msh)
+{
+	int	fd;
+	int	saved_stdin;
+
+	fd = open_tmp_file();
+	if (fd == -1)
+	{
+		msh->exit_status = 1;
+		return ;
+	}
+	if (parse_heredoc(root->redir->here_doc_delim, fd))
+	{
+		close(fd);
+		msh->exit_status = 1;
+		return ;
+	}
+	close(fd);
+	fd = open("tmp_file", O_RDONLY, 0);
+	if (fd == -1)
+	{
+		perror("handle_heredoc: open tmp_file");
+		msh->exit_status = 1;
+		return ;
+	}
+	redirect_and_execute(fd, STDIN_FILENO, root, msh);
+	unlink("tmp_file");
+}
+
+int	parse_heredoc(char *delimiter, int fd)
+{
+	char	*line;
+	int		linenum;
+
+	linenum = 0;
+
+}
+
+int	open_tmp_file(void)
+{
+	int	fd;
+
+	fd = open("tmp_file", O_RDWR | O_TRUNC | O_APPEND | O_CREAT, 0777);
+	if (fd == -1)
+		ft_error("Parsing error");
+	return (fd);
+}

@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/15 11:18:57 by fibarros          #+#    #+#             */
-/*   Updated: 2024/07/15 12:54:37 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/07/16 16:02:14 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,15 +25,7 @@ void	handle_input_redir(t_ast *root, t_msh *msh)
 		msh->exit_status = 1;
 		return ;
 	}
-	saved_stdin = handle_fd_redirection(fd, STDIN_FILENO);
-	if (saved_stdin == -1)
-	{
-		msh->exit_status = 1;
-		return ;
-	}
-	execute_ast(root->left, msh);
-	dup2(saved_stdin, STDIN_FILENO);
-	close(saved_stdin);
+	redirect_and_execute(fd, STDIN_FILENO, root, msh);
 }
 
 void	handle_output_replace(t_ast *root, t_msh *msh)
@@ -48,15 +40,7 @@ void	handle_output_replace(t_ast *root, t_msh *msh)
 		msh->exit_status = 1;
 		return ;
 	}
-	saved_stdout = handle_fd_redirection(fd, STDOUT_FILENO);
-	if (saved_stdout == -1)
-	{
-		msh->exit_status = 1;
-		return ;
-	}
-	execute_ast(root->left, STDOUT_FILENO);
-	dup2(saved_stdout, STDOUT_FILENO);
-	close(saved_stdout);
+	redirect_and_execute(fd, STDOUT_FILENO, root, msh);
 }
 
 void	handle_output_append(t_ast *root, t_msh *msh)
@@ -71,15 +55,7 @@ void	handle_output_append(t_ast *root, t_msh *msh)
 		msh->exit_status = 1;
 		return ;
 	}
-	saved_stdout = handle_fd_redirection(fd, STDOUT_FILENO);
-	if (saved_stdout == -1)
-	{
-		msh->exit_status = 1;
-		return ;
-	}
-	execute_ast(root->left, STDOUT_FILENO);
-	dup2(saved_stdout, STDOUT_FILENO);
-	close(saved_stdout);
+	redirect_and_execute(fd, STDOUT_FILENO, root, msh);
 }
 
 int	handle_fd_redirection(int fd, int target_fd)
@@ -103,4 +79,19 @@ int	handle_fd_redirection(int fd, int target_fd)
 	}
 	close(fd);
 	return (saved_fd);
+}
+
+void	redirect_and_execute(int fd, int std_fd, t_ast *root, t_msh *msh)
+{
+	int	saved_fd;
+
+	saved_fd = handle_fd_redirection(fd, std_fd);
+	if (saved_fd == -1)
+	{
+		msh->exit_status = 1;
+		return ;
+	}
+	execute_ast(root->left, msh);
+	dup2(saved_fd, std_fd);
+	close(saved_fd);
 }

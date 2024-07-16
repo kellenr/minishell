@@ -3,32 +3,29 @@
 /*                                                        :::      ::::::::   */
 /*   handle_ast_op.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 16:33:38 by fibarros          #+#    #+#             */
-/*   Updated: 2024/07/08 15:24:02 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/07/16 16:51:29 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_ast *handle_operator_pipe_ast(t_token **current_token, t_ast *root)
+t_ast	*handle_operator_pipe_ast(t_token **current_token, t_ast *root)
 {
-	t_ast *pipe_node;
+	t_ast	*pipe_node;
 
 	pipe_node = malloc(sizeof(t_ast));
 	if (!pipe_node)
 		ft_error("malloc failed");
-
 	pipe_node->op = PIPE;
 	pipe_node->left = root;
 	pipe_node->right = NULL;
 	pipe_node->command = NULL;
 	pipe_node->args = NULL;
-
 	(*current_token) = (*current_token)->next;
 	pipe_node->right = init_ast(current_token);
-
 	return (pipe_node);
 }
 
@@ -39,7 +36,6 @@ t_ast	*handle_operator_redir_ast(t_token **current_token, t_ast *root)
 	redir_node = malloc(sizeof(t_ast));
 	if (!redir_node)
 		ft_error("malloc failed");
-
 	redir_node->op = (*current_token)->op;
 	redir_node->left = root;
 	redir_node->right = NULL;
@@ -49,7 +45,7 @@ t_ast	*handle_operator_redir_ast(t_token **current_token, t_ast *root)
 	if (!redir_node->redir)
 	{
 		free(redir_node);
-		return NULL;
+		return (NULL);
 	}
 	(*current_token) = (*current_token)->next;
 	if (redir_node->op == REDIR_INPUT)
@@ -88,9 +84,21 @@ t_ast	*handle_operator_ast(t_token **current_token, t_ast *root)
 	{
 		if ((*current_token)->op == PIPE)
 			return (handle_operator_pipe_ast(current_token, root));
-		else if((*current_token)->op == REDIR_APPEND || (*current_token)->op == REDIR_REPLACE || \
-				(*current_token)->op == REDIR_HERE_DOC || (*current_token)->op == REDIR_INPUT)
+		else if ((*current_token)->op == REDIR_APPEND || \
+				(*current_token)->op == REDIR_REPLACE || \
+				(*current_token)->op == REDIR_HERE_DOC || \
+				(*current_token)->op == REDIR_INPUT)
 			return ((handle_operator_redir_ast(current_token, root)));
 	}
 	return (NULL);
 }
+
+// void	init_redir_node(t_ast *node, t_token **token, t_ast *root)
+// {
+// 	node->op = (*token)->op;
+// 	node->left = root;
+// 	node->right = NULL;
+// 	node->command = NULL;
+// 	node->args = NULL;
+// 	node->redir = init_redir();
+// }
