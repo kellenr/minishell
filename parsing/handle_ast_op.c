@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 16:33:38 by fibarros          #+#    #+#             */
-/*   Updated: 2024/07/08 15:24:02 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/07/16 19:42:20 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,25 @@ t_ast	*handle_operator_redir_ast(t_token **current_token, t_ast *root)
 	return (redir_node);
 }
 
+t_ast	*handle_operator_and_or_ast(t_token **current_token, t_ast *root)
+{
+	t_ast	*and_or_node;
+
+	and_or_node = malloc(sizeof(t_ast));
+	if (!and_or_node)
+		ft_error("malloc failed");
+
+	and_or_node->op = (*current_token)->op;
+	and_or_node->left = root;
+	and_or_node->right = NULL;
+	and_or_node->command = NULL;
+	and_or_node->args = NULL;
+
+	(*current_token) = (*current_token)->next;
+	and_or_node->right = init_ast(current_token);
+	return (and_or_node);
+}
+
 /*
  * Function to handle operator tokens and update the AST.
  * Takes the current token and the root of the AST as arguments.
@@ -91,6 +110,10 @@ t_ast	*handle_operator_ast(t_token **current_token, t_ast *root)
 		else if((*current_token)->op == REDIR_APPEND || (*current_token)->op == REDIR_REPLACE || \
 				(*current_token)->op == REDIR_HERE_DOC || (*current_token)->op == REDIR_INPUT)
 			return ((handle_operator_redir_ast(current_token, root)));
+		else if ((*current_token)->op == AND || (*current_token)->op == OR)
+			return (handle_operator_and_or_ast(current_token, root));
+		// else if((*current_token)->op == OPEN || (*current_token)->op == CLOSE)
+		// 	return (handle_parentheses_ast(current_token, root));
 	}
 	return (NULL);
 }

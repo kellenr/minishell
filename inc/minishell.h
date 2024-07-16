@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 09:43:39 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/16 15:24:34 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/07/16 19:32:21 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,10 @@ typedef enum e_op
 	REDIR_APPEND,
 	REDIR_HERE_DOC,
 	AND,
-	OR
+	OR,
+	SUBSHELL,
+	OPEN,
+	CLOSE
 }		t_op;
 
 /*env list*/
@@ -276,8 +279,13 @@ t_ast	*handle_operator_redir_ast(t_token **current_token, t_ast *root);
 //int		handle_heredoc(const char *delimiter);
 t_redir	*init_redir(void);
 
-// Background Execution Functions
-//void	handle_background(t_ast *root, t_msh *msh);
+// Logical Execution Functions
+void	handle_logical_op(t_ast *root, t_msh *msh);
+t_ast	*handle_operator_and_or_ast(t_token **current_token, t_ast *root);
+t_ast	*handle_parentheses_ast(t_token **current_token, t_ast *root);
+void	handle_parentheses_op(t_ast *root, t_msh *msh);
+
+
 void	print_ast(t_ast *node);
 void	print_pipe(t_ast *node, int level, const char *label);
 

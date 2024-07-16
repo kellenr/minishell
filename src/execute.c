@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 13:54:08 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/12 11:18:03 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/07/16 19:42:03 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	populate_tokens_array(t_ast *root, char **tokens, int *index)
 /*
  * Function to execute commands represented by the AST.
  * Takes the root of the AST as an argument.
- * 
+ *
  * EDIT: added the new initialization of the environment in the command struct
  */
 void	execute_ast(t_ast *root, t_msh *msh)
@@ -53,18 +53,18 @@ void	execute_ast(t_ast *root, t_msh *msh)
 
 	if (!root)
 		return ;
-	//printf("Executing AST node: command=%s\n", root->command);  // Debug statement
 	if (root->op == PIPE)
 		execute_pipes(root, msh);
 	else if (root->op == REDIR_APPEND || root->op == REDIR_REPLACE || \
 			root->op == REDIR_HERE_DOC || root->op == REDIR_INPUT)
 		handle_redirection(root, msh);
 	else if (root->op == AND || root->op == OR)
-		return ; //handle_background(root, msh);
+		handle_logical_op(root, msh);
+	// else if (root->op == SUBSHELL)
+	// 	handle_parentheses_op(root->left, msh);
 	else
 	{
 		cmd = ast_to_cmd(root);
-		// print_tokens(cmd->tokens);
 		cmd->msh = msh;
 		init_env(cmd, msh->env);
 		if (is_builtin(cmd->cmd))
