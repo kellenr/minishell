@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 14:18:00 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/04 15:09:08 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/07/16 15:51:22 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,35 @@ char	*extract_token(char **input, int *single)
 	char	quote_char;
 
 	start = *input;
-	while (**input && !ft_isspace(**input))
+	if (is_operator(**input))
+	{
+		if (**input == '<' && *(*input + 1) == '<')
+		{
+			*input += 2;
+			return ft_strdup("<<");
+		}
+		else if (**input == '>' && *(*input + 1) == '>')
+		{
+			*input += 2;
+			return ft_strdup(">>");
+		}
+		else if (**input == '&' && *(*input + 1) == '&')
+		{
+			*input += 2;
+			return ft_strdup("&&");
+		}
+		else if (**input == '|' && *(*input + 1) == '|')
+		{
+			*input += 2;
+			return ft_strdup("||");
+		}
+		else
+		{
+			(*input)++;
+			return ft_strndup(start, 1);
+		}
+	}
+	while (**input && !ft_isspace(**input) && !is_operator(**input))
 	{
 		if (**input == '\'' || **input == '\"')
 		{
@@ -112,7 +140,7 @@ char	*extract_token(char **input, int *single)
 			while (**input && **input != quote_char)
 				(*input)++;
 			if (**input == '\0')
-				return (NULL);
+				return NULL;
 			if (**input)
 				(*input)++;
 		}
@@ -120,10 +148,11 @@ char	*extract_token(char **input, int *single)
 			(*input)++;
 	}
 	token = ft_strndup(start, *input - start);
+	if (is_operator(**input))
+		token = ft_strndup(start, *input - start);
 	cleaned_token = remove_quotes(token);
 	free(token);
 	return (cleaned_token);
-	return (token);
 }
 
 /*

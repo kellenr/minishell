@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 09:43:39 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/10 17:05:40 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/07/16 15:24:34 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -267,7 +267,8 @@ void	execute_pipes(t_ast *root, t_msh *msh);
 
 t_ast	*get_command(t_ast *root, int *current_index, int target_index);
 int		count_commands(t_ast *root);
-int		is_operator(const char *value);
+
+int		is_operator(char c);
 
 // Redirection Handling Functions
 void	handle_redirection(t_ast *root, t_msh *msh);
