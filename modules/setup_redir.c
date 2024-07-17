@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 18:37:49 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/16 16:39:06 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/07/17 11:00:37 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,14 +29,13 @@ void	handle_redirection(t_ast *root, t_msh *msh)
 	else if (root->op == REDIR_APPEND)
 		handle_output_append(root, msh);
 	else if (root->op == REDIR_HERE_DOC)
-		handle_heredoc(root->redir->here_doc_delim, msh);
+		handle_heredoc(root, msh);
 }
 
 
 void	handle_heredoc(t_ast *root, t_msh *msh)
 {
 	int	fd;
-	int	saved_stdin;
 
 	fd = open_tmp_file();
 	if (fd == -1)
@@ -68,7 +67,27 @@ int	parse_heredoc(char *delimiter, int fd)
 	int		linenum;
 
 	linenum = 0;
-
+	// add g_estatus here
+	while (1)
+	{
+		line = readline("> ");
+		if (!line)
+		{
+			ft_printf("msh: warning: here-document delimited by \
+			end-of-file (wanted `%s')\n", delimiter);
+			break ;
+		}
+		if (ft_strcmp(line, delimiter) == 0)
+		{
+			free(line);
+			break ;
+		}
+		ft_putendl_fd(line, fd);
+		free(line);
+		linenum++;
+	}
+	// add check if g_estatus == 148 
+	return (0);
 }
 
 int	open_tmp_file(void)

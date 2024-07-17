@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 09:43:39 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/16 16:51:33 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/07/17 10:56:08 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -290,6 +290,7 @@ void	handle_output_append(t_ast *root, t_msh *msh);
 int		handle_fd_redirection(int fd, int target_fd);
 void	redirect_and_execute(int fd, int std_fd, t_ast *root, t_msh *msh);
 int		open_tmp_file(void);
+int		parse_heredoc(char *delimiter, int fd);
 // void	init_node(t_ast *node, t_token **token, t_ast *root);
 
 

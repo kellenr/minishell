@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 13:54:08 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/12 11:18:03 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/07/17 11:07:48 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	populate_tokens_array(t_ast *root, char **tokens, int *index)
 /*
  * Function to execute commands represented by the AST.
  * Takes the root of the AST as an argument.
- * 
+ *
  * EDIT: added the new initialization of the environment in the command struct
  */
 void	execute_ast(t_ast *root, t_msh *msh)
@@ -64,7 +64,6 @@ void	execute_ast(t_ast *root, t_msh *msh)
 	else
 	{
 		cmd = ast_to_cmd(root);
-		// print_tokens(cmd->tokens);
 		cmd->msh = msh;
 		init_env(cmd, msh->env);
 		if (is_builtin(cmd->cmd))

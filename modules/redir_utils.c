@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/15 11:18:57 by fibarros          #+#    #+#             */
-/*   Updated: 2024/07/16 16:02:14 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/07/17 11:03:55 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 void	handle_input_redir(t_ast *root, t_msh *msh)
 {
 	int	fd;
-	int	saved_stdin;
 
 	fd = open(root->redir->input_file, O_RDONLY, 0);
 	if (fd == -1)
@@ -31,7 +30,6 @@ void	handle_input_redir(t_ast *root, t_msh *msh)
 void	handle_output_replace(t_ast *root, t_msh *msh)
 {
 	int	fd;
-	int	saved_stdout;
 
 	fd = open(root->redir->output_file, O_WRONLY | O_CREAT | O_TRUNC, 0777);
 	if (fd == -1)
@@ -46,7 +44,6 @@ void	handle_output_replace(t_ast *root, t_msh *msh)
 void	handle_output_append(t_ast *root, t_msh *msh)
 {
 	int	fd;
-	int	saved_stdout;
 
 	fd = open(root->redir->append_file, O_WRONLY | O_CREAT | O_TRUNC, 0777);
 	if (fd == -1)
