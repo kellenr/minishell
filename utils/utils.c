@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 19:44:25 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/04 14:10:56 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/07/17 14:27:17 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,12 +76,16 @@ char	*skip_spaces(char *input)
 	return (input);
 }
 
-char *safe_strdup(const char *s)
+char	*safe_strdup(const char *s)
 {
-	if (!s) return (NULL);
+	size_t	len;
+	char	*dest;
 
-	size_t len = strlen(s) + 1;
-	char *dest = malloc(len);
+	if (!s)
+		return (NULL);
+
+	len = strlen(s) + 1;
+	dest = malloc(len);
 	if (!dest)
 		ft_error("safe_strdup: malloc failed");
 	memcpy(dest, s, len);
