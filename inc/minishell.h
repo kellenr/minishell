@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 09:43:39 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/17 14:34:50 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/07/22 17:39:12 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -271,7 +271,6 @@ int		is_operator(const char *value);
 // Redirection Handling Functions
 void	handle_redirection(t_ast *root, t_msh *msh);
 t_ast	*handle_operator_redir_ast(t_token **current_token, t_ast *root);
-//int		handle_heredoc(const char *delimiter);
 t_redir	*init_redir(void);
 void	handle_heredoc(t_ast *root, t_msh *msh);
 
@@ -290,9 +289,12 @@ void	handle_output_append(t_ast *root, t_msh *msh);
 int		handle_fd_redirection(int fd, int target_fd);
 void	redirect_and_execute(int fd, int std_fd, t_ast *root, t_msh *msh);
 int		open_tmp_file(void);
-int		parse_heredoc(char *delimiter, int fd);
-int		find_var_end(char *str, int index);
-int		*expand_and_replace_var(char *ptr, char *var_name, t_msh *msh);
+int		parse_heredoc(char *delimiter, int fd, t_msh *msh);
+// int		*expand_and_replace_var(char *ptr, char *var_name, t_msh *msh);
+t_ast	*create_redir_node(int op, t_ast *root);
+void	handle_redir_file(t_token **current_token, char **file_field);
+int		has_quotes(char *delimiter);
+char	*strip_quotes(char *delimiter);
 
 // void	init_node(t_ast *node, t_token **token, t_ast *root);
 

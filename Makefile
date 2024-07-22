@@ -6,7 +6,7 @@
 #    By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/07 17:06:07 by keramos-          #+#    #+#              #
-#    Updated: 2024/07/15 14:16:01 by fibarros         ###   ########.fr        #
+#    Updated: 2024/07/22 16:01:18 by fibarros         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -66,6 +66,7 @@ endef
 SRCS = minishell.c \
 	utils/input.c utils/intro_art.c utils/utils.c utils/checks.c utils/utils_v2.c \
 	utils/erro.c utils/free.c utils/print_ast.c utils/init_env.c utils/init_env_utils.c \
+	utils/heredocs.c \
 	parsing/ast.c parsing/token.c parsing/handle_ast_op.c \
 	built/built_cd.c built/built_echo.c built/built_pwd.c built/built_exit.c \
 	built/built_env.c built/export_utils.c built/built_export.c built/built_unset.c \
