@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 09:43:39 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/22 17:39:12 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/07/23 12:00:14 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -295,6 +295,8 @@ t_ast	*create_redir_node(int op, t_ast *root);
 void	handle_redir_file(t_token **current_token, char **file_field);
 int		has_quotes(char *delimiter);
 char	*strip_quotes(char *delimiter);
+// int		process_heredoc_lines(char *delimiter, int fd, t_msh *msh);
+// int		handle_line(char *line, char *delimiter, int fd, t_msh *msh);
 
 // void	init_node(t_ast *node, t_token **token, t_ast *root);
 
