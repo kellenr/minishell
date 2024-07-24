@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   checks.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/09 02:52:41 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/11 12:57:35 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/07/16 19:19:18 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,10 @@ t_op	valid_op(const char *operator)
 		return (AND);
 	if (cmp_s(operator, "||") == 0)
 		return (OR);
+	if (cmp_s(operator, "(") == 0)
+		return (OPEN);
+	if (cmp_s(operator, ")") == 0)
+		return (CLOSE);
 	return (NONE);
 }
 

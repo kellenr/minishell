@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 19:44:25 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/04 14:10:56 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/07/16 19:03:15 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,17 @@ int	ft_isspace(char c)
 {
 	if (c == ' ' || c == '\t' || c == '\n' || c == '\v'
 		|| c == '\f' || c == '\r')
+		return (1);
+	return (0);
+}
+
+/*
+ * Function to check if a character is an operator character.
+ * Returns 1 if the character is an operator character, 0 otherwise.
+ */
+int	is_operator(char c)
+{
+	if(c == '|' || c == '<' || c == '>' || c == '&' || c == '(' || c == ')')
 		return (1);
 	return (0);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 09:43:39 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/10 17:05:40 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/07/22 15:04:01 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,10 @@ typedef enum e_op
 	REDIR_APPEND,
 	REDIR_HERE_DOC,
 	AND,
-	OR
+	OR,
+	SUBSHELL,
+	OPEN,
+	CLOSE
 }		t_op;
 
 /*env list*/
@@ -230,8 +233,8 @@ void	remove_env_var(t_env **env_list, char *name);
 
 t_token	*create_token(char *value, int single);
 void	add_token(t_token **head, char *value, int single);
-t_token	*tokenize(char *input);
-char	*extract_token(char **input, int *single);
+t_token	*tokenize(char *input, t_msh *msh);
+char	*extract_token(char **input, int *single, t_msh *msh);
 t_ast	*init_ast(t_token **current_token);
 t_ast	*handle_non_operator(t_token **current_token, t_ast *current_node);
 t_ast	*handle_operator_ast(t_token **current_token, t_ast *root);
@@ -267,7 +270,8 @@ void	execute_pipes(t_ast *root, t_msh *msh);
 
 t_ast	*get_command(t_ast *root, int *current_index, int target_index);
 int		count_commands(t_ast *root);
-int		is_operator(const char *value);
+
+int		is_operator(char c);
 
 // Redirection Handling Functions
 void	handle_redirection(t_ast *root, t_msh *msh);
@@ -275,8 +279,13 @@ t_ast	*handle_operator_redir_ast(t_token **current_token, t_ast *root);
 //int		handle_heredoc(const char *delimiter);
 t_redir	*init_redir(void);
 
-// Background Execution Functions
-//void	handle_background(t_ast *root, t_msh *msh);
+// Logical Execution Functions
+void	handle_logical_op(t_ast *root, t_msh *msh);
+t_ast	*handle_operator_and_or_ast(t_token **current_token, t_ast *root);
+t_ast	*handle_parentheses_ast(t_token **current_token, t_ast *root);
+void	handle_parentheses_op(t_ast *root, t_msh *msh);
+
+
 void	print_ast(t_ast *node);
 void	print_pipe(t_ast *node, int level, const char *label);
 

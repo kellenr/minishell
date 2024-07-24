@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/13 23:14:16 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/08 16:03:18 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/07/16 19:46:56 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,10 +67,10 @@ void print_ast_helper(t_ast *node, int level)
 		printf("|- >>\n");
 	} else if (node->op == REDIR_HERE_DOC) {
 		printf("|- <<\n");
-	// } else if (node->op == AND) {
-	// 	printf("|- AND\n");
-	// } else if (node->op == OR) {
-	// 	printf("|- OR\n");
+	} else if (node->op == AND) {
+		printf("|- (&&) AND\n");
+	} else if (node->op == OR) {
+		printf("|- (||) OR\n");
 	} else {
 		printf("|- Command: %s\n", node->command);
 		for (int i = 0; node->args && node->args[i] != NULL; i++) {

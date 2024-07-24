@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_env.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 16:48:37 by fibarros          #+#    #+#             */
-/*   Updated: 2024/07/10 14:08:00 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/07/22 13:53:37 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,6 @@
 
 void	*init_env(t_cmd *cmd, char **envp)
 {
-	int	i;
-
-	i = 0;
 	cmd->env = ft_calloc((array_len(envp) + 1), sizeof(char *));
 	if (!cmd->env)
 	{

@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ast.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 13:40:58 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/05 20:02:12 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/07/16 19:20:57 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
 
 /*
  * Function to initialize a redirection structure.
@@ -136,7 +135,8 @@ t_ast	*parse_tokens_to_ast(t_token *tokens)
 	current_token 	= tokens;
 	while (current_token != NULL)
 	{
-		if (current_token->op == PIPE)
+		if (current_token->op == PIPE || current_token->op == AND || \
+		current_token->op == OR)
 		{
 			root = handle_operator_ast(&current_token, root);
 			current_node = root->right;
