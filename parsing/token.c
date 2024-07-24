@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 14:18:00 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/16 19:42:30 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/07/22 15:46:40 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void	add_token(t_token **head, char *value, int single)
  * Takes the input string as an argument.
  * Returns the head of the token list.
  */
-t_token	*tokenize(char *input)
+t_token	*tokenize(char *input, t_msh *msh)
 {
 	t_token	*head;
 	char	*token;
@@ -75,7 +75,7 @@ t_token	*tokenize(char *input)
 		if (*input)
 		{
 			single = 0;
-			token = extract_token(&input, &single);
+			token = extract_token(&input, &single, msh);
 			if (!token)
 			{
 				free_tokens(head);
@@ -94,7 +94,7 @@ t_token	*tokenize(char *input)
  * Takes a pointer to the input string as an argument and updates it.
  * Returns the extracted token.
  */
-char	*extract_token(char **input, int *single)
+char	*extract_token(char **input, int *single, t_msh *msh)
 {
 	char	*start;
 	char	*token;
@@ -148,8 +148,13 @@ char	*extract_token(char **input, int *single)
 			(*input)++;
 	}
 	token = ft_strndup(start, *input - start);
-	if (is_operator(**input))
-		token = ft_strndup(start, *input - start);
+	// if (is_operator(**input))
+	// 	token = ft_strndup(start, *input - start);
+	if (!*single) {
+		char *expanded_token = exp_env_var(token, msh);
+		free(token);
+		token = expanded_token;
+	}
 	cleaned_token = remove_quotes(token);
 	free(token);
 	return (cleaned_token);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 09:43:39 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/16 19:32:21 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/07/22 15:04:01 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -233,8 +233,8 @@ void	remove_env_var(t_env **env_list, char *name);
 
 t_token	*create_token(char *value, int single);
 void	add_token(t_token **head, char *value, int single);
-t_token	*tokenize(char *input);
-char	*extract_token(char **input, int *single);
+t_token	*tokenize(char *input, t_msh *msh);
+char	*extract_token(char **input, int *single, t_msh *msh);
 t_ast	*init_ast(t_token **current_token);
 t_ast	*handle_non_operator(t_token **current_token, t_ast *current_node);
 t_ast	*handle_operator_ast(t_token **current_token, t_ast *root);

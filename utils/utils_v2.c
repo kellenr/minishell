@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_v2.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 14:12:05 by fibarros          #+#    #+#             */
-/*   Updated: 2024/07/10 15:11:39 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/07/22 13:53:01 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 int	update_env_msh(t_msh *msh, t_env *env_list)
 {
-	int		len;
 	int		len_current;
 	char	**env_array;
 
@@ -24,7 +23,6 @@ int	update_env_msh(t_msh *msh, t_env *env_list)
 		perror("failed to convert env list to array");
 		return (-1);
 	}
-	len = array_len(env_array);
 	len_current = array_len(msh->env);
 	free_array(msh->env, len_current);
 	msh->env = env_array;
@@ -36,9 +34,7 @@ char	**list_to_array(t_env *env_list)
 	int		list_size;
 	char	**env_array;
 	t_env	*current;
-	int		i;
 
-	i = 0;
 	list_size = 0;
 	current = env_list;
 	while (current)
