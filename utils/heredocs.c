@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 11:54:56 by fibarros          #+#    #+#             */
-/*   Updated: 2024/07/23 11:34:02 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/07/24 14:37:57 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int	parse_heredoc(char *delimiter, int fd, t_msh *msh)
 	int		expand_vars;
 
 	linenum = 0;
-	expand_vars = !has_quotes(delimiter);
+	// if flag -> expand
 	// add g_estatus here
 	while (1)
 	{

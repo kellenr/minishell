@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 14:18:00 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/04 15:09:08 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/07/24 14:40:20 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,7 +123,7 @@ char	*extract_token(char **input, int *single)
 	cleaned_token = remove_quotes(token);
 	free(token);
 	return (cleaned_token);
-	return (token);
+	// return (token);
 }
 
 /*

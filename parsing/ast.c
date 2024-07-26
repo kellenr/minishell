@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 13:40:58 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/16 16:50:55 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/07/23 15:02:11 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,10 @@ t_redir	*init_redir(void)
  * - Default Initialization: Initializes the fields of the node to default values.
  * - Command Initialization: If the current token is a command (not an operator), sets the command field and initializes the args array with the command as the first argument.
  */
-t_ast *init_ast(t_token **current_token)
+
+t_ast	*init_ast(t_token **current_token)
 {
-	t_ast *node;
+	t_ast	*node;
 
 	node = malloc(sizeof(t_ast));
 	if (!node)
