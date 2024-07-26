@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 12:07:43 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/11 12:55:04 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/07/26 17:11:30 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,5 +68,6 @@ int	init_msh(char **env, t_msh *msh)
 		i++;
 	}
 	msh->env[i] = NULL;
+	msh->heredoc_flag = 0;
 	return (0);
 }

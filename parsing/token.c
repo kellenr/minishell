@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 14:18:00 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/22 15:46:40 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/07/26 17:23:35 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,9 @@ t_token	*tokenize(char *input, t_msh *msh)
 	t_token	*head;
 	char	*token;
 	int		single;
+	int		heredoc_flag;
 
+	heredoc_flag = 0;
 	head = NULL;
 	while (*input)
 	{
@@ -75,7 +77,7 @@ t_token	*tokenize(char *input, t_msh *msh)
 		if (*input)
 		{
 			single = 0;
-			token = extract_token(&input, &single, msh);
+			token = extract_token(&input, &single, msh, &heredoc_flag);
 			if (!token)
 			{
 				free_tokens(head);
@@ -94,7 +96,7 @@ t_token	*tokenize(char *input, t_msh *msh)
  * Takes a pointer to the input string as an argument and updates it.
  * Returns the extracted token.
  */
-char	*extract_token(char **input, int *single, t_msh *msh)
+char	*extract_token(char **input, int *single, t_msh *msh, int *heredoc_flag)
 {
 	char	*start;
 	char	*token;
@@ -107,27 +109,28 @@ char	*extract_token(char **input, int *single, t_msh *msh)
 		if (**input == '<' && *(*input + 1) == '<')
 		{
 			*input += 2;
-			return ft_strdup("<<");
+			*heredoc_flag = 1;
+			return (ft_strdup("<<"));
 		}
 		else if (**input == '>' && *(*input + 1) == '>')
 		{
 			*input += 2;
-			return ft_strdup(">>");
+			return (ft_strdup(">>"));
 		}
 		else if (**input == '&' && *(*input + 1) == '&')
 		{
 			*input += 2;
-			return ft_strdup("&&");
+			return (ft_strdup("&&"));
 		}
 		else if (**input == '|' && *(*input + 1) == '|')
 		{
 			*input += 2;
-			return ft_strdup("||");
+			return (ft_strdup("||"));
 		}
 		else
 		{
 			(*input)++;
-			return ft_strndup(start, 1);
+			return (ft_strndup(start, 1));
 		}
 	}
 	while (**input && !ft_isspace(**input) && !is_operator(**input))
@@ -140,7 +143,7 @@ char	*extract_token(char **input, int *single, t_msh *msh)
 			while (**input && **input != quote_char)
 				(*input)++;
 			if (**input == '\0')
-				return NULL;
+				return (NULL);
 			if (**input)
 				(*input)++;
 		}
@@ -148,6 +151,12 @@ char	*extract_token(char **input, int *single, t_msh *msh)
 			(*input)++;
 	}
 	token = ft_strndup(start, *input - start);
+	if (*heredoc_flag)
+	{
+		*heredoc_flag = 0;
+		if (has_quotes(token))
+			msh->heredoc_flag = 1;
+	}
 	// if (is_operator(**input))
 	// 	token = ft_strndup(start, *input - start);
 	if (!*single) {
@@ -192,4 +201,15 @@ char	*remove_quotes(const char *token)
 	}
 	output[j] = '\0';
 	return (output);
+}
+
+int	has_quotes(char *delimiter)
+{
+	size_t	len;
+
+	len = ft_strlen(delimiter);
+	if ((delimiter[0] == '\'' && delimiter[len - 1] == '\'' ) || \
+		(delimiter[0] == '\"' && delimiter[len - 1] == '\"' ))
+		return (1);
+	return (0);
 }

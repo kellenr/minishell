@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_v2.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 14:12:05 by fibarros          #+#    #+#             */
-/*   Updated: 2024/07/22 13:53:01 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/07/26 14:29:03 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,4 +90,14 @@ void	free_array(char **arr, int size)
 		i++;
 	}
 	free(arr);
+}
+
+int	open_tmp_file(void)
+{
+	int	fd;
+
+	fd = open("tmp_file", O_RDWR | O_TRUNC | O_APPEND | O_CREAT, 0777);
+	if (fd == -1)
+		ft_error("Failed to open temp file");
+	return (fd);
 }
