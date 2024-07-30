@@ -6,11 +6,12 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 12:07:43 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/26 17:11:30 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/07/30 13:03:46 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
 
 /* this function to continuously receive and process user input */
 void	receive_msg(t_msh *msh)
@@ -19,13 +20,16 @@ void	receive_msg(t_msh *msh)
 
 	while (1)
 	{
+		// handle signals function
 		prompt = read_input();
 		if (!prompt)
 		{
 			ft_printf("Exit\n");
 			break ;
 		}
+		// handle_signals children?
 		process_cmd(prompt, msh);
+		// free prompt?
 	}
 }
 

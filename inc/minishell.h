@@ -6,12 +6,14 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 09:43:39 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/26 17:25:58 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/07/30 15:12:44 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
+
+# define _GNU_SOURCE
 
 # include "libft.h"
 # include <readline/readline.h>
@@ -19,6 +21,8 @@
 # include <fcntl.h>
 # include <stdbool.h>
 # include <sys/wait.h>
+# include <signal.h>
+# include <sys/ioctl.h>
 
 /* # include <sys/types.h>
 # include <sys/stat.h>
