@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 13:54:08 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/16 19:42:03 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/01 16:42:34 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,17 +123,26 @@ void	execute_command(t_cmd *cmd)
 		cmd->msh->exit_status = 127;
 		return ;
 	}
+	handle_signals_children(cmd->msh);
 	pid = fork();
 	if (pid == 0)
 	{
+		signal(SIGINT, SIG_IGN);
+		signal(SIGQUIT, SIG_IGN);
 		if (execve(cmd_path, cmd->tokens, cmd->env) == -1)
+		{
 			perror("execve");
+			exit(EXIT_FAILURE);
+		}
+
 	}
 	else if (pid > 0)
 	{
 		waitpid(pid, &status, 0);
 		if (WIFEXITED(status))
 			cmd->msh->exit_status = WEXITSTATUS(status);
+		else if (WIFSIGNALED(status))
+			cmd->msh->exit_status = 128 + WTERMSIG(status);
 		else
 			cmd->msh->exit_status = 1;
 	}
@@ -142,4 +151,5 @@ void	execute_command(t_cmd *cmd)
 		perror("fork");
 		cmd->msh->exit_status = 1;
 	}
+	handle_signals(cmd->msh);
 }

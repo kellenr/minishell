@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 09:43:39 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/30 15:12:44 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/01 11:11:12 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -311,6 +311,13 @@ t_ast	*create_redir_node(int op, t_ast *root);
 void	handle_redir_file(t_token **current_token, char **file_field);
 int		has_quotes(char *delimiter);
 
+/*									SIGNALS								*/
+void	sig_handler_int(int signum, siginfo_t *info, void *context);
+void	handle_signals(t_msh *msh);
+void	sig_handler_child(int signum, siginfo_t *info, void *context);
+void	handle_signals_children(t_msh *msh);
+void	heredoc_sig_handler(int signum, siginfo_t *info, void *context);
+void	handle_signals_heredoc(void);
 
 //////////// 	TEST	////////
 // void	print_tokens(char **tokens);

@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 12:07:43 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/30 13:03:46 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/01 10:15:45 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ int	main(int argc, char **argv, char **env)
 	}
 	ft_intro_art();
 	// receive_msg(&msh);
+	handle_signals(msh);
 	receive_msg(msh);
 	// free msh here./mi
 	return (0);

@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 11:54:56 by fibarros          #+#    #+#             */
-/*   Updated: 2024/07/30 15:31:20 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/01 11:57:56 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,10 +44,11 @@ void	handle_heredoc(t_ast *root, t_msh *msh)
 int	parse_heredoc(char *delimiter, int fd, t_msh *msh)
 {
 	char	*line;
-	int		linenum;
+	// int		linenum;
 	char	*expanded_line;
 
-	linenum = 0;
+	// linenum = 0;
+	handle_signals_heredoc();
 	while (1)
 	{
 		line = readline("> ");
@@ -73,7 +74,7 @@ int	parse_heredoc(char *delimiter, int fd, t_msh *msh)
 		}
 		ft_putendl_fd(expanded_line, fd);
 		free(expanded_line);
-		linenum++;
+		// linenum++;
 	}
 	return (0);
 }
