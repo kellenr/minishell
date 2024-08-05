@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ast.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 13:40:58 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/16 19:20:57 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/07/26 16:28:03 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@ t_redir	*init_redir(void)
 	t_redir	*redir;
 
 	redir = (t_redir *)malloc(sizeof(t_redir));
-	if (!redir) {
+	if (!redir)
+	{
 		ft_error("init_redir: malloc failed");
 		return (NULL);
 	}
@@ -42,7 +43,7 @@ t_redir	*init_redir(void)
  * - Default Initialization: Initializes the fields of the node to default values.
  * - Command Initialization: If the current token is a command (not an operator), sets the command field and initializes the args array with the command as the first argument.
  */
-t_ast *init_ast(t_token **current_token)
+t_ast	*init_ast(t_token **current_token)
 {
 	t_ast *node;
 

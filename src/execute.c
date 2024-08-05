@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 13:54:08 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/16 19:42:03 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/05 16:31:40 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,17 +123,31 @@ void	execute_command(t_cmd *cmd)
 		cmd->msh->exit_status = 127;
 		return ;
 	}
+	handle_non_interactive();
 	pid = fork();
 	if (pid == 0)
 	{
 		if (execve(cmd_path, cmd->tokens, cmd->env) == -1)
+		{
 			perror("execve");
+			exit(EXIT_FAILURE);
+		}
+
 	}
 	else if (pid > 0)
 	{
 		waitpid(pid, &status, 0);
 		if (WIFEXITED(status))
 			cmd->msh->exit_status = WEXITSTATUS(status);
+		else if (WIFSIGNALED(status))
+		{
+			if (WTERMSIG(status) == SIGQUIT)
+				cmd->msh->exit_status = 131;
+			else if (WTERMSIG(status) == SIGINT)
+				cmd->msh->exit_status = 130;
+			else
+				cmd->msh->exit_status = 128 + WTERMSIG(status);
+		}
 		else
 			cmd->msh->exit_status = 1;
 	}
@@ -142,4 +156,7 @@ void	execute_command(t_cmd *cmd)
 		perror("fork");
 		cmd->msh->exit_status = 1;
 	}
+	// handle_signals();
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
 }
