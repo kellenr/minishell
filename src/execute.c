@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 13:54:08 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/05 13:41:34 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/05 16:31:40 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,7 +140,14 @@ void	execute_command(t_cmd *cmd)
 		if (WIFEXITED(status))
 			cmd->msh->exit_status = WEXITSTATUS(status);
 		else if (WIFSIGNALED(status))
-			cmd->msh->exit_status = 128 + WTERMSIG(status);
+		{
+			if (WTERMSIG(status) == SIGQUIT)
+				cmd->msh->exit_status = 131;
+			else if (WTERMSIG(status) == SIGINT)
+				cmd->msh->exit_status = 130;
+			else
+				cmd->msh->exit_status = 128 + WTERMSIG(status);
+		}
 		else
 			cmd->msh->exit_status = 1;
 	}

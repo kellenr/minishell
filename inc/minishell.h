@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 09:43:39 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/05 11:30:54 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/05 14:36:29 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,7 +169,7 @@ typedef struct s_token
 /*                                 SOURCES                                    */
 /* ************************************************************************** */
 
-extern volatile __sig_atomic_t  g_signal;
+extern volatile __sig_atomic_t	g_signal;
 
 /*                               handel msg                                   */
 
