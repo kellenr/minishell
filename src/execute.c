@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 13:54:08 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/01 16:42:34 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/05 13:41:34 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,12 +123,10 @@ void	execute_command(t_cmd *cmd)
 		cmd->msh->exit_status = 127;
 		return ;
 	}
-	handle_signals_children(cmd->msh);
+	handle_non_interactive();
 	pid = fork();
 	if (pid == 0)
 	{
-		signal(SIGINT, SIG_IGN);
-		signal(SIGQUIT, SIG_IGN);
 		if (execve(cmd_path, cmd->tokens, cmd->env) == -1)
 		{
 			perror("execve");
@@ -151,5 +149,7 @@ void	execute_command(t_cmd *cmd)
 		perror("fork");
 		cmd->msh->exit_status = 1;
 	}
-	handle_signals(cmd->msh);
+	// handle_signals();
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
 }

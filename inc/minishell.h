@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 09:43:39 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/01 11:11:12 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/05 11:30:54 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,6 +169,8 @@ typedef struct s_token
 /*                                 SOURCES                                    */
 /* ************************************************************************** */
 
+extern volatile __sig_atomic_t  g_signal;
+
 /*                               handel msg                                   */
 
 void	ft_intro_art(void);
@@ -312,12 +314,13 @@ void	handle_redir_file(t_token **current_token, char **file_field);
 int		has_quotes(char *delimiter);
 
 /*									SIGNALS								*/
-void	sig_handler_int(int signum, siginfo_t *info, void *context);
-void	handle_signals(t_msh *msh);
-void	sig_handler_child(int signum, siginfo_t *info, void *context);
-void	handle_signals_children(t_msh *msh);
-void	heredoc_sig_handler(int signum, siginfo_t *info, void *context);
-void	handle_signals_heredoc(void);
+void	sig_handler_int(int signum);
+void	handle_signals(void);
+void	sig_non_interactive(int signum);
+void	handle_non_interactive(void);
+void	sig_handle_heredoc(int signum);
+// void	heredoc_sig_handler(int signum, siginfo_t *info, void *context);
+// void	handle_signals_heredoc(void);
 
 //////////// 	TEST	////////
 // void	print_tokens(char **tokens);
