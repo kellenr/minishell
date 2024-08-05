@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 11:54:56 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/05 16:24:11 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/05 17:00:10 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,9 @@ void	handle_heredoc(t_ast *root, t_msh *msh)
 {
 	int	fd;
 
-	fd = open_tmp_file();
+	fd = open_tmp_file(msh);
 	if (fd == -1)
-	{
-		msh->exit_status = 1;
 		return ;
-	}
 	if (parse_heredoc(root->redir->here_doc_delim, fd, msh))
 	{
 		if (g_signal == 2)
@@ -54,20 +51,10 @@ int	parse_heredoc(char *delimiter, int fd, t_msh *msh)
 	{
 		if (g_signal == 2)
 			return (1);
-		line = readline("> ");
+		line = read_heredoc_line(delimiter);
 		if (!line)
-		{
-			ft_printf("msh: warning: here-document delimited by \
-			end-of-file (wanted %s')\n", delimiter);
 			break ;
-		}
-		if (!msh->heredoc_flag)
-		{
-			expanded_line = exp_env_var(line, msh);
-			free(line);
-		}
-		else
-			expanded_line = line;
+		expanded_line = expand_heredoc_line(line, msh);
 		if (!expanded_line)
 			return (1);
 		if (ft_strcmp(expanded_line, delimiter) == 0)
@@ -80,4 +67,31 @@ int	parse_heredoc(char *delimiter, int fd, t_msh *msh)
 	}
 	signal(SIGINT, sig_handler_int);
 	return (0);
+}
+
+char	*read_heredoc_line(char *delimiter)
+{
+	char	*line;
+
+	line = readline("> ");
+	if (!line)
+	{
+		ft_printf("msh: warning: here-document delimited by end-of-file \
+		(wanted %s')\n", delimiter);
+	}
+	return (line);
+}
+
+char	*expand_heredoc_line(char *line, t_msh *msh)
+{
+	char	*expanded_line;
+
+	if (!msh->heredoc_flag)
+	{
+		expanded_line = exp_env_var(line, msh);
+		free(line);
+	}
+	else
+		expanded_line = line;
+	return (expanded_line);
 }

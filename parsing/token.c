@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 14:18:00 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/26 17:23:35 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/05 16:47:54 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -201,15 +201,4 @@ char	*remove_quotes(const char *token)
 	}
 	output[j] = '\0';
 	return (output);
-}
-
-int	has_quotes(char *delimiter)
-{
-	size_t	len;
-
-	len = ft_strlen(delimiter);
-	if ((delimiter[0] == '\'' && delimiter[len - 1] == '\'' ) || \
-		(delimiter[0] == '\"' && delimiter[len - 1] == '\"' ))
-		return (1);
-	return (0);
 }

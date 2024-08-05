@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 13:40:58 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/26 16:28:03 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/05 16:46:43 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,9 +131,9 @@ t_ast	*parse_tokens_to_ast(t_token *tokens)
 	t_ast	*current_node;
 	t_token	*current_token;
 
-	root 			= NULL;
-	current_node 	= NULL;
-	current_token 	= tokens;
+	root = NULL;
+	current_node = NULL;
+	current_token = tokens;
 	while (current_token != NULL)
 	{
 		if (current_token->op == PIPE || current_token->op == AND || \

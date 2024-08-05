@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 19:44:25 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/26 14:29:24 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/05 16:48:32 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	ft_isspace(char c)
  */
 int	is_operator(char c)
 {
-	if(c == '|' || c == '<' || c == '>' || c == '&' || c == '(' || c == ')')
+	if (c == '|' || c == '<' || c == '>' || c == '&' || c == '(' || c == ')')
 		return (1);
 	return (0);
 }
@@ -73,18 +73,6 @@ int	cmp_s(const char *str1, const char *str2)
 		i++;
 	}
 	return (0);
-}
-
-/*
- * Function to skip leading spaces in the input string.
- * Takes the input string as an argument.
- * Returns the new position in the input string.
- */
-char	*skip_spaces(char *input)
-{
-	while (*input && ft_isspace(*input))
-		input++;
-	return (input);
 }
 
 char	*safe_strdup(const char *s)

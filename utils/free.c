@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 00:20:12 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/04 14:15:02 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/05 16:43:43 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,16 +59,17 @@ void	free_tokens(t_token *tokens)
  */
 void	free_ast(t_ast *root)
 {
-	int i;
+	int	i;
 
 	if (!root)
-		return;
+		return ;
 	printf("Freeing node at %p\n", (void *)root);
 	free_ast(root->left);
 	free_ast(root->right);
 	if (root->command)
 	{
-		printf("Freeing command at %p: %s\n", (void *)root->command, root->command);
+		printf("Freeing command at %p: %s\n", (void *)root->command, \
+		root->command);
 		free(root->command);
 		root->command = NULL;
 	}
@@ -77,7 +78,8 @@ void	free_ast(t_ast *root)
 		i = 0;
 		while (root->args[i])
 		{
-			printf("Freeing arg at %p: %s\n", (void *)root->args[i], root->args[i]);
+			printf("Freeing arg at %p: %s\n", (void *)root->args[i], \
+			root->args[i]);
 			free(root->args[i]);
 			i++;
 		}
