@@ -34,7 +34,6 @@ void	process_cmd(char *prompt, t_msh *msh)
 	preprocessed_input = process_input(trimmed_prompt);
 	free(trimmed_prompt);
 	tokens = tokenize(preprocessed_input, msh);
-	token_var_exp(tokens, msh);
 	free(preprocessed_input);
 	if (!tokens)
 	{

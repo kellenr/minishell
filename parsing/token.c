@@ -17,7 +17,7 @@
  * Takes the token value as an argument.
  * Returns a pointer to the new token.
  */
-t_token	*create_token(char *value, int single)
+t_token	*create_token(char *value)
 {
 	t_token	*token;
 
@@ -26,7 +26,6 @@ t_token	*create_token(char *value, int single)
 		return (NULL);
 	token->value = ft_strdup(value);
 	token->op = valid_op(value);
-	token->quoted = single;
 	token->next = NULL;
 	return (token);
 }
@@ -35,12 +34,12 @@ t_token	*create_token(char *value, int single)
  * Function to add a token to the end of the token list.
  * Takes a pointer to the head of the list and the token value as arguments.
  */
-void	add_token(t_token **head, char *value, int single)
+void	add_token(t_token **head, char *value)
 {
 	t_token	*new;
 	t_token	*temp;
 
-	new = create_token(value, single);
+	new = create_token(value);
 	if (!new)
 		return ;
 	if (!*head)
@@ -66,7 +65,6 @@ t_token	*tokenize(char *input, t_msh *msh)
 {
 	t_token	*head;
 	char	*token;
-	int		single;
 	int		heredoc_flag;
 
 	heredoc_flag = 0;
@@ -76,14 +74,13 @@ t_token	*tokenize(char *input, t_msh *msh)
 		input = skip_spaces(input);
 		if (*input)
 		{
-			single = 0;
-			token = extract_token(&input, &single, msh, &heredoc_flag);
+			token = extract_token(&input, msh, &heredoc_flag);
 			if (!token)
 			{
 				free_tokens(head);
 				return (NULL);
 			}
-			add_token(&head, token, single);
+			add_token(&head, token);
 			free(token);
 		}
 		input = skip_spaces(input);
@@ -96,12 +93,13 @@ t_token	*tokenize(char *input, t_msh *msh)
  * Takes a pointer to the input string as an argument and updates it.
  * Returns the extracted token.
  */
-char	*extract_token(char **input, int *single, t_msh *msh, int *heredoc_flag)
+char	*extract_token(char **input, t_msh *msh, int *heredoc_flag)
 {
 	char	*start;
 	char	*token;
 	char	*cleaned_token;
 	char	quote_char;
+	char	*expanded_token;
 
 	start = *input;
 	if (is_operator(**input))
@@ -138,8 +136,6 @@ char	*extract_token(char **input, int *single, t_msh *msh, int *heredoc_flag)
 		if (**input == '\'' || **input == '\"')
 		{
 			quote_char = *(*input)++;
-			if (quote_char == '\'')
-				*single = 1;
 			while (**input && **input != quote_char)
 				(*input)++;
 			if (**input == '\0')
@@ -159,11 +155,9 @@ char	*extract_token(char **input, int *single, t_msh *msh, int *heredoc_flag)
 	}
 	// if (is_operator(**input))
 	// 	token = ft_strndup(start, *input - start);
-	if (!*single) {
-		char *expanded_token = exp_env_var(token, msh);
-		free(token);
-		token = expanded_token;
-	}
+	expanded_token = exp_env_var(token, msh);
+	free(token);
+	token = expanded_token;
 	cleaned_token = remove_quotes(token);
 	free(token);
 	return (cleaned_token);

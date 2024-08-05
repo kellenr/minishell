@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   var_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kellen <kellen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/13 21:10:35 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/26 14:26:51 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/05 16:56:12 by kellen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,4 +65,28 @@ char	*get_env_value(char *var, char **env)
 		env++;
 	}
 	return (NULL);
+}
+
+int	is_var_btw_squote(const char *input, int start, int end)
+{
+	int	i;
+	int	in_single_q;
+	int	in_double_q;
+
+	i = 0;
+	in_single_q = 0;
+	in_double_q = 0;
+	while (input[i] != '\0')
+	{
+		if (input[i] == '"' && !in_single_q)
+			in_double_q = !in_double_q;
+		if (input[i] == '\'' && !in_double_q)
+			in_single_q = !in_single_q;
+		if (i == start && in_single_q)
+			return (1);
+		if (i > end)
+			break ;
+		i++;
+	}
+	return (0);
 }

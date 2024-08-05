@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   var_exp.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: kellen <kellen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 01:41:45 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/22 15:53:15 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/05 16:55:54 by kellen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,10 @@ char	*exp_general_var(const char *input, int *index, char *rst, t_msh *msh)
 			|| input[j] == '_'))
 		j++;
 	var = ft_substr(input, *index, j - *index);
-	expanded = exp_single_var(var, msh);
+	if (is_var_btw_squote(input, *index, j))
+		expanded = ft_strdup (var);
+	else
+		expanded = exp_single_var(var, msh);
 	tmp = ft_strjoin(rst, expanded);
 	free(rst);
 	free(expanded);

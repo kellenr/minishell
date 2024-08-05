@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   ast.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kellen <kellen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 13:40:58 by keramos-          #+#    #+#             */
 /*   Updated: 2024/08/05 16:46:43 by fibarros         ###   ########.fr       */
@@ -45,7 +45,7 @@ t_redir	*init_redir(void)
  */
 t_ast	*init_ast(t_token **current_token)
 {
-	t_ast *node;
+	t_ast	*node;
 
 	node = malloc(sizeof(t_ast));
 	if (!node)
@@ -85,7 +85,7 @@ t_ast	*init_ast(t_token **current_token)
  */
 t_ast	*handle_non_operator(t_token **current_token, t_ast *current_node)
 {
-	int argc;
+	int	argc;
 
 	if (current_node->command == NULL)
 	{
@@ -99,7 +99,7 @@ t_ast	*handle_non_operator(t_token **current_token, t_ast *current_node)
 	else
 	{
 		argc = 0;
-		while(current_node->args[argc] != NULL && argc < MAX_ARGUMENTS)
+		while (current_node->args[argc] != NULL && argc < MAX_ARGUMENTS)
 			argc++;
 		if (argc < MAX_ARGUMENTS)
 		{
