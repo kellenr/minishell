@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 14:12:05 by fibarros          #+#    #+#             */
-/*   Updated: 2024/07/26 14:29:03 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/05 16:52:01 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,12 +92,15 @@ void	free_array(char **arr, int size)
 	free(arr);
 }
 
-int	open_tmp_file(void)
+int	open_tmp_file(t_msh *msh)
 {
 	int	fd;
 
 	fd = open("tmp_file", O_RDWR | O_TRUNC | O_APPEND | O_CREAT, 0777);
 	if (fd == -1)
+	{
+		msh->exit_status = 1;
 		ft_error("Failed to open temp file");
+	}
 	return (fd);
 }

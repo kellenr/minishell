@@ -303,14 +303,15 @@ void	handle_output_replace(t_ast *root, t_msh *msh);
 void	handle_output_append(t_ast *root, t_msh *msh);
 int		handle_fd_redirection(int fd, int target_fd);
 void	redirect_and_execute(int fd, int std_fd, t_ast *root, t_msh *msh);
-int		open_tmp_file(void);
+int		open_tmp_file(t_msh *msh);
 int		parse_heredoc(char *delimiter, int fd, t_msh *msh);
 void	handle_heredoc(t_ast *root, t_msh *msh);
 // int		*expand_and_replace_var(char *ptr, char *var_name, t_msh *msh);
 t_ast	*create_redir_node(int op, t_ast *root);
 void	handle_redir_file(t_token **current_token, char **file_field);
 int		has_quotes(char *delimiter);
-
+char	*read_heredoc_line(char *delimiter);
+char	*expand_heredoc_line(char *line, t_msh *msh);
 /*									SIGNALS								*/
 void	sig_handler_int(int signum);
 void	handle_signals(void);

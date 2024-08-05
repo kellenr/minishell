@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_env_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 11:30:43 by fibarros          #+#    #+#             */
-/*   Updated: 2024/07/22 13:54:11 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/05 16:42:17 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,6 @@ void	free_env_list(t_env *env_list)
 		free(current->name);
 		free(current->value);
 		free(current);
-		// current = current->next;
 	}
 }
 
