@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kellen <kellen@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 14:18:00 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/05 16:48:27 by kellen           ###   ########.fr       */
+/*   Updated: 2024/07/26 17:23:35 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,14 +65,16 @@ t_token	*tokenize(char *input, t_msh *msh)
 {
 	t_token	*head;
 	char	*token;
+	int		heredoc_flag;
 
+	heredoc_flag = 0;
 	head = NULL;
 	while (*input)
 	{
 		input = skip_spaces(input);
 		if (*input)
 		{
-			token = extract_token(&input, msh);
+			token = extract_token(&input, msh, &heredoc_flag);
 			if (!token)
 			{
 				free_tokens(head);
@@ -91,7 +93,7 @@ t_token	*tokenize(char *input, t_msh *msh)
  * Takes a pointer to the input string as an argument and updates it.
  * Returns the extracted token.
  */
-char	*extract_token(char **input, t_msh *msh)
+char	*extract_token(char **input, t_msh *msh, int *heredoc_flag)
 {
 	char	*start;
 	char	*token;
@@ -105,6 +107,7 @@ char	*extract_token(char **input, t_msh *msh)
 		if (**input == '<' && *(*input + 1) == '<')
 		{
 			*input += 2;
+			*heredoc_flag = 1;
 			return (ft_strdup("<<"));
 		}
 		else if (**input == '>' && *(*input + 1) == '>')
@@ -144,6 +147,12 @@ char	*extract_token(char **input, t_msh *msh)
 			(*input)++;
 	}
 	token = ft_strndup(start, *input - start);
+	if (*heredoc_flag)
+	{
+		*heredoc_flag = 0;
+		if (has_quotes(token))
+			msh->heredoc_flag = 1;
+	}
 	// if (is_operator(**input))
 	// 	token = ft_strndup(start, *input - start);
 	expanded_token = exp_env_var(token, msh);
@@ -186,4 +195,15 @@ char	*remove_quotes(const char *token)
 	}
 	output[j] = '\0';
 	return (output);
+}
+
+int	has_quotes(char *delimiter)
+{
+	size_t	len;
+
+	len = ft_strlen(delimiter);
+	if ((delimiter[0] == '\'' && delimiter[len - 1] == '\'' ) || \
+		(delimiter[0] == '\"' && delimiter[len - 1] == '\"' ))
+		return (1);
+	return (0);
 }

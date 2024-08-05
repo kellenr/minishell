@@ -13,12 +13,16 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+# define _GNU_SOURCE
+
 # include "libft.h"
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <fcntl.h>
 # include <stdbool.h>
 # include <sys/wait.h>
+# include <signal.h>
+# include <sys/ioctl.h>
 
 /* # include <sys/types.h>
 # include <sys/stat.h>
@@ -92,6 +96,7 @@ typedef struct s_msh
 {
 	char	**env;
 	int		exit_status;
+	int		heredoc_flag;
 }		t_msh;
 
 /*
@@ -163,6 +168,8 @@ typedef struct s_token
 /*                                 SOURCES                                    */
 /* ************************************************************************** */
 
+extern volatile __sig_atomic_t	g_signal;
+
 /*                               handel msg                                   */
 
 void	ft_intro_art(void);
@@ -232,7 +239,7 @@ void	remove_env_var(t_env **env_list, char *name);
 t_token	*create_token(char *value);
 void	add_token(t_token **head, char *value);
 t_token	*tokenize(char *input, t_msh *msh);
-char	*extract_token(char **input, t_msh *msh);
+char	*extract_token(char **input, t_msh *msh, int *heredoc_flag);
 t_ast	*init_ast(t_token **current_token);
 t_ast	*handle_non_operator(t_token **current_token, t_ast *current_node);
 t_ast	*handle_operator_ast(t_token **current_token, t_ast *root);
@@ -288,6 +295,30 @@ void	print_ast(t_ast *node);
 void	print_pipe(t_ast *node, int level, const char *label);
 
 char	*safe_strdup(const char *s);
+
+
+/*									REDIR UTILS								*/
+void	handle_input_redir(t_ast *root, t_msh *msh);
+void	handle_output_replace(t_ast *root, t_msh *msh);
+void	handle_output_append(t_ast *root, t_msh *msh);
+int		handle_fd_redirection(int fd, int target_fd);
+void	redirect_and_execute(int fd, int std_fd, t_ast *root, t_msh *msh);
+int		open_tmp_file(void);
+int		parse_heredoc(char *delimiter, int fd, t_msh *msh);
+void	handle_heredoc(t_ast *root, t_msh *msh);
+// int		*expand_and_replace_var(char *ptr, char *var_name, t_msh *msh);
+t_ast	*create_redir_node(int op, t_ast *root);
+void	handle_redir_file(t_token **current_token, char **file_field);
+int		has_quotes(char *delimiter);
+
+/*									SIGNALS								*/
+void	sig_handler_int(int signum);
+void	handle_signals(void);
+void	sig_non_interactive(int signum);
+void	handle_non_interactive(void);
+void	sig_handle_heredoc(int signum);
+// void	heredoc_sig_handler(int signum, siginfo_t *info, void *context);
+// void	handle_signals_heredoc(void);
 
 //////////// 	TEST	////////
 // void	print_tokens(char **tokens);
