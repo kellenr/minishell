@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   var_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: kellen <kellen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/13 21:10:35 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/03 17:02:51 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/05 16:56:12 by kellen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,9 @@ void	token_var_exp(t_token *head, t_msh *msh)
  */
 char	*process_literal(const char *input, int *index, char *result)
 {
-	int j;
-	char *literal;
-	char *tmp;
+	int		j;
+	char	*literal;
+	char	*tmp;
 
 	j = *index;
 	while (input[j] && input[j] != '$')
@@ -65,4 +65,28 @@ char	*get_env_value(char *var, char **env)
 		env++;
 	}
 	return (NULL);
+}
+
+int	is_var_btw_squote(const char *input, int start, int end)
+{
+	int	i;
+	int	in_single_q;
+	int	in_double_q;
+
+	i = 0;
+	in_single_q = 0;
+	in_double_q = 0;
+	while (input[i] != '\0')
+	{
+		if (input[i] == '"' && !in_single_q)
+			in_double_q = !in_double_q;
+		if (input[i] == '\'' && !in_double_q)
+			in_single_q = !in_single_q;
+		if (i == start && in_single_q)
+			return (1);
+		if (i > end)
+			break ;
+		i++;
+	}
+	return (0);
 }

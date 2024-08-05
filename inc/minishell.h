@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: kellen <kellen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 09:43:39 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/22 15:04:01 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/05 16:45:21 by kellen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,6 @@ typedef struct s_env
 	char			*value;
 	struct s_env	*next;
 }		t_env;
-
 
 /*
  * Structure representing a redirection.
@@ -188,7 +187,7 @@ char	*get_dir(t_cmd *cmd, char *prev_dir);
 void	print_with_escapes(const char *str);
 char	*find_path(char *cmd, char **env);
 char	*get_path(char *cmd, char **paths);
-
+int		is_var_btw_squote(const char *input, int start, int end);
 int		update_env_msh(t_msh *msh, t_env *env_list);
 char	**list_to_array(t_env *env_list);
 char	**populate_env_array(t_env *env_list, char **env_array, int list_size);
@@ -203,7 +202,6 @@ void	add_env_node(t_env **env_list, t_env *node);
 int		array_len(char **arr);
 void	free_env(t_cmd *cmd);
 void	free_env_list(t_env *env_list);
-
 
 /*                                   BUILT                                    */
 
@@ -231,10 +229,10 @@ void	remove_env_var(t_env **env_list, char *name);
 
 /*                                  Parsing                                   */
 
-t_token	*create_token(char *value, int single);
-void	add_token(t_token **head, char *value, int single);
+t_token	*create_token(char *value);
+void	add_token(t_token **head, char *value);
 t_token	*tokenize(char *input, t_msh *msh);
-char	*extract_token(char **input, int *single, t_msh *msh);
+char	*extract_token(char **input, t_msh *msh);
 t_ast	*init_ast(t_token **current_token);
 t_ast	*handle_non_operator(t_token **current_token, t_ast *current_node);
 t_ast	*handle_operator_ast(t_token **current_token, t_ast *root);

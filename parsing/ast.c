@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ast.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kellen <kellen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 13:40:58 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/16 19:20:57 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/05 16:46:42 by kellen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@ t_redir	*init_redir(void)
 	t_redir	*redir;
 
 	redir = (t_redir *)malloc(sizeof(t_redir));
-	if (!redir) {
+	if (!redir)
+	{
 		ft_error("init_redir: malloc failed");
 		return (NULL);
 	}
@@ -42,9 +43,9 @@ t_redir	*init_redir(void)
  * - Default Initialization: Initializes the fields of the node to default values.
  * - Command Initialization: If the current token is a command (not an operator), sets the command field and initializes the args array with the command as the first argument.
  */
-t_ast *init_ast(t_token **current_token)
+t_ast	*init_ast(t_token **current_token)
 {
-	t_ast *node;
+	t_ast	*node;
 
 	node = malloc(sizeof(t_ast));
 	if (!node)
@@ -84,7 +85,7 @@ t_ast *init_ast(t_token **current_token)
  */
 t_ast	*handle_non_operator(t_token **current_token, t_ast *current_node)
 {
-	int argc;
+	int	argc;
 
 	if (current_node->command == NULL)
 	{
@@ -98,7 +99,7 @@ t_ast	*handle_non_operator(t_token **current_token, t_ast *current_node)
 	else
 	{
 		argc = 0;
-		while(current_node->args[argc] != NULL && argc < MAX_ARGUMENTS)
+		while (current_node->args[argc] != NULL && argc < MAX_ARGUMENTS)
 			argc++;
 		if (argc < MAX_ARGUMENTS)
 		{
@@ -130,9 +131,9 @@ t_ast	*parse_tokens_to_ast(t_token *tokens)
 	t_ast	*current_node;
 	t_token	*current_token;
 
-	root 			= NULL;
-	current_node 	= NULL;
-	current_token 	= tokens;
+	root			= NULL;
+	current_node	= NULL;
+	current_token	= tokens;
 	while (current_token != NULL)
 	{
 		if (current_token->op == PIPE || current_token->op == AND || \

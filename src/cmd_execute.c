@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_execute.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: kellen <kellen@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 13:54:08 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/22 15:54:26 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/05 16:47:03 by kellen           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ void	process_cmd(char *prompt, t_msh *msh)
 	preprocessed_input = process_input(trimmed_prompt);
 	free(trimmed_prompt);
 	tokens = tokenize(preprocessed_input, msh);
-	token_var_exp(tokens, msh);
 	free(preprocessed_input);
 	if (!tokens)
 	{
