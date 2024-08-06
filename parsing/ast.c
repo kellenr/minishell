@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ast.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kellen <kellen@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 13:40:58 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/05 16:46:43 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/06 10:20:52 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,19 +43,12 @@ t_redir	*init_redir(void)
  * - Default Initialization: Initializes the fields of the node to default values.
  * - Command Initialization: If the current token is a command (not an operator), sets the command field and initializes the args array with the command as the first argument.
  */
+
 t_ast	*init_ast(t_token **current_token)
 {
 	t_ast	*node;
 
-	node = malloc(sizeof(t_ast));
-	if (!node)
-		ft_error("init_ast: malloc failed");
-	node->command = NULL;
-	node->args = NULL;
-	node->left = NULL;
-	node->right = NULL;
-	node->op = NONE;
-	node->redir = NULL;
+	node = init_ast_node();
 	if (*current_token && (*current_token)->op == NONE)
 	{
 		node->command = safe_strdup((*current_token)->value);
@@ -88,14 +81,7 @@ t_ast	*handle_non_operator(t_token **current_token, t_ast *current_node)
 	int	argc;
 
 	if (current_node->command == NULL)
-	{
-		current_node->command = safe_strdup((*current_token)->value);
-		current_node->args = malloc(sizeof(char *) * (MAX_ARGUMENTS + 1));
-		if (!current_node->args)
-			ft_error("handle_non_operator: malloc failed");
-		current_node->args[0] = safe_strdup((*current_token)->value);
-		current_node->args[1] = NULL;
-	}
+		initialize_command_and_args(current_node, *current_token);
 	else
 	{
 		argc = 0;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kellen <kellen@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 09:43:39 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/05 16:45:21 by kellen           ###   ########.fr       */
+/*   Updated: 2024/08/06 10:20:19 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -200,6 +200,8 @@ char	**list_to_array(t_env *env_list);
 char	**populate_env_array(t_env *env_list, char **env_array, int list_size);
 void	free_array(char **arr, int size);
 int		init_msh(char **env, t_msh *msh);
+t_ast	*init_ast_node(void);
+void	initialize_command_and_args(t_ast *node, t_token *token);
 
 /*									ENV										  */
 void	*init_env(t_cmd *cmd, char **envp);
@@ -233,6 +235,8 @@ void	add_env_var(t_env **env_list, char *name, char *value);
 int		is_valid_unset(char *token);
 int		check_valid_unset_token(char *token, char *error_message);
 void	remove_env_var(t_env **env_list, char *name);
+void	initialize_echo(bool *flg, bool *eflg, int *i);
+void	parse_options(t_cmd *scmd, int *i, bool *flg, bool *eflg);
 
 /*                                  Parsing                                   */
 
@@ -281,7 +285,6 @@ int		is_operator(char c);
 // Redirection Handling Functions
 void	handle_redirection(t_ast *root, t_msh *msh);
 t_ast	*handle_operator_redir_ast(t_token **current_token, t_ast *root);
-//int		handle_heredoc(const char *delimiter);
 t_redir	*init_redir(void);
 
 // Logical Execution Functions
@@ -306,12 +309,12 @@ void	redirect_and_execute(int fd, int std_fd, t_ast *root, t_msh *msh);
 int		open_tmp_file(t_msh *msh);
 int		parse_heredoc(char *delimiter, int fd, t_msh *msh);
 void	handle_heredoc(t_ast *root, t_msh *msh);
-// int		*expand_and_replace_var(char *ptr, char *var_name, t_msh *msh);
 t_ast	*create_redir_node(int op, t_ast *root);
 void	handle_redir_file(t_token **current_token, char **file_field);
 int		has_quotes(char *delimiter);
 char	*read_heredoc_line(char *delimiter);
 char	*expand_heredoc_line(char *line, t_msh *msh);
+
 /*									SIGNALS								*/
 void	sig_handler_int(int signum);
 void	handle_signals(void);
