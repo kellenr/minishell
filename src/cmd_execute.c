@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 13:54:08 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/29 13:49:36 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/06 14:52:27 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,6 @@ void	process_cmd(char *prompt, t_msh *msh)
 		return ;
 	}
 	cmd_tree = parse_tokens_to_ast(tokens);
-	// print_ast(cmd_tree);
-	// handle_signals children?
 	execute_ast(cmd_tree, msh);
 }
 
@@ -59,29 +57,63 @@ t_cmd	*ast_to_cmd(t_ast *root)
 	int		i;
 
 	i = 0;
-	cmd = malloc(sizeof(t_cmd));
+	count = 0;
+	cmd = init_cmd();
 	if (!cmd)
 		return (NULL);
-	count = 0;
-	while (root->args[count] != NULL)
-		count++;
-	cmd->tokens = (char **)malloc(sizeof(char *) * (count + 1));
+	cmd->tokens = copy_tokens(root->args, &count);
 	if (!cmd->tokens)
 	{
 		free(cmd);
 		return (NULL);
 	}
-	while (i < count)
-	{
-		cmd->tokens[i] = ft_strdup(root->args[i]);
-		i++;
-	}
-	cmd->tokens[count] = NULL;
 	cmd->cmd = ft_strdup(root->command);
+	if (!cmd->cmd)
+	{
+		free_cmd(cmd);
+		return (NULL);
+	}
+	cmd->argc = count;
+	return (cmd);
+}
+
+t_cmd	*init_cmd(void)
+{
+	t_cmd	*cmd;
+
+	cmd = malloc(sizeof(t_cmd));
+	if (!cmd)
+		return (NULL);
 	cmd->env = NULL;
 	cmd->env_list = NULL;
-	cmd->argc = count;
 	cmd->next = NULL;
 	cmd->prev = NULL;
 	return (cmd);
+}
+
+char	**copy_tokens(char **args, int *count)
+{
+	char	**tokens;
+	int		i;
+
+	i = 0;
+	while (args[*count] != NULL)
+		(*count)++;
+	tokens = (char **)malloc(sizeof(char *) * (*count + 1));
+	if (!tokens)
+		return (NULL);
+	while (i < *count)
+	{
+		tokens[i] = ft_strdup(args[i]);
+		if (!tokens[i])
+		{
+			while (i > 0)
+				free(tokens[i--]);
+			free(tokens);
+			return (NULL);
+		}
+		i++;
+	}
+	tokens[*count] = NULL;
+	return (tokens);
 }

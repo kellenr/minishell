@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 09:43:39 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/06 14:28:24 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/06 15:22:35 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -207,6 +207,14 @@ t_ast	*process_token(t_token **token, t_ast *root, t_ast *current_node);
 char	*handle_operator_token(char **input, int *heredoc_flag);
 int		is_multi_char_op(char **input, char *op_str);
 int		advance_past_token(char **input);
+t_cmd	*init_cmd(void);
+char	**copy_tokens(char **args, int *count);
+
+/*					Exec utils					*/
+char	*get_command_path(t_cmd *cmd);
+void	execute_in_child(char *cmd_path, char **tokens, char **env);
+void	handle_child_status(t_cmd *cmd, int status);
+int		check_tokens(t_cmd *cmd);
 
 /*									ENV										  */
 void	*init_env(t_cmd *cmd, char **envp);
