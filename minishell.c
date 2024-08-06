@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 12:07:43 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/05 13:29:28 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/06 15:43:57 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 volatile __sig_atomic_t  g_signal = 0;
 
-/* this function to continuously receive and process user input */
 void	receive_msg(t_msh *msh)
 {
 	char	*prompt;
@@ -29,12 +28,10 @@ void	receive_msg(t_msh *msh)
 			break ;
 		}
 		process_cmd(prompt, msh);
-		// free prompt?
 	}
 }
 
 /* Added init_msh function because of updating the environment*/
-
 int	main(int argc, char **argv, char **env)
 {
 	t_msh	*msh;
@@ -50,7 +47,6 @@ int	main(int argc, char **argv, char **env)
 		exit(0);
 	}
 	ft_intro_art();
-	// receive_msg(&msh);
 	receive_msg(msh);
 	// free msh here./mi
 	return (0);

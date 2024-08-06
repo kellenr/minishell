@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 16:57:00 by fibarros          #+#    #+#             */
-/*   Updated: 2024/07/10 16:55:49 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/06 15:44:44 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,10 @@
  * Export function that handles exporting environment variables.
  * If no arguments are provided (`cmd->argc == 1`), prints all environment variables.
  * Otherwise, iterates through each argument to update or add environment variables.
- * Updates both the command's environment list (`cmd->env_list`) and the shell's environment (`cmd->msh->env`).
+ * Updates both the command's environment list (`cmd->env_list`) and the shell's
+ * environment (`cmd->msh->env`).
  * Returns 0 on success, -1 on error.
  */
-
 int	ft_export(t_cmd *cmd)
 {
 	t_env	*env_list;

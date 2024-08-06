@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   setup_and_or_parent.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 16:17:06 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/16 19:43:40 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/06 15:27:47 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,43 +35,38 @@ void	handle_logical_op(t_ast *root, t_msh *msh)
 
 t_ast	*handle_parentheses_ast(t_token **current_token, t_ast *root)
 {
-	t_ast *parentheses_node;
+	t_ast	*parentheses_node;
 
 	parentheses_node = malloc(sizeof(t_ast));
 	if (!parentheses_node)
 		ft_error("malloc failed");
-
 	parentheses_node->op = SUBSHELL;
 	parentheses_node->left = NULL;
 	parentheses_node->right = NULL;
 	parentheses_node->command = NULL;
 	parentheses_node->args = NULL;
-	// Skip the opening parenthesis
 	(*current_token) = (*current_token)->next;
 	parentheses_node->left = parse_tokens_to_ast(*current_token);
-
-	// Skip the closing parenthesis
 	while (*current_token && (*current_token)->op != CLOSE)
 		(*current_token) = (*current_token)->next;
 	if (*current_token)
 		(*current_token) = (*current_token)->next;
 	if (root)
 		root->right = parentheses_node;
-
 	return (parentheses_node);
 }
 
 void	handle_parentheses_op(t_ast *root, t_msh *msh)
 {
-	pid_t pid;
-	int status;
+	pid_t	pid;
+	int		status;
 
 	pid = fork();
 	if (pid == -1)
 	{
 		perror("fork");
 		msh->exit_status = 1;
-		return;
+		return ;
 	}
 	if (pid == 0)
 	{

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_env.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 16:48:37 by fibarros          #+#    #+#             */
-/*   Updated: 2024/07/22 13:53:37 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/06 15:47:46 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,5 +91,4 @@ void	add_env_node(t_env **env_list, t_env *node)
 			current = current->next;
 		current->next = node;
 	}
-
 }
