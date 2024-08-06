@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 09:43:39 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/06 10:20:19 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/06 14:28:24 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -202,6 +202,11 @@ void	free_array(char **arr, int size);
 int		init_msh(char **env, t_msh *msh);
 t_ast	*init_ast_node(void);
 void	initialize_command_and_args(t_ast *node, t_token *token);
+bool	is_op_token(t_token *token);
+t_ast	*process_token(t_token **token, t_ast *root, t_ast *current_node);
+char	*handle_operator_token(char **input, int *heredoc_flag);
+int		is_multi_char_op(char **input, char *op_str);
+int		advance_past_token(char **input);
 
 /*									ENV										  */
 void	*init_env(t_cmd *cmd, char **envp);

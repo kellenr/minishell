@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 16:33:38 by fibarros          #+#    #+#             */
-/*   Updated: 2024/07/26 16:24:29 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/06 11:20:14 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,12 +72,6 @@ t_ast	*create_redir_node(int op, t_ast *root)
 		return (NULL);
 	}
 	return (redir_node);
-}
-
-void	handle_redir_file(t_token **current_token, char **file_field)
-{
-	*file_field = ft_strdup((*current_token)->value);
-	(*current_token) = (*current_token)->next;
 }
 
 t_ast	*handle_operator_and_or_ast(t_token **current_token, t_ast *root)
