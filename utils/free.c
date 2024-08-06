@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 00:20:12 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/05 16:43:43 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/06 17:58:10 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,3 +90,39 @@ void	free_ast(t_ast *root)
 	free(root);
 	root = NULL;
 }
+
+void	free_arr(char **arr, int i)
+{
+	int	j;
+
+	j = 0;
+	if (!arr)
+		return ;
+	while (j < i)
+	{
+		if (arr[j])
+			free(arr[j]);
+		j++;
+	}
+	free(arr);
+}
+
+void	free_msh(t_msh *msh)
+{
+	int	i;
+
+	i = 0;
+	if (msh->env)
+	{
+		i = 0;
+		while (msh->env[i])
+		{
+			free(msh->env[i]);
+			i++;
+		}
+		free(msh->env);
+	}
+	msh->env = NULL;
+}
+
+

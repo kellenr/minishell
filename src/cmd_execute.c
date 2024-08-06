@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 13:54:08 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/06 14:52:27 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/06 17:58:41 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,12 @@ void	process_cmd(char *prompt, t_msh *msh)
 		return ;
 	}
 	cmd_tree = parse_tokens_to_ast(tokens);
-	execute_ast(cmd_tree, msh);
+	free_tokens(tokens);
+	if (cmd_tree)
+	{
+		execute_ast(cmd_tree, msh);
+		free_ast(cmd_tree);
+	}
 }
 
 /*
@@ -70,6 +75,7 @@ t_cmd	*ast_to_cmd(t_ast *root)
 	cmd->cmd = ft_strdup(root->command);
 	if (!cmd->cmd)
 	{
+		free_arr(cmd->tokens, count);
 		free_cmd(cmd);
 		return (NULL);
 	}

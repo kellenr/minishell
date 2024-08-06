@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 12:07:43 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/06 15:43:57 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/06 17:51:00 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int	main(int argc, char **argv, char **env)
 	}
 	ft_intro_art();
 	receive_msg(msh);
-	// free msh here./mi
+	free_all(msh);
 	return (0);
 }
 
@@ -71,3 +71,9 @@ int	init_msh(char **env, t_msh *msh)
 	msh->heredoc_flag = 0;
 	return (0);
 }
+
+void	free_all(t_msh *msh)
+{
+	free_msh(msh);
+}
+

@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 16:48:37 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/06 15:47:46 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/06 17:59:47 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,8 @@ void	*init_env(t_cmd *cmd, char **envp)
 	cmd->env_list = NULL;
 	if (init_arr_and_list(cmd, envp) != 0)
 	{
-		free_env(cmd);
+		free_arr(cmd->env, array_len(envp));
+		free_env_list(cmd->env_list);
 		perror("Allocation error");
 		exit(EXIT_FAILURE);
 	}
@@ -40,10 +41,18 @@ int	init_arr_and_list(t_cmd *cmd, char **envp)
 	{
 		cmd->env[i] = ft_strdup(envp[i]);
 		if (!cmd->env[i])
+		{
+			free_arr(cmd->env, i + 1);
+			free_env_list(cmd->env_list);
 			return (-1);
+		}
 		new_node = create_env_node(envp[i]);
 		if (!new_node)
+		{
+			free_arr(cmd->env, i + 1);
+			free_env_list(cmd->env_list);
 			return (-1);
+		}
 		add_env_node(&cmd->env_list, new_node);
 		i++;
 	}
@@ -66,15 +75,19 @@ t_env	*create_env_node(const char *env_str)
 		return (NULL);
 	}
 	new_node->name = ft_strndup(env_str, equal_sign - env_str);
-	new_node->value = ft_strdup(equal_sign + 1);
-	new_node->next = NULL;
-	if (!new_node->name || !new_node->value)
+	if (!new_node->name)
 	{
-		free(new_node->name);
-		free(new_node->value);
 		free(new_node);
 		return (NULL);
 	}
+	new_node->value = ft_strdup(equal_sign + 1);
+	if (!new_node->value)
+	{
+		free(new_node->name);
+		free(new_node);
+		return (NULL);
+	}
+	new_node->next = NULL;
 	return (new_node);
 }
 
