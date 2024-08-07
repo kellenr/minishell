@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 12:07:43 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/07 10:44:00 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/07 12:05:06 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int	main(int argc, char **argv, char **env)
 	t_msh	*msh;
 
 	(void)argv;
-	msh = calloc(1, sizeof(t_msh));
+	msh = ft_calloc(1, sizeof(t_msh));
 	if (!msh)
 		ft_error("Memory allocation error");
 	init_msh(env, msh);

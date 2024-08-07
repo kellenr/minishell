@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 01:41:45 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/07 11:48:23 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/07 15:21:29 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,18 +54,30 @@ char	*exp_special_var(const char *input, int *index, char *rst, t_msh *msh)
 
 	j = *index + 2;
 	var = ft_substr(input, *index, 2);
+	if (!var)
+		return (NULL);
 	expanded = exp_single_var(var, msh);
 	free(var);
+	if (!expanded)
+		return (NULL);
 	while (input[j] && (ft_isalnum(input[j]) || input[j] == '?' \
 			|| input[j] == '_' || input[j] == '$'))
 		j++;
 	suffix = ft_substr(input, *index + 2, j - (*index + 2));
+	if (!suffix)
+	{
+		free(expanded);
+		return (NULL);
+	}
 	tmp = ft_strjoin(expanded, suffix);
-	free(expanded);
 	free(suffix);
+	if (!tmp)
+		return (NULL);
 	expanded = ft_strjoin(rst, tmp);
 	free(rst);
 	free(tmp);
+	if (!expanded)
+		return (NULL);
 	*index = j;
 	return (expanded);
 }
@@ -88,14 +100,23 @@ char	*exp_general_var(const char *input, int *index, char *rst, t_msh *msh)
 			|| input[j] == '_'))
 		j++;
 	var = ft_substr(input, *index, j - *index);
+	if (!var)
+		return (NULL);
 	if (is_var_btw_squote(input, *index, j))
 		expanded = ft_strdup (var);
 	else
 		expanded = exp_single_var(var, msh);
+	free(var);
+	if (!expanded)
+	{
+		free(rst);
+		return (NULL);
+	}
 	tmp = ft_strjoin(rst, expanded);
 	free(rst);
 	free(expanded);
-	free(var);
+	if (!tmp)
+		return (NULL);
 	*index = j;
 	return (tmp);
 }
@@ -108,18 +129,24 @@ char	*exp_general_var(const char *input, int *index, char *rst, t_msh *msh)
  */
 char	*exp_variable(const char *input, int *index, char *result, t_msh *msh)
 {
-	int	j;
+	int		j;
+	char	*expanded;
 
 	j = *index + 1;
 	if (input[j] == '\0' || input[j] == ' ')
 	{
-		result = ft_strjoin(result, "$");
+		expanded = ft_strjoin(result, "$");
 		(*index)++;
-		return (result);
+		return (expanded);
 	}
 	if (input[j] == '?')
-		return (exp_special_var(input, index, result, msh));
-	return (exp_general_var(input, index, result, msh));
+	{
+		expanded = exp_special_var(input, index, result, msh);
+		return (expanded);
+	}
+	expanded = exp_general_var(input, index, result, msh);
+	free(result);
+	return (expanded);
 }
 
 /*

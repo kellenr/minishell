@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 13:40:58 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/07 11:26:56 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/07 12:17:13 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,57 @@ t_redir	*init_redir(void)
  * - Default Initialization: Initializes the fields of the node to default values.
  * - Command Initialization: If the current token is a command (not an operator), sets the command field and initializes the args array with the command as the first argument.
  */
+
+// t_ast	*init_ast(t_token **current_token)
+// {
+// 	t_ast	*node;
+
+// 	node = init_ast_node();
+// 	if (!node)
+// 	{
+// 		perror("malloc fail");
+// 		return (NULL);
+// 	}
+// 	if (*current_token && (*current_token)->op == NONE)
+// 	{
+// 		node->command = safe_strdup((*current_token)->value);
+// 		if (!node->command)
+// 		{
+// 			free(node);
+// 			perror("malloc failed for command");
+// 			return (NULL);
+// 		}
+// 		node->args = malloc(sizeof(char *) * (MAX_ARGUMENTS + 1));
+// 		if (!node->args)
+// 		{
+// 			free(node->command);
+// 			free(node);
+// 			perror("malloc failed for args");
+// 			return (NULL);
+// 		}
+// 		node->args[0] = safe_strdup((*current_token)->value);
+// 		if (!node->args[0])
+// 		{
+// 			free(node->args);
+// 			free(node->command);
+// 			free(node);
+// 			perror("malloc failed for args");
+// 			return (NULL);
+// 		}
+// 		node->args[1] = NULL;
+// 	}
+// 	if (*current_token)
+// 	{
+// 		node->command = safe_strdup((*current_token)->value);
+// 		if (!node->command)
+// 		{
+// 			free(node);
+// 			ft_error("malloc fail");
+// 		}
+// 		(*current_token) = (*current_token)->next;
+// 	}
+// 	return (node);
+// }
 
 t_ast	*init_ast(t_token **current_token)
 {
@@ -82,18 +133,16 @@ t_ast	*init_ast(t_token **current_token)
 		}
 		node->args[1] = NULL;
 	}
-	if (*current_token)
+	else
 	{
-		node->command = safe_strdup((*current_token)->value);
-		if (!node->command)
-		{
-			free(node);
-			ft_error("malloc fail");
-		}
-		(*current_token) = (*current_token)->next;
+		node->command = NULL;
+		node->args = NULL;
 	}
+	if (*current_token)
+		(*current_token) = (*current_token)->next;
 	return (node);
 }
+
 
 /*
  * Function to handle non-operator tokens and update the AST.

@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 16:33:38 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/07 11:32:59 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/07 14:28:36 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,10 @@ t_ast	*create_redir_node(int op, t_ast *root)
 
 	redir_node = malloc(sizeof(t_ast));
 	if (!redir_node)
+	{
 		ft_error("malloc failed");
+		return (NULL);
+	}
 	redir_node->op = op;
 	redir_node->left = root;
 	redir_node->right = NULL;
