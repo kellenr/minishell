@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/06 10:06:43 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/06 11:20:25 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/07 11:08:01 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,21 @@ t_ast	*init_ast_node(void)
 void	initialize_command_and_args(t_ast *node, t_token *token)
 {
 	node->command = safe_strdup((token)->value);
+	if (!node->command)
+		ft_error("malloc error");
 	node->args = malloc(sizeof(char *) * (MAX_ARGUMENTS + 1));
 	if (!node->args)
+	{
+		free(node->command);
 		ft_error("handle_non_operator: malloc failed");
+	}
 	node->args[0] = safe_strdup((token)->value);
+	if (!node->args[0])
+	{
+		free(node->command);
+		free(node->args);
+		ft_error("malloc error");
+	}
 	node->args[1] = NULL;
 }
 
@@ -52,17 +63,30 @@ t_ast	*process_token(t_token **token, t_ast *root, t_ast *current_node)
 	if (root == NULL)
 	{
 		root = init_ast(token);
+		if (!root)
+			return (NULL);
 		current_node = root;
 	}
 	else if (current_node->command == NULL)
+	{
 		current_node = handle_non_operator(token, current_node);
+		if (!current_node)
+			return (NULL);
+	}
+
 	else
+	{
 		current_node = handle_non_operator(token, current_node);
+		if (!current_node)
+			return (NULL);
+	}
 	return (current_node);
 }
 
 void	handle_redir_file(t_token **current_token, char **file_field)
 {
 	*file_field = ft_strdup((*current_token)->value);
+	if (!*file_field)
+		return ;
 	(*current_token) = (*current_token)->next;
 }

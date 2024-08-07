@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 16:33:38 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/06 11:20:14 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/07 11:22:25 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,16 +19,18 @@ t_ast	*handle_operator_pipe_ast(t_token **current_token, t_ast *root)
 	pipe_node = malloc(sizeof(t_ast));
 	if (!pipe_node)
 		ft_error("malloc failed");
-
 	pipe_node->op = PIPE;
 	pipe_node->left = root;
 	pipe_node->right = NULL;
 	pipe_node->command = NULL;
 	pipe_node->args = NULL;
-
 	(*current_token) = (*current_token)->next;
 	pipe_node->right = init_ast(current_token);
-
+	if (!pipe_node->right)
+	{
+		free(pipe_node);
+		return (NULL);
+	}
 	return (pipe_node);
 }
 
@@ -41,15 +43,55 @@ t_ast	*handle_operator_redir_ast(t_token **current_token, t_ast *root)
 		return (NULL);
 	(*current_token) = (*current_token)->next;
 	if (redir_node->op == REDIR_INPUT)
+	{
 		handle_redir_file(current_token, &redir_node->redir->input_file);
+		if (!redir_node->redir->input_file)
+		{
+			free_redir(redir_node->redir);
+			free(redir_node);
+			return (NULL);
+		}
+	}
 	else if (redir_node->op == REDIR_REPLACE)
+	{
 		handle_redir_file(current_token, &redir_node->redir->output_file);
+		if (!redir_node->redir->output_file)
+		{
+			free_redir(redir_node->redir);
+			free(redir_node);
+			return (NULL);
+		}
+	}
 	else if (redir_node->op == REDIR_APPEND)
+	{
 		handle_redir_file(current_token, &redir_node->redir->append_file);
+		if (!redir_node->redir->append_file)
+		{
+			free_redir(redir_node->redir);
+			free(redir_node);
+			return (NULL);
+		}
+	}
 	else if (redir_node->op == REDIR_HERE_DOC)
+	{
 		handle_redir_file(current_token, &redir_node->redir->here_doc_delim);
+		if (!redir_node->redir->here_doc_delim)
+		{
+			free_redir(redir_node->redir);
+			free(redir_node);
+			return (NULL);
+		}
+	}
 	else
+	{
 		redir_node->right = init_ast(current_token);
+		if (!redir_node->right)
+		{
+			free_redir(redir_node->redir);
+			free(redir_node);
+			return (NULL);
+		}
+	}
 	return (redir_node);
 }
 
@@ -81,13 +123,11 @@ t_ast	*handle_operator_and_or_ast(t_token **current_token, t_ast *root)
 	and_or_node = malloc(sizeof(t_ast));
 	if (!and_or_node)
 		ft_error("malloc failed");
-
 	and_or_node->op = (*current_token)->op;
 	and_or_node->left = root;
 	and_or_node->right = NULL;
 	and_or_node->command = NULL;
 	and_or_node->args = NULL;
-
 	(*current_token) = (*current_token)->next;
 	and_or_node->right = init_ast(current_token);
 	return (and_or_node);

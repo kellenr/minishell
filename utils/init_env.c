@@ -6,29 +6,48 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 16:48:37 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/06 17:59:47 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/07 10:50:27 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	*init_env(t_cmd *cmd, char **envp)
+// void	*init_env(t_cmd *cmd, char **envp)
+// {
+// 	cmd->env = ft_calloc((array_len(envp) + 1), sizeof(char *));
+// 	if (!cmd->env)
+// 	{
+// 		perror("Memory allocation error");
+// 		exit(EXIT_FAILURE);
+// 	}
+// 	cmd->env_list = NULL;
+// 	if (init_arr_and_list(cmd, envp) != 0)
+// 	{
+// 		free_arr(cmd->env, array_len(envp));
+// 		free_env_list(cmd->env_list);
+// 		perror("Allocation error");
+// 		exit(EXIT_FAILURE);
+// 	}
+// 	return (NULL);
+// }
+
+int	init_env(t_cmd *cmd, char **envp)
 {
 	cmd->env = ft_calloc((array_len(envp) + 1), sizeof(char *));
 	if (!cmd->env)
 	{
 		perror("Memory allocation error");
-		exit(EXIT_FAILURE);
+		return (1);
 	}
 	cmd->env_list = NULL;
 	if (init_arr_and_list(cmd, envp) != 0)
 	{
-		free_arr(cmd->env, array_len(envp));
+		free_array(cmd->env, array_len(envp));
 		free_env_list(cmd->env_list);
 		perror("Allocation error");
-		exit(EXIT_FAILURE);
+		return (1);
 	}
-	return (NULL);
+	return (0);
 }
 
 int	init_arr_and_list(t_cmd *cmd, char **envp)
@@ -42,14 +61,14 @@ int	init_arr_and_list(t_cmd *cmd, char **envp)
 		cmd->env[i] = ft_strdup(envp[i]);
 		if (!cmd->env[i])
 		{
-			free_arr(cmd->env, i + 1);
+			free_array(cmd->env, i + 1);
 			free_env_list(cmd->env_list);
 			return (-1);
 		}
 		new_node = create_env_node(envp[i]);
 		if (!new_node)
 		{
-			free_arr(cmd->env, i + 1);
+			free_array(cmd->env, i + 1);
 			free_env_list(cmd->env_list);
 			return (-1);
 		}

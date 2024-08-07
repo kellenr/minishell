@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 09:43:39 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/06 17:58:24 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/07 11:17:06 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -209,9 +209,9 @@ int		is_multi_char_op(char **input, char *op_str);
 int		advance_past_token(char **input);
 t_cmd	*init_cmd(void);
 char	**copy_tokens(char **args, int *count);
-void	free_arr(char **arr, int i);
 void	free_msh(t_msh *msh);
 void	free_all(t_msh *msh);
+void	free_redir(t_redir *redir);
 
 /*					Exec utils					*/
 char	*get_command_path(t_cmd *cmd);
@@ -220,7 +220,7 @@ void	handle_child_status(t_cmd *cmd, int status);
 int		check_tokens(t_cmd *cmd);
 
 /*									ENV										  */
-void	*init_env(t_cmd *cmd, char **envp);
+int		init_env(t_cmd *cmd, char **envp);
 int		init_arr_and_list(t_cmd *cmd, char **envp);
 t_env	*create_env_node(const char *env_str);
 void	add_env_node(t_env **env_list, t_env *node);

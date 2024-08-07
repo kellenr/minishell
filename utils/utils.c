@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 19:44:25 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/06 15:47:52 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/07 10:53:00 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,10 +82,13 @@ char	*safe_strdup(const char *s)
 
 	if (!s)
 		return (NULL);
-	len = strlen(s) + 1;
+	len = ft_strlen(s) + 1;
 	dest = malloc(len);
 	if (!dest)
+	{
 		ft_error("safe_strdup: malloc failed");
-	memcpy(dest, s, len);
+		return (NULL);
+	}
+	ft_memcpy(dest, s, len);
 	return (dest);
 }

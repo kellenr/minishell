@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 13:40:58 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/06 10:38:25 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/07 11:26:56 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,18 +49,47 @@ t_ast	*init_ast(t_token **current_token)
 	t_ast	*node;
 
 	node = init_ast_node();
+	if (!node)
+	{
+		perror("malloc fail");
+		return (NULL);
+	}
 	if (*current_token && (*current_token)->op == NONE)
 	{
 		node->command = safe_strdup((*current_token)->value);
+		if (!node->command)
+		{
+			free(node);
+			perror("malloc failed for command");
+			return (NULL);
+		}
 		node->args = malloc(sizeof(char *) * (MAX_ARGUMENTS + 1));
 		if (!node->args)
-			ft_error("init_ast: malloc failed");
+		{
+			free(node->command);
+			free(node);
+			perror("malloc failed for args");
+			return (NULL);
+		}
 		node->args[0] = safe_strdup((*current_token)->value);
+		if (!node->args[0])
+		{
+			free(node->args);
+			free(node->command);
+			free(node);
+			perror("malloc failed for args");
+			return (NULL);
+		}
 		node->args[1] = NULL;
 	}
 	if (*current_token)
 	{
 		node->command = safe_strdup((*current_token)->value);
+		if (!node->command)
+		{
+			free(node);
+			ft_error("malloc fail");
+		}
 		(*current_token) = (*current_token)->next;
 	}
 	return (node);
@@ -125,6 +154,11 @@ t_ast	*parse_tokens_to_ast(t_token *tokens)
 		if (is_op_token(current_token))
 		{
 			root = handle_operator_ast(&current_token, root);
+			if (!root)
+			{
+				free_ast(current_node);
+				return (NULL);
+			}
 			current_node = root->right;
 		}
 		else
@@ -132,12 +166,31 @@ t_ast	*parse_tokens_to_ast(t_token *tokens)
 			if (root == NULL)
 			{
 				root = init_ast(&current_token);
+				if (!root)
+				{
+					free_ast(current_node);
+					return (NULL);
+				}
 				current_node = root;
 			}
 			else if (current_node->command == NULL)
+			{
 				current_node = handle_non_operator(&current_token, current_node);
+				if (!current_node)
+				{
+					free_ast(root);
+					return (NULL);
+				}
+			}
 			else
+			{
 				current_node = handle_non_operator(&current_token, current_node);
+				if (!current_node)
+				{
+					free_ast(root);
+					return (NULL);
+				}
+			}
 		}
 	}
 	return (root);

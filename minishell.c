@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 12:07:43 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/06 17:51:00 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/07 10:44:00 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,14 +57,20 @@ int	init_msh(char **env, t_msh *msh)
 	int	i;
 
 	msh->env = ft_calloc((array_len(env) + 1), sizeof(char *));
-	i = 0;
 	if (!msh->env)
+	{
 		ft_error("Memory allocation error");
+		return (1);
+	}
+	i = 0;
 	while (env[i])
 	{
 		msh->env[i] = ft_strdup(env[i]);
 		if (!msh->env[i])
-			return (-1);
+		{
+			free_array(msh->env, i);
+			return (1);
+		}
 		i++;
 	}
 	msh->env[i] = NULL;

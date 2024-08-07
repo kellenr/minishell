@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 13:54:08 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/06 17:58:41 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/07 10:50:45 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	process_cmd(char *prompt, t_msh *msh)
 	if (!prompt || !*prompt)
 		return ;
 	trimmed_prompt = trim_whitespace(prompt);
-	if (!*trimmed_prompt)
+	if (!*trimmed_prompt || !trimmed_prompt)
 	{
 		free(trimmed_prompt);
 		return ;
@@ -75,7 +75,7 @@ t_cmd	*ast_to_cmd(t_ast *root)
 	cmd->cmd = ft_strdup(root->command);
 	if (!cmd->cmd)
 	{
-		free_arr(cmd->tokens, count);
+		free_array(cmd->tokens, count);
 		free_cmd(cmd);
 		return (NULL);
 	}
