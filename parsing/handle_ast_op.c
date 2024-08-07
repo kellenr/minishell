@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 16:33:38 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/07 11:22:25 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/07 11:32:59 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,10 @@ t_ast	*handle_operator_and_or_ast(t_token **current_token, t_ast *root)
 
 	and_or_node = malloc(sizeof(t_ast));
 	if (!and_or_node)
-		ft_error("malloc failed");
+	{
+		perror("malloc fail");
+		return (NULL);
+	}
 	and_or_node->op = (*current_token)->op;
 	and_or_node->left = root;
 	and_or_node->right = NULL;

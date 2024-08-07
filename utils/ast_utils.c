@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/06 10:06:43 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/07 11:08:01 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/07 11:33:31 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,6 @@ t_ast	*process_token(t_token **token, t_ast *root, t_ast *current_node)
 		if (!current_node)
 			return (NULL);
 	}
-
 	else
 	{
 		current_node = handle_non_operator(token, current_node);

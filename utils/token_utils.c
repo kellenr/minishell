@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/05 16:47:37 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/06 14:27:15 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/07 11:36:07 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,11 @@ char	*handle_operator_token(char **input, int *heredoc_flag)
 	{
 		(*input)++;
 		result = (ft_strndup(*input - 1, 1));
+	}
+	if (!result)
+	{
+		perror("malloc fail");
+		return (NULL);
 	}
 	return (result);
 }

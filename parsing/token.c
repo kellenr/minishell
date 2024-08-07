@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 14:18:00 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/06 14:28:36 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/07 11:36:55 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,8 @@ char	*extract_token(char **input, t_msh *msh, int *heredoc_flag)
 	if (result == -1)
 		return (NULL);
 	token = ft_strndup(start, *input - start);
+	if (!token)
+		return (NULL);
 	if (*heredoc_flag)
 	{
 		*heredoc_flag = 0;

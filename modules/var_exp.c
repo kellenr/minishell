@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   var_exp.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kellen <kellen@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 01:41:45 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/05 16:55:54 by kellen           ###   ########.fr       */
+/*   Updated: 2024/08/07 11:48:23 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ char	*exp_env_var(char *input, t_msh *msh)
 	if (!input)
 		return (NULL);
 	result = ft_strdup("");
+	if (!result)
+		return (NULL);
 	i = 0;
 	while (input[i])
 	{
@@ -129,14 +131,35 @@ char	*exp_single_var(char *token, t_msh *msh)
 {
 	char	*key;
 	char	*value;
+	char	*result;
 
 	if (ft_strcmp(token, "$?") == 0)
-		return (ft_itoa(msh->exit_status));
-	if (token[0] != '$')
-		return (ft_strdup(token));
-	key = token + 1;
-	value = get_env_value(key, msh->env);
-	if (value)
-		return (ft_strdup(value));
-	return (ft_strdup(""));
+		result = ft_itoa(msh->exit_status);
+	else if (token[0] != '$')
+	{
+		result = ft_strdup(token);
+		if (!result)
+		{
+			perror("malloc fail");
+			return (NULL);
+		}
+	}
+	else
+	{
+		key = token + 1;
+		value = get_env_value(key, msh->env);
+		if (value)
+		{
+			result = ft_strdup(value);
+			if (!result)
+			{
+				perror("malloc fail");
+				return (NULL);
+			}
+		}
+		else
+			result = ft_strdup("");
+	}
+	free(token);
+	return (result);
 }
