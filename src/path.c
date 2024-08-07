@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/09 02:10:15 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/07 14:22:52 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/07 15:29:52 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ char	*find_path(char *cmd, char **env)
 		if (ft_strncmp("PATH=", env[i], 5) == 0)
 		{
 			path = ft_split(env[i] + 5, ':');
+			if (!path)
+				return (NULL);
 			break ;
 		}
 		i++;
