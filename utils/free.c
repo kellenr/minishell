@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 00:20:12 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/07 14:38:02 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/08 16:18:47 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,27 @@ void	free_cmd(t_cmd *cmd)
 	if (!cmd)
 		return ;
 	if (cmd->cmd)
+	{
 		free(cmd->cmd);
+		cmd->cmd = NULL;
+	}
 	if (cmd->tokens)
+	{
 		free_array(cmd->tokens, array_len(cmd->tokens));
+		cmd->tokens = NULL;
+	}
 	if (cmd->env)
+	{
 		free_array(cmd->env, array_len(cmd->env));
+		cmd->env = NULL;
+	}
 	if (cmd->env_list)
+	{
 		free_env_list(cmd->env_list);
+		cmd->env_list = NULL;
+	}
 	free(cmd);
+	cmd = NULL;
 }
 
 /*
@@ -60,7 +73,9 @@ void	free_ast(t_ast *root)
 	if (!root)
 		return ;
 	free_ast(root->left);
+	root->left = NULL;
 	free_ast(root->right);
+	root->right = NULL;
 	if (root->redir)
 	{
 		free_redir(root->redir);
@@ -77,9 +92,11 @@ void	free_ast(t_ast *root)
 		while (root->args[i])
 		{
 			free(root->args[i]);
+			root->args[i] = NULL;
 			i++;
 		}
 		free(root->args);
+		root->args = NULL;
 	}
 	free(root);
 	root = NULL;
@@ -103,12 +120,24 @@ void	free_redir(t_redir *redir)
 	if (!redir)
 		return ;
 	if (redir->input_file)
+	{
 		free(redir->input_file);
+		redir->input_file = NULL;
+	}
 	if (redir->output_file)
+	{
 		free(redir->output_file);
+		redir->output_file = NULL;
+	}
 	if (redir->append_file)
+	{
 		free(redir->append_file);
+		redir->append_file = NULL;
+	}
 	if (redir->here_doc_delim)
+	{
 		free(redir->here_doc_delim);
+		redir->here_doc_delim = NULL;
+	}
 	free(redir);
 }

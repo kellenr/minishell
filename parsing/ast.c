@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 13:40:58 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/07 12:17:13 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/08 11:52:12 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ t_redir	*init_redir(void)
 	redir = (t_redir *)malloc(sizeof(t_redir));
 	if (!redir)
 	{
-		ft_error("init_redir: malloc failed");
+		perror("init_redir: malloc failed");
 		return (NULL);
 	}
 	redir->input_file = NULL;
