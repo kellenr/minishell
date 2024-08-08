@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   built_pwd.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 19:33:02 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/07 16:51:38 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/08 11:31:05 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,5 +27,6 @@ int	ft_pwd(void)
 		ft_error(P_R"Error."RT);
 	}
 	ft_printf("%s\n", pwd);
+	free(pwd);
 	return (EXIT_SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 16:57:00 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/06 15:44:44 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/08 11:27:39 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ void	handle_export_vars(t_cmd *cmd, char *arg)
 			free(existing_var->value);
 			existing_var->value = value;
 			free(name);
+			// free(value);
 		}
 		else
 			add_env_var(&cmd->env_list, name, value);
@@ -101,8 +102,8 @@ void	add_env_var(t_env **env_list, char *name, char *value)
 	new_var = malloc(sizeof(t_env));
 	if (!new_var)
 		ft_error("Memory allocation error");
-	new_var->name = ft_strdup(name);
-	new_var->value = ft_strdup(value);
+	new_var->name = (name);
+	new_var->value = (value);
 	new_var->next = *env_list;
 	*env_list = new_var;
 }
