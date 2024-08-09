@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 16:33:38 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/07 14:28:36 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/09 14:02:03 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ t_ast	*handle_operator_pipe_ast(t_token **current_token, t_ast *root)
 	pipe_node->right = NULL;
 	pipe_node->command = NULL;
 	pipe_node->args = NULL;
+	pipe_node->redir = NULL;
 	(*current_token) = (*current_token)->next;
 	pipe_node->right = init_ast(current_token);
 	if (!pipe_node->right)

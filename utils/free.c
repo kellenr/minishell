@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 00:20:12 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/08 16:18:47 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/09 13:59:43 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,9 +73,7 @@ void	free_ast(t_ast *root)
 	if (!root)
 		return ;
 	free_ast(root->left);
-	root->left = NULL;
 	free_ast(root->right);
-	root->right = NULL;
 	if (root->redir)
 	{
 		free_redir(root->redir);
@@ -99,8 +97,8 @@ void	free_ast(t_ast *root)
 		root->args = NULL;
 	}
 	free(root);
-	root = NULL;
 }
+
 
 void	free_msh(t_msh *msh)
 {

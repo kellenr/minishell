@@ -6,7 +6,7 @@
 #    By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/07 17:06:07 by keramos-          #+#    #+#              #
-#    Updated: 2024/08/06 16:47:19 by fibarros         ###   ########.fr        #
+#    Updated: 2024/08/09 14:05:00 by fibarros         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -100,7 +100,7 @@ $(LIBFT):
 
 $(NAME): $(OBJS) $(LIBFT)
 	$(call print_status,"Creating Minishell...")
-	@$(CC) $(INCLUDES) $(OBJS) $(LIBFT) $(RL_LIB) $(LDFLAGS) -o $@ > /dev/null
+	@$(CC) $(INCLUDES) $(OBJS) $(LIBFT) $(RL_LIB) ${LDFLAGS} -o $@ > /dev/null
 	@echo "${CHECK} Compiling utilities and sources"
 
 %.o: %.c
