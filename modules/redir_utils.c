@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/15 11:18:57 by fibarros          #+#    #+#             */
-/*   Updated: 2024/07/26 14:25:49 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/09 15:51:05 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	handle_output_append(t_ast *root, t_msh *msh)
 {
 	int	fd;
 
-	fd = open(root->redir->append_file, O_WRONLY | O_CREAT | O_TRUNC, 0777);
+	fd = open(root->redir->append_file, O_WRONLY | O_CREAT | O_APPEND, 0777);
 	if (fd == -1)
 	{
 		perror("open");

@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 16:17:06 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/07 10:00:14 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/09 16:23:14 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ t_ast	*handle_parentheses_ast(t_token **current_token, t_ast *root)
 	parentheses_node->right = NULL;
 	parentheses_node->command = NULL;
 	parentheses_node->args = NULL;
+	parentheses_node->redir = NULL;
 	(*current_token) = (*current_token)->next;
 	parentheses_node->left = parse_tokens_to_ast(*current_token);
 	if (!parentheses_node->left)

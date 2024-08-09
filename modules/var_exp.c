@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 01:41:45 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/07 15:21:29 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/09 16:58:32 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ char	*exp_special_var(const char *input, int *index, char *rst, t_msh *msh)
 	if (!var)
 		return (NULL);
 	expanded = exp_single_var(var, msh);
-	free(var);
+	//free(var);
 	if (!expanded)
 		return (NULL);
 	while (input[j] && (ft_isalnum(input[j]) || input[j] == '?' \

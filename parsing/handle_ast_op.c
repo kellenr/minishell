@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 16:33:38 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/09 14:02:03 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/09 14:12:34 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,6 +135,7 @@ t_ast	*handle_operator_and_or_ast(t_token **current_token, t_ast *root)
 	and_or_node->right = NULL;
 	and_or_node->command = NULL;
 	and_or_node->args = NULL;
+	and_or_node->redir = NULL;
 	(*current_token) = (*current_token)->next;
 	and_or_node->right = init_ast(current_token);
 	return (and_or_node);
