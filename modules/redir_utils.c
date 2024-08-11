@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/15 11:18:57 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/09 15:51:05 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/11 17:10:56 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,4 +92,3 @@ void	redirect_and_execute(int fd, int std_fd, t_ast *root, t_msh *msh)
 	dup2(saved_fd, std_fd);
 	close(saved_fd);
 }
-
