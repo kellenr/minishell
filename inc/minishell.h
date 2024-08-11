@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 09:43:39 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/07 11:17:06 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/11 17:29:12 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@
 /* # include <sys/types.h>
 # include <sys/stat.h>
 # include <dirent.h>
-# include <signal.h> */
+ */
 
 # define MAX_TKS 1024
 # define MAX_ARGUMENTS 10
@@ -212,6 +212,7 @@ char	**copy_tokens(char **args, int *count);
 void	free_msh(t_msh *msh);
 void	free_all(t_msh *msh);
 void	free_redir(t_redir *redir);
+char	*handle_parenthesis(char **input);
 
 /*					Exec utils					*/
 char	*get_command_path(t_cmd *cmd);
@@ -309,12 +310,10 @@ t_ast	*handle_operator_and_or_ast(t_token **current_token, t_ast *root);
 t_ast	*handle_parentheses_ast(t_token **current_token, t_ast *root);
 void	handle_parentheses_op(t_ast *root, t_msh *msh);
 
-
 void	print_ast(t_ast *node);
 void	print_pipe(t_ast *node, int level, const char *label);
 
 char	*safe_strdup(const char *s);
-
 
 /*									REDIR UTILS								*/
 void	handle_input_redir(t_ast *root, t_msh *msh);
@@ -330,6 +329,7 @@ void	handle_redir_file(t_token **current_token, char **file_field);
 int		has_quotes(char *delimiter);
 char	*read_heredoc_line(char *delimiter);
 char	*expand_heredoc_line(char *line, t_msh *msh);
+t_ast	*handle_parenthesis_ast(t_token **current_token, t_ast *root);
 
 /*									SIGNALS								*/
 void	sig_handler_int(int signum);

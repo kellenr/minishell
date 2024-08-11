@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 13:34:20 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/09 14:47:07 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/11 16:11:14 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,6 +107,7 @@ int		ft_toupper(int c);
 int		ft_tolower(int c);
 char	*ft_strcpy(char *dest, const char *src);
 char	*ft_strcat(char *dest, char *src);
+char	*ft_strncpy(char *dest, const char *src, size_t n);
 
 /* ************************************************************************** */
 /*                                 PRINTF                                     */

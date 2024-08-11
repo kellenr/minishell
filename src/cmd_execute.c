@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_execute.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 13:54:08 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/07 14:34:33 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/11 15:37:48 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,9 +61,7 @@ t_cmd	*ast_to_cmd(t_ast *root)
 {
 	t_cmd	*cmd;
 	int		count;
-	int		i;
 
-	i = 0;
 	count = 0;
 	cmd = init_cmd();
 	if (!cmd)

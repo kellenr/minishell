@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 13:54:08 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/08 17:13:45 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/11 17:17:37 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,8 +60,8 @@ void	execute_ast(t_ast *root, t_msh *msh)
 		handle_redirection(root, msh);
 	else if (root->op == AND || root->op == OR)
 		handle_logical_op(root, msh);
-	// else if (root->op == SUBSHELL)
-	// 	handle_parentheses_op(root->left, msh);
+	else if (root->op == SUBSHELL)
+		handle_parentheses_op(root, msh);
 	else
 	{
 		cmd = ast_to_cmd(root);
@@ -146,7 +146,7 @@ void	execute_command(t_cmd *cmd)
 		perror("fork");
 		cmd->msh->exit_status = 1;
 	}
-	if (!(ft_strcmp(cmd->tokens[0], cmd_path) == 0 ))
+	if (!(ft_strcmp(cmd->tokens[0], cmd_path) == 0))
 		free(cmd_path);
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);

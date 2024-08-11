@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 12:07:43 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/07 12:05:06 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/11 16:25:05 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-volatile __sig_atomic_t  g_signal = 0;
+volatile __sig_atomic_t	g_signal = 0;
 
 void	receive_msg(t_msh *msh)
 {
@@ -28,6 +28,7 @@ void	receive_msg(t_msh *msh)
 			break ;
 		}
 		process_cmd(prompt, msh);
+		free(prompt);
 	}
 }
 
@@ -49,6 +50,7 @@ int	main(int argc, char **argv, char **env)
 	ft_intro_art();
 	receive_msg(msh);
 	free_all(msh);
+	rl_clear_history();
 	return (0);
 }
 
@@ -82,4 +84,3 @@ void	free_all(t_msh *msh)
 {
 	free_msh(msh);
 }
-

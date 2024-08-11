@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   var_exp.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 01:41:45 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/09 16:58:32 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/11 18:01:18 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,6 @@ char	*exp_special_var(const char *input, int *index, char *rst, t_msh *msh)
 	if (!var)
 		return (NULL);
 	expanded = exp_single_var(var, msh);
-	//free(var);
 	if (!expanded)
 		return (NULL);
 	while (input[j] && (ft_isalnum(input[j]) || input[j] == '?' \
@@ -106,7 +105,6 @@ char	*exp_general_var(const char *input, int *index, char *rst, t_msh *msh)
 		expanded = ft_strdup (var);
 	else
 		expanded = exp_single_var(var, msh);
-	free(var);
 	if (!expanded)
 	{
 		free(rst);
@@ -145,7 +143,6 @@ char	*exp_variable(const char *input, int *index, char *result, t_msh *msh)
 		return (expanded);
 	}
 	expanded = exp_general_var(input, index, result, msh);
-	free(result);
 	return (expanded);
 }
 

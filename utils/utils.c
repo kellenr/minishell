@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 19:44:25 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/07 10:53:00 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/11 16:46:30 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,16 +43,28 @@ int	is_operator(char c)
 char	*trim_whitespace(char *str)
 {
 	char	*end;
+	size_t	len;
+	char	*trimmed;
 
 	while (ft_isspace(*str))
+	{
 		str++;
+	}
 	if (*str == 0)
-		return (str);
+		return (ft_strdup(""));
 	end = str + ft_strlen(str) - 1;
 	while (end > str && ft_isspace(*end))
 		end--;
-	*(end + 1) = '\0';
-	return (str);
+	len = end - str + 1;
+	trimmed = malloc(len + 1);
+	if (!trimmed)
+	{
+		perror("allocation error");
+		return (NULL);
+	}
+	ft_strncpy (trimmed, str, len);
+	trimmed [len] = '\0';
+	return (trimmed);
 }
 
 /*

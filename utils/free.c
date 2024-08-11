@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 00:20:12 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/09 13:59:43 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/11 16:44:19 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,12 +99,8 @@ void	free_ast(t_ast *root)
 	free(root);
 }
 
-
 void	free_msh(t_msh *msh)
 {
-	int	i;
-
-	i = 0;
 	if (!msh)
 		return ;
 	if (msh->env)

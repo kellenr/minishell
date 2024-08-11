@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 14:18:00 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/07 11:36:55 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/11 18:04:00 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,9 @@ char	*extract_token(char **input, t_msh *msh, int *heredoc_flag)
 	char	*expanded_token;
 
 	start = *input;
+	token = NULL;
+	cleaned_token = NULL;
+	expanded_token = NULL;
 	if (is_operator(**input))
 		return (handle_operator_token(input, heredoc_flag));
 	result = advance_past_token(input);

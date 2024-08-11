@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_ast_op.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 16:33:38 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/09 14:12:34 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/11 18:03:19 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,11 @@ t_ast	*handle_operator_pipe_ast(t_token **current_token, t_ast *root)
 {
 	t_ast	*pipe_node;
 
+	if (root == NULL)
+	{
+		ft_printf("msh: syntax error near unexpected token '|'\n");
+		return (NULL);
+	}
 	pipe_node = malloc(sizeof(t_ast));
 	if (!pipe_node)
 		ft_error("malloc failed");
@@ -159,8 +164,6 @@ t_ast	*handle_operator_ast(t_token **current_token, t_ast *root)
 			return ((handle_operator_redir_ast(current_token, root)));
 		else if ((*current_token)->op == AND || (*current_token)->op == OR)
 			return (handle_operator_and_or_ast(current_token, root));
-		// else if((*current_token)->op == OPEN || (*current_token)->op == CLOSE)
-		// 	return (handle_parentheses_ast(current_token, root));
 	}
 	return (NULL);
 }

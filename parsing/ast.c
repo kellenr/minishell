@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ast.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 13:40:58 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/08 11:52:12 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/11 17:45:08 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,11 @@ t_redir	*init_redir(void)
  *
  * Explanation:
  * - Memory Allocation: Allocates memory for a new node.
- * - Default Initialization: Initializes the fields of the node to default values.
- * - Command Initialization: If the current token is a command (not an operator), sets the command field and initializes the args array with the command as the first argument.
+ * - Default Initialization: Initializes the fields of the node to default
+ * values.
+ * - Command Initialization: If the current token is a command (not an operator),
+ * sets the command field and initializes the args array with the command as the
+ * first argument.
  */
 
 // t_ast	*init_ast(t_token **current_token)
@@ -143,7 +146,6 @@ t_ast	*init_ast(t_token **current_token)
 	return (node);
 }
 
-
 /*
  * Function to handle non-operator tokens and update the AST.
  * Takes the current token and the current AST node as arguments.
@@ -192,40 +194,40 @@ t_ast	*handle_non_operator(t_token **current_token, t_ast *current_node)
 t_ast	*parse_tokens_to_ast(t_token *tokens)
 {
 	t_ast	*root;
-	t_ast	*current_node;
-	t_token	*current_token;
+	t_ast	*cur_node;
+	t_token	*cur_token;
 
 	root = NULL;
-	current_node = NULL;
-	current_token = tokens;
-	while (current_token != NULL)
+	cur_node = NULL;
+	cur_token = tokens;
+	while (cur_token != NULL)
 	{
-		if (is_op_token(current_token))
+		if (is_op_token(cur_token))
 		{
-			root = handle_operator_ast(&current_token, root);
+			root = handle_operator_ast(&cur_token, root);
 			if (!root)
 			{
-				free_ast(current_node);
+				free_ast(cur_node);
 				return (NULL);
 			}
-			current_node = root->right;
+			cur_node = root->right;
 		}
 		else
 		{
 			if (root == NULL)
 			{
-				root = init_ast(&current_token);
+				root = init_ast(&cur_token);
 				if (!root)
 				{
-					free_ast(current_node);
+					free_ast(cur_node);
 					return (NULL);
 				}
-				current_node = root;
+				cur_node = root;
 			}
-			else if (current_node->command == NULL)
+			else if (cur_node->command == NULL)
 			{
-				current_node = handle_non_operator(&current_token, current_node);
-				if (!current_node)
+				cur_node = handle_non_operator(&cur_token, cur_node);
+				if (!cur_node)
 				{
 					free_ast(root);
 					return (NULL);
@@ -233,8 +235,8 @@ t_ast	*parse_tokens_to_ast(t_token *tokens)
 			}
 			else
 			{
-				current_node = handle_non_operator(&current_token, current_node);
-				if (!current_node)
+				cur_node = handle_non_operator(&cur_token, cur_node);
+				if (!cur_node)
 				{
 					free_ast(root);
 					return (NULL);
