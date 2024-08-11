@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   built_echo.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 21:20:52 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/07 15:59:54 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/06 10:05:36 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,17 +71,8 @@ int	ft_echo(t_cmd *scmd)
 	bool	eflg;
 	int		i;
 
-	i = 1;
-	flg = false;
-	eflg = false;
-	while (scmd->tokens[i] && check_opt(scmd->tokens[i]))
-	{
-		if (scmd->tokens[i][1] == 'n')
-			flg = true;
-		else if (scmd->tokens[i][1] == 'e')
-			eflg = true;
-		i++;
-	}
+	initialize_echo(&flg, &eflg, &i);
+	parse_options(scmd, &i, &flg, &eflg);
 	while (scmd->tokens[i])
 	{
 		if (eflg)
@@ -95,4 +86,23 @@ int	ft_echo(t_cmd *scmd)
 	if (!flg)
 		ft_printf("\n");
 	return (0);
+}
+
+void	initialize_echo(bool *flg, bool *eflg, int *i)
+{
+	*i = 1;
+	*flg = false;
+	*eflg = false;
+}
+
+void	parse_options(t_cmd *scmd, int *i, bool *flg, bool *eflg)
+{
+	while (scmd->tokens[*i] && check_opt(scmd->tokens[*i]))
+	{
+		if (scmd->tokens[*i][1] == 'n')
+			*flg = true;
+		else if (scmd->tokens[*i][1] == 'e')
+			*eflg = true;
+		(*i)++;
+	}
 }

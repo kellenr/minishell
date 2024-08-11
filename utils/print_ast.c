@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   print_ast.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/13 23:14:16 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/16 19:46:56 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/11 16:42:29 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-const char *op_to_string(t_op op)
+/* const char *op_to_string(t_op op)
 {
 	switch (op) {
 		case NONE: return "NONE";
@@ -25,7 +25,7 @@ const char *op_to_string(t_op op)
 		case OR: return "OR";
 		default: return "UNKNOWN";
 	}
-}
+} */
 
 /* void print_ast(t_ast *root, int level, char *branch)
 {
@@ -52,7 +52,7 @@ const char *op_to_string(t_op op)
 	}
 } */
 
-void print_ast_helper(t_ast *node, int level)
+/* void print_ast_helper(t_ast *node, int level)
 {
 	if (node == NULL) return;
 	for (int i = 0; i < level; i++) printf("  ");
@@ -94,7 +94,8 @@ void print_ast_helper(t_ast *node, int level)
 			}
 			if (node->redir->append_file != NULL) {
 				for (int i = 0; i < level + 1; i++) printf("  ");
-				printf("|- Output in Append File: %s\n", node->redir->append_file);
+				printf("|- Output in Append File: %s\n", \
+				node->redir->append_file);
 			}
 			if (node->redir->here_doc_delim != NULL) {
 				for (int i = 0; i < level + 1; i++) printf("  ");
@@ -117,7 +118,8 @@ void print_ast_helper(t_ast *node, int level)
 			}
 			if (node->redir->append_file != NULL) {
 				for (int i = 0; i < level + 1; i++) printf("  ");
-				printf("|- Output in Append File: %s\n", node->redir->append_file);
+				printf("|- Output in Append File: %s\n", \
+				node->redir->append_file);
 			}
 			if (node->redir->here_doc_delim != NULL) {
 				for (int i = 0; i < level + 1; i++) printf("  ");
@@ -131,4 +133,4 @@ void print_ast(t_ast *node)
 {
 	printf("AST:\n");
 	print_ast_helper(node, 0);
-}
+} */

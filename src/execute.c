@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 13:54:08 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/05 16:39:16 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/11 17:17:37 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,13 +60,25 @@ void	execute_ast(t_ast *root, t_msh *msh)
 		handle_redirection(root, msh);
 	else if (root->op == AND || root->op == OR)
 		handle_logical_op(root, msh);
-	// else if (root->op == SUBSHELL)
-	// 	handle_parentheses_op(root->left, msh);
+	else if (root->op == SUBSHELL)
+		handle_parentheses_op(root, msh);
 	else
 	{
 		cmd = ast_to_cmd(root);
+		if (!cmd)
+		{
+			ft_printf("Error: Failed to create command");
+			msh->exit_status = 1;
+			return ;
+		}
 		cmd->msh = msh;
-		init_env(cmd, msh->env);
+		if (init_env(cmd, msh->env) != 0)
+		{
+			ft_printf("Error: Failed to initialize env");
+			msh->exit_status = 1;
+			free_cmd(cmd);
+			return ;
+		}
 		if (is_builtin(cmd->cmd))
 			cmd->msh->exit_status = execute_builtin(cmd);
 		else
@@ -105,57 +117,37 @@ int	execute_builtin(t_cmd *cmd)
  * Forks a child process to execute the command and waits for it to complete.
  * Updates the global status variable with the exit status of the command.
  */
+
 void	execute_command(t_cmd *cmd)
 {
 	pid_t	pid;
 	int		status;
 	char	*cmd_path;
 
-	if (!cmd->tokens)
-	{
-		perror("tokend not found");
+	if (!check_tokens(cmd))
 		return ;
-	}
-	cmd_path = find_path(cmd->tokens[0], cmd->env);
+	cmd_path = get_command_path(cmd);
 	if (!cmd_path)
 	{
-		ft_printf("msh: %s: command not found\n", cmd->tokens[0]);
 		cmd->msh->exit_status = 127;
 		return ;
 	}
 	handle_non_interactive();
 	pid = fork();
 	if (pid == 0)
-	{
-		if (execve(cmd_path, cmd->tokens, cmd->env) == -1)
-		{
-			perror("execve");
-			exit(EXIT_FAILURE);
-		}
-
-	}
+		execute_in_child(cmd_path, cmd->tokens, cmd->env);
 	else if (pid > 0)
 	{
 		waitpid(pid, &status, 0);
-		if (WIFEXITED(status))
-			cmd->msh->exit_status = WEXITSTATUS(status);
-		else if (WIFSIGNALED(status))
-		{
-			if (WTERMSIG(status) == SIGQUIT)
-				cmd->msh->exit_status = 131;
-			else if (WTERMSIG(status) == SIGINT)
-				cmd->msh->exit_status = 130;
-			else
-				cmd->msh->exit_status = 128 + WTERMSIG(status);
-		}
-		else
-			cmd->msh->exit_status = 1;
+		handle_child_status(cmd, status);
 	}
 	else
 	{
 		perror("fork");
 		cmd->msh->exit_status = 1;
 	}
+	if (!(ft_strcmp(cmd->tokens[0], cmd_path) == 0))
+		free(cmd_path);
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
 }

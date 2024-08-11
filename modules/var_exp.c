@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   var_exp.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kellen <kellen@student.42.fr>              +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 01:41:45 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/05 16:55:54 by kellen           ###   ########.fr       */
+/*   Updated: 2024/08/11 18:01:18 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ char	*exp_env_var(char *input, t_msh *msh)
 	if (!input)
 		return (NULL);
 	result = ft_strdup("");
+	if (!result)
+		return (NULL);
 	i = 0;
 	while (input[i])
 	{
@@ -52,18 +54,29 @@ char	*exp_special_var(const char *input, int *index, char *rst, t_msh *msh)
 
 	j = *index + 2;
 	var = ft_substr(input, *index, 2);
+	if (!var)
+		return (NULL);
 	expanded = exp_single_var(var, msh);
-	free(var);
+	if (!expanded)
+		return (NULL);
 	while (input[j] && (ft_isalnum(input[j]) || input[j] == '?' \
 			|| input[j] == '_' || input[j] == '$'))
 		j++;
 	suffix = ft_substr(input, *index + 2, j - (*index + 2));
+	if (!suffix)
+	{
+		free(expanded);
+		return (NULL);
+	}
 	tmp = ft_strjoin(expanded, suffix);
-	free(expanded);
 	free(suffix);
+	if (!tmp)
+		return (NULL);
 	expanded = ft_strjoin(rst, tmp);
 	free(rst);
 	free(tmp);
+	if (!expanded)
+		return (NULL);
 	*index = j;
 	return (expanded);
 }
@@ -86,14 +99,22 @@ char	*exp_general_var(const char *input, int *index, char *rst, t_msh *msh)
 			|| input[j] == '_'))
 		j++;
 	var = ft_substr(input, *index, j - *index);
+	if (!var)
+		return (NULL);
 	if (is_var_btw_squote(input, *index, j))
 		expanded = ft_strdup (var);
 	else
 		expanded = exp_single_var(var, msh);
+	if (!expanded)
+	{
+		free(rst);
+		return (NULL);
+	}
 	tmp = ft_strjoin(rst, expanded);
 	free(rst);
 	free(expanded);
-	free(var);
+	if (!tmp)
+		return (NULL);
 	*index = j;
 	return (tmp);
 }
@@ -106,18 +127,23 @@ char	*exp_general_var(const char *input, int *index, char *rst, t_msh *msh)
  */
 char	*exp_variable(const char *input, int *index, char *result, t_msh *msh)
 {
-	int	j;
+	int		j;
+	char	*expanded;
 
 	j = *index + 1;
 	if (input[j] == '\0' || input[j] == ' ')
 	{
-		result = ft_strjoin(result, "$");
+		expanded = ft_strjoin(result, "$");
 		(*index)++;
-		return (result);
+		return (expanded);
 	}
 	if (input[j] == '?')
-		return (exp_special_var(input, index, result, msh));
-	return (exp_general_var(input, index, result, msh));
+	{
+		expanded = exp_special_var(input, index, result, msh);
+		return (expanded);
+	}
+	expanded = exp_general_var(input, index, result, msh);
+	return (expanded);
 }
 
 /*
@@ -129,14 +155,35 @@ char	*exp_single_var(char *token, t_msh *msh)
 {
 	char	*key;
 	char	*value;
+	char	*result;
 
 	if (ft_strcmp(token, "$?") == 0)
-		return (ft_itoa(msh->exit_status));
-	if (token[0] != '$')
-		return (ft_strdup(token));
-	key = token + 1;
-	value = get_env_value(key, msh->env);
-	if (value)
-		return (ft_strdup(value));
-	return (ft_strdup(""));
+		result = ft_itoa(msh->exit_status);
+	else if (token[0] != '$')
+	{
+		result = ft_strdup(token);
+		if (!result)
+		{
+			perror("malloc fail");
+			return (NULL);
+		}
+	}
+	else
+	{
+		key = token + 1;
+		value = get_env_value(key, msh->env);
+		if (value)
+		{
+			result = ft_strdup(value);
+			if (!result)
+			{
+				perror("malloc fail");
+				return (NULL);
+			}
+		}
+		else
+			result = ft_strdup("");
+	}
+	free(token);
+	return (result);
 }

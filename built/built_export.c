@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   built_export.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 16:57:00 by fibarros          #+#    #+#             */
-/*   Updated: 2024/07/10 16:55:49 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/11 16:29:40 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,14 @@
 
 /*
  * Export function that handles exporting environment variables.
- * If no arguments are provided (`cmd->argc == 1`), prints all environment variables.
- * Otherwise, iterates through each argument to update or add environment variables.
- * Updates both the command's environment list (`cmd->env_list`) and the shell's environment (`cmd->msh->env`).
+ * If no arguments are provided (`cmd->argc == 1`), prints all environment
+ * variables.
+ * Otherwise, iterates through each argument to update or add environment
+ * variables.
+ * Updates both the command's environment list (`cmd->env_list`) and the
+ * shell's environment (`cmd->msh->env`).
  * Returns 0 on success, -1 on error.
  */
-
 int	ft_export(t_cmd *cmd)
 {
 	t_env	*env_list;
@@ -89,7 +91,8 @@ void	print_export(t_env *env_list)
 	sorted_list = sort_env_list(env_list);
 	while (sorted_list != NULL)
 	{
-		ft_printf("declare -x %s=\"%s\"\n", sorted_list->name, sorted_list->value);
+		ft_printf("declare -x %s=\"%s\"\n", sorted_list->name, \
+			sorted_list->value);
 		sorted_list = sorted_list->next;
 	}
 }
@@ -101,8 +104,8 @@ void	add_env_var(t_env **env_list, char *name, char *value)
 	new_var = malloc(sizeof(t_env));
 	if (!new_var)
 		ft_error("Memory allocation error");
-	new_var->name = ft_strdup(name);
-	new_var->value = ft_strdup(value);
+	new_var->name = (name);
+	new_var->value = (value);
 	new_var->next = *env_list;
 	*env_list = new_var;
 }

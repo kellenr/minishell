@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 14:18:00 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/05 16:47:54 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/11 18:04:00 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,63 +98,27 @@ char	*extract_token(char **input, t_msh *msh, int *heredoc_flag)
 	char	*start;
 	char	*token;
 	char	*cleaned_token;
-	char	quote_char;
+	int		result;
 	char	*expanded_token;
 
 	start = *input;
+	token = NULL;
+	cleaned_token = NULL;
+	expanded_token = NULL;
 	if (is_operator(**input))
-	{
-		if (**input == '<' && *(*input + 1) == '<')
-		{
-			*input += 2;
-			*heredoc_flag = 1;
-			return (ft_strdup("<<"));
-		}
-		else if (**input == '>' && *(*input + 1) == '>')
-		{
-			*input += 2;
-			return (ft_strdup(">>"));
-		}
-		else if (**input == '&' && *(*input + 1) == '&')
-		{
-			*input += 2;
-			return (ft_strdup("&&"));
-		}
-		else if (**input == '|' && *(*input + 1) == '|')
-		{
-			*input += 2;
-			return (ft_strdup("||"));
-		}
-		else
-		{
-			(*input)++;
-			return (ft_strndup(start, 1));
-		}
-	}
-	while (**input && !ft_isspace(**input) && !is_operator(**input))
-	{
-		if (**input == '\'' || **input == '\"')
-		{
-			quote_char = *(*input)++;
-			while (**input && **input != quote_char)
-				(*input)++;
-			if (**input == '\0')
-				return (NULL);
-			if (**input)
-				(*input)++;
-		}
-		else
-			(*input)++;
-	}
+		return (handle_operator_token(input, heredoc_flag));
+	result = advance_past_token(input);
+	if (result == -1)
+		return (NULL);
 	token = ft_strndup(start, *input - start);
+	if (!token)
+		return (NULL);
 	if (*heredoc_flag)
 	{
 		*heredoc_flag = 0;
 		if (has_quotes(token))
 			msh->heredoc_flag = 1;
 	}
-	// if (is_operator(**input))
-	// 	token = ft_strndup(start, *input - start);
 	expanded_token = exp_env_var(token, msh);
 	free(token);
 	token = expanded_token;

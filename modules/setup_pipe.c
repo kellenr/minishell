@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   setup_pipe.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/09 14:35:09 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/07 17:04:41 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/06 15:27:52 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	execute_pipes(t_ast *root, t_msh *msh)
 	if (root->op != PIPE)
 	{
 		execute_ast(root, msh);
-		return;
+		return ;
 	}
 	if (pipe(pipefd) == -1)
 		ft_error("pipe");

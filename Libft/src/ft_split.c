@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/22 12:09:31 by keramos-          #+#    #+#             */
-/*   Updated: 2023/11/27 15:44:28 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/07 12:22:34 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ char	**ft_split(char const *s, char c)
 {
 	char	**array;
 	size_t	words;
+	char	**result;
 
 	if (!s)
 		return (NULL);
@@ -89,6 +90,11 @@ char	**ft_split(char const *s, char c)
 	array = (char **)malloc(sizeof(char *) * (words + 1));
 	if (!array)
 		return (NULL);
-	array = split(s, c, array, words);
-	return (array);
+	result = split(s, c, array, words);
+	if (!result)
+	{
+		free(array);
+		return (NULL);
+	}
+	return (result);
 }

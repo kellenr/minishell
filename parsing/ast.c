@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ast.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kellen <kellen@student.42.fr>              +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 13:40:58 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/05 16:46:43 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/11 17:45:08 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ t_redir	*init_redir(void)
 	redir = (t_redir *)malloc(sizeof(t_redir));
 	if (!redir)
 	{
-		ft_error("init_redir: malloc failed");
+		perror("init_redir: malloc failed");
 		return (NULL);
 	}
 	redir->input_file = NULL;
@@ -40,36 +40,109 @@ t_redir	*init_redir(void)
  *
  * Explanation:
  * - Memory Allocation: Allocates memory for a new node.
- * - Default Initialization: Initializes the fields of the node to default values.
- * - Command Initialization: If the current token is a command (not an operator), sets the command field and initializes the args array with the command as the first argument.
+ * - Default Initialization: Initializes the fields of the node to default
+ * values.
+ * - Command Initialization: If the current token is a command (not an operator),
+ * sets the command field and initializes the args array with the command as the
+ * first argument.
  */
+
+// t_ast	*init_ast(t_token **current_token)
+// {
+// 	t_ast	*node;
+
+// 	node = init_ast_node();
+// 	if (!node)
+// 	{
+// 		perror("malloc fail");
+// 		return (NULL);
+// 	}
+// 	if (*current_token && (*current_token)->op == NONE)
+// 	{
+// 		node->command = safe_strdup((*current_token)->value);
+// 		if (!node->command)
+// 		{
+// 			free(node);
+// 			perror("malloc failed for command");
+// 			return (NULL);
+// 		}
+// 		node->args = malloc(sizeof(char *) * (MAX_ARGUMENTS + 1));
+// 		if (!node->args)
+// 		{
+// 			free(node->command);
+// 			free(node);
+// 			perror("malloc failed for args");
+// 			return (NULL);
+// 		}
+// 		node->args[0] = safe_strdup((*current_token)->value);
+// 		if (!node->args[0])
+// 		{
+// 			free(node->args);
+// 			free(node->command);
+// 			free(node);
+// 			perror("malloc failed for args");
+// 			return (NULL);
+// 		}
+// 		node->args[1] = NULL;
+// 	}
+// 	if (*current_token)
+// 	{
+// 		node->command = safe_strdup((*current_token)->value);
+// 		if (!node->command)
+// 		{
+// 			free(node);
+// 			ft_error("malloc fail");
+// 		}
+// 		(*current_token) = (*current_token)->next;
+// 	}
+// 	return (node);
+// }
+
 t_ast	*init_ast(t_token **current_token)
 {
 	t_ast	*node;
 
-	node = malloc(sizeof(t_ast));
+	node = init_ast_node();
 	if (!node)
-		ft_error("init_ast: malloc failed");
-	node->command = NULL;
-	node->args = NULL;
-	node->left = NULL;
-	node->right = NULL;
-	node->op = NONE;
-	node->redir = NULL;
+	{
+		perror("malloc fail");
+		return (NULL);
+	}
 	if (*current_token && (*current_token)->op == NONE)
 	{
 		node->command = safe_strdup((*current_token)->value);
+		if (!node->command)
+		{
+			free(node);
+			perror("malloc failed for command");
+			return (NULL);
+		}
 		node->args = malloc(sizeof(char *) * (MAX_ARGUMENTS + 1));
 		if (!node->args)
-			ft_error("init_ast: malloc failed");
+		{
+			free(node->command);
+			free(node);
+			perror("malloc failed for args");
+			return (NULL);
+		}
 		node->args[0] = safe_strdup((*current_token)->value);
+		if (!node->args[0])
+		{
+			free(node->args);
+			free(node->command);
+			free(node);
+			perror("malloc failed for args");
+			return (NULL);
+		}
 		node->args[1] = NULL;
 	}
-	if (*current_token)
+	else
 	{
-		node->command = safe_strdup((*current_token)->value);
-		(*current_token) = (*current_token)->next;
+		node->command = NULL;
+		node->args = NULL;
 	}
+	if (*current_token)
+		(*current_token) = (*current_token)->next;
 	return (node);
 }
 
@@ -88,14 +161,7 @@ t_ast	*handle_non_operator(t_token **current_token, t_ast *current_node)
 	int	argc;
 
 	if (current_node->command == NULL)
-	{
-		current_node->command = safe_strdup((*current_token)->value);
-		current_node->args = malloc(sizeof(char *) * (MAX_ARGUMENTS + 1));
-		if (!current_node->args)
-			ft_error("handle_non_operator: malloc failed");
-		current_node->args[0] = safe_strdup((*current_token)->value);
-		current_node->args[1] = NULL;
-	}
+		initialize_command_and_args(current_node, *current_token);
 	else
 	{
 		argc = 0;
@@ -128,37 +194,54 @@ t_ast	*handle_non_operator(t_token **current_token, t_ast *current_node)
 t_ast	*parse_tokens_to_ast(t_token *tokens)
 {
 	t_ast	*root;
-	t_ast	*current_node;
-	t_token	*current_token;
+	t_ast	*cur_node;
+	t_token	*cur_token;
 
 	root = NULL;
-	current_node = NULL;
-	current_token = tokens;
-	while (current_token != NULL)
+	cur_node = NULL;
+	cur_token = tokens;
+	while (cur_token != NULL)
 	{
-		if (current_token->op == PIPE || current_token->op == AND || \
-		current_token->op == OR)
+		if (is_op_token(cur_token))
 		{
-			root = handle_operator_ast(&current_token, root);
-			current_node = root->right;
-		}
-		else if (current_token->op == REDIR_APPEND || current_token->op == REDIR_REPLACE || \
-				current_token->op == REDIR_HERE_DOC || current_token->op == REDIR_INPUT)
-		{
-			root = handle_operator_ast(&current_token, root);
-			current_node = root->right;
+			root = handle_operator_ast(&cur_token, root);
+			if (!root)
+			{
+				free_ast(cur_node);
+				return (NULL);
+			}
+			cur_node = root->right;
 		}
 		else
 		{
 			if (root == NULL)
 			{
-				root = init_ast(&current_token);
-				current_node = root;
+				root = init_ast(&cur_token);
+				if (!root)
+				{
+					free_ast(cur_node);
+					return (NULL);
+				}
+				cur_node = root;
 			}
-			else if (current_node->command == NULL)
-				current_node = handle_non_operator(&current_token, current_node);
+			else if (cur_node->command == NULL)
+			{
+				cur_node = handle_non_operator(&cur_token, cur_node);
+				if (!cur_node)
+				{
+					free_ast(root);
+					return (NULL);
+				}
+			}
 			else
-				current_node = handle_non_operator(&current_token, current_node);
+			{
+				cur_node = handle_non_operator(&cur_token, cur_node);
+				if (!cur_node)
+				{
+					free_ast(root);
+					return (NULL);
+				}
+			}
 		}
 	}
 	return (root);

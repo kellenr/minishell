@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kellen <kellen@student.42.fr>              +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 09:43:39 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/05 16:45:21 by kellen           ###   ########.fr       */
+/*   Updated: 2024/08/11 17:29:12 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@
 /* # include <sys/types.h>
 # include <sys/stat.h>
 # include <dirent.h>
-# include <signal.h> */
+ */
 
 # define MAX_TKS 1024
 # define MAX_ARGUMENTS 10
@@ -200,9 +200,28 @@ char	**list_to_array(t_env *env_list);
 char	**populate_env_array(t_env *env_list, char **env_array, int list_size);
 void	free_array(char **arr, int size);
 int		init_msh(char **env, t_msh *msh);
+t_ast	*init_ast_node(void);
+void	initialize_command_and_args(t_ast *node, t_token *token);
+bool	is_op_token(t_token *token);
+t_ast	*process_token(t_token **token, t_ast *root, t_ast *current_node);
+char	*handle_operator_token(char **input, int *heredoc_flag);
+int		is_multi_char_op(char **input, char *op_str);
+int		advance_past_token(char **input);
+t_cmd	*init_cmd(void);
+char	**copy_tokens(char **args, int *count);
+void	free_msh(t_msh *msh);
+void	free_all(t_msh *msh);
+void	free_redir(t_redir *redir);
+char	*handle_parenthesis(char **input);
+
+/*					Exec utils					*/
+char	*get_command_path(t_cmd *cmd);
+void	execute_in_child(char *cmd_path, char **tokens, char **env);
+void	handle_child_status(t_cmd *cmd, int status);
+int		check_tokens(t_cmd *cmd);
 
 /*									ENV										  */
-void	*init_env(t_cmd *cmd, char **envp);
+int		init_env(t_cmd *cmd, char **envp);
 int		init_arr_and_list(t_cmd *cmd, char **envp);
 t_env	*create_env_node(const char *env_str);
 void	add_env_node(t_env **env_list, t_env *node);
@@ -233,6 +252,8 @@ void	add_env_var(t_env **env_list, char *name, char *value);
 int		is_valid_unset(char *token);
 int		check_valid_unset_token(char *token, char *error_message);
 void	remove_env_var(t_env **env_list, char *name);
+void	initialize_echo(bool *flg, bool *eflg, int *i);
+void	parse_options(t_cmd *scmd, int *i, bool *flg, bool *eflg);
 
 /*                                  Parsing                                   */
 
@@ -281,7 +302,6 @@ int		is_operator(char c);
 // Redirection Handling Functions
 void	handle_redirection(t_ast *root, t_msh *msh);
 t_ast	*handle_operator_redir_ast(t_token **current_token, t_ast *root);
-//int		handle_heredoc(const char *delimiter);
 t_redir	*init_redir(void);
 
 // Logical Execution Functions
@@ -290,12 +310,10 @@ t_ast	*handle_operator_and_or_ast(t_token **current_token, t_ast *root);
 t_ast	*handle_parentheses_ast(t_token **current_token, t_ast *root);
 void	handle_parentheses_op(t_ast *root, t_msh *msh);
 
-
 void	print_ast(t_ast *node);
 void	print_pipe(t_ast *node, int level, const char *label);
 
 char	*safe_strdup(const char *s);
-
 
 /*									REDIR UTILS								*/
 void	handle_input_redir(t_ast *root, t_msh *msh);
@@ -306,12 +324,13 @@ void	redirect_and_execute(int fd, int std_fd, t_ast *root, t_msh *msh);
 int		open_tmp_file(t_msh *msh);
 int		parse_heredoc(char *delimiter, int fd, t_msh *msh);
 void	handle_heredoc(t_ast *root, t_msh *msh);
-// int		*expand_and_replace_var(char *ptr, char *var_name, t_msh *msh);
 t_ast	*create_redir_node(int op, t_ast *root);
 void	handle_redir_file(t_token **current_token, char **file_field);
 int		has_quotes(char *delimiter);
 char	*read_heredoc_line(char *delimiter);
 char	*expand_heredoc_line(char *line, t_msh *msh);
+t_ast	*handle_parenthesis_ast(t_token **current_token, t_ast *root);
+
 /*									SIGNALS								*/
 void	sig_handler_int(int signum);
 void	handle_signals(void);

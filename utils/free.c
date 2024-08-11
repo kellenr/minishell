@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 00:20:12 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/05 16:43:43 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/11 16:44:19 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,21 +19,30 @@
  */
 void	free_cmd(t_cmd *cmd)
 {
-	int	i;
-
+	if (!cmd)
+		return ;
 	if (cmd->cmd)
+	{
 		free(cmd->cmd);
+		cmd->cmd = NULL;
+	}
 	if (cmd->tokens)
 	{
-		i = 0;
-		while (cmd->tokens[i])
-		{
-			free(cmd->tokens[i]);
-			i++;
-		}
-		free(cmd->tokens);
+		free_array(cmd->tokens, array_len(cmd->tokens));
+		cmd->tokens = NULL;
+	}
+	if (cmd->env)
+	{
+		free_array(cmd->env, array_len(cmd->env));
+		cmd->env = NULL;
+	}
+	if (cmd->env_list)
+	{
+		free_env_list(cmd->env_list);
+		cmd->env_list = NULL;
 	}
 	free(cmd);
+	cmd = NULL;
 }
 
 /*
@@ -63,13 +72,15 @@ void	free_ast(t_ast *root)
 
 	if (!root)
 		return ;
-	printf("Freeing node at %p\n", (void *)root);
 	free_ast(root->left);
 	free_ast(root->right);
+	if (root->redir)
+	{
+		free_redir(root->redir);
+		root->redir = NULL;
+	}
 	if (root->command)
 	{
-		printf("Freeing command at %p: %s\n", (void *)root->command, \
-		root->command);
 		free(root->command);
 		root->command = NULL;
 	}
@@ -78,15 +89,49 @@ void	free_ast(t_ast *root)
 		i = 0;
 		while (root->args[i])
 		{
-			printf("Freeing arg at %p: %s\n", (void *)root->args[i], \
-			root->args[i]);
 			free(root->args[i]);
+			root->args[i] = NULL;
 			i++;
 		}
-		printf("Freeing args array at %p\n", (void *)root->args);
 		free(root->args);
+		root->args = NULL;
 	}
-	printf("Freeing root node at %p\n", (void *)root);
 	free(root);
-	root = NULL;
+}
+
+void	free_msh(t_msh *msh)
+{
+	if (!msh)
+		return ;
+	if (msh->env)
+		free_array(msh->env, array_len(msh->env));
+	msh->env = NULL;
+	free(msh);
+}
+
+void	free_redir(t_redir *redir)
+{
+	if (!redir)
+		return ;
+	if (redir->input_file)
+	{
+		free(redir->input_file);
+		redir->input_file = NULL;
+	}
+	if (redir->output_file)
+	{
+		free(redir->output_file);
+		redir->output_file = NULL;
+	}
+	if (redir->append_file)
+	{
+		free(redir->append_file);
+		redir->append_file = NULL;
+	}
+	if (redir->here_doc_delim)
+	{
+		free(redir->here_doc_delim);
+		redir->here_doc_delim = NULL;
+	}
+	free(redir);
 }

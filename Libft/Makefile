@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+         #
+#    By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/17 13:38:57 by keramos-          #+#    #+#              #
-#    Updated: 2024/07/09 14:47:19 by fibarros         ###   ########.fr        #
+#    Updated: 2024/08/11 16:11:32 by keramos-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -71,7 +71,7 @@ LIBFT_FILES = isalpha isdigit isalnum \
 		lstlast lstadd_back lstdelone \
 		lstclear lstiter lstmap \
 		strcmp strtoke strndup \
-		strcdup
+		strcdup strncpy
 
 SRC = $(addprefix $(SRC_DIR)ft_, $(addsuffix .c, $(LIBFT_FILES)))
 

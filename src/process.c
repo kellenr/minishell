@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   process.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 17:32:36 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/09 02:55:16 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/07 10:16:54 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,10 @@ char	*process_input(const char *input)
 
 	result = malloc(strlen(input) * 2);
 	if (!result)
+	{
+		perror("allocation error");
 		return (NULL);
+	}
 	res_ptr = result;
 	inp_ptr = input;
 	while (*inp_ptr)
