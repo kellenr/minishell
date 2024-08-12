@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_ast_op.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 16:33:38 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/12 06:41:17 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/12 14:50:06 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ t_ast	*handle_operator_redir_ast(t_token **current_token, t_ast *root)
 	if (!redir_node)
 		return (NULL);
 	(*current_token) = (*current_token)->next;
+	
 	if (*current_token == NULL || is_operator((*current_token)->op))
 	{
 		ft_printf("msh: syntax error near unexpected token 'newline'\n");

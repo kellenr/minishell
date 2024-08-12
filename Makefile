@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+         #
+#    By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/07 17:06:07 by keramos-          #+#    #+#              #
-#    Updated: 2024/08/12 02:11:09 by keramos-         ###   ########.fr        #
+#    Updated: 2024/08/12 15:05:04 by fibarros         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -75,7 +75,7 @@ SRCS = minishell.c \
 	src/cmd_execute.c src/execute.c src/process.c src/path.c src/signals.c \
 	modules/var_exp.c modules/var_utils.c modules/setup_pipe.c \
 	modules/setup_redir.c modules/setup_and_or_parent.c modules/redir_utils.c \
-	utils/op_utils.c utils/exp_utils.c utils/ast_utils_v2.c
+	utils/op_utils.c utils/exp_utils.c utils/ast_utils_v2.c utils/cmd_exec_utils.c
 
 OBJS = $(SRCS:.c=.o)
 

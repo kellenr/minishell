@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 09:43:39 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/12 05:38:46 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/12 15:04:33 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -224,6 +224,8 @@ char	*get_command_path(t_cmd *cmd);
 void	execute_in_child(char *cmd_path, char **tokens, char **env);
 void	handle_child_status(t_cmd *cmd, int status);
 int		check_tokens(t_cmd *cmd);
+void	handle_empty_prompt(char *prompt, char **trimmed_prompt);
+void	handle_preprocessing(char *trimmed_prompt, char **preprocessed_input);
 
 /*									ENV										  */
 int		init_env(t_cmd *cmd, char **envp);
