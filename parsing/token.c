@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 14:18:00 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/11 18:04:00 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/12 16:58:28 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,9 +121,13 @@ char	*extract_token(char **input, t_msh *msh, int *heredoc_flag)
 	}
 	expanded_token = exp_env_var(token, msh);
 	free(token);
+	if (!expanded_token)
+		return (NULL);
 	token = expanded_token;
 	cleaned_token = remove_quotes(token);
 	free(token);
+	if(!cleaned_token)
+		return (NULL);
 	return (cleaned_token);
 }
 

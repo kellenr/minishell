@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 13:54:08 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/12 02:52:30 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/12 14:48:33 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,6 @@ void	populate_tokens_array(t_ast *root, char **tokens, int *index)
  */
 void	execute_ast(t_ast *root, t_msh *msh)
 {
-	t_cmd	*cmd;
-
 	if (!root)
 		return ;
 	if (root->op == PIPE)
@@ -63,28 +61,7 @@ void	execute_ast(t_ast *root, t_msh *msh)
 	else if (root->op == SUBSHELL)
 		handle_parentheses_op(root, msh);
 	else
-	{
-		cmd = ast_to_cmd(root);
-		if (!cmd)
-		{
-			ft_printf("Error: Failed to create command");
-			msh->exit_status = 1;
-			return ;
-		}
-		cmd->msh = msh;
-		if (init_env(cmd, msh->env) != 0)
-		{
-			ft_printf("Error: Failed to initialize env");
-			msh->exit_status = 1;
-			free_cmd(cmd);
-			return ;
-		}
-		if (is_builtin(cmd->cmd))
-			cmd->msh->exit_status = execute_builtin(cmd);
-		else
-			execute_command(cmd);
-		free_cmd(cmd);
-	}
+		execute_command_helper(root, msh);
 }
 
 /*
@@ -117,11 +94,8 @@ int	execute_builtin(t_cmd *cmd)
  * Forks a child process to execute the command and waits for it to complete.
  * Updates the global status variable with the exit status of the command.
  */
-
 void	execute_command(t_cmd *cmd)
 {
-	pid_t	pid;
-	int		status;
 	char	*cmd_path;
 
 	if (!check_tokens(cmd))
@@ -133,19 +107,7 @@ void	execute_command(t_cmd *cmd)
 		return ;
 	}
 	handle_non_interactive();
-	pid = fork();
-	if (pid == 0)
-		execute_in_child(cmd_path, cmd->tokens, cmd->env);
-	else if (pid > 0)
-	{
-		waitpid(pid, &status, 0);
-		handle_child_status(cmd, status);
-	}
-	else
-	{
-		perror("fork");
-		cmd->msh->exit_status = 1;
-	}
+	fork_and_execute(cmd, cmd_path);
 	if (!(ft_strcmp(cmd->tokens[0], cmd_path) == 0))
 		free(cmd_path);
 	signal(SIGINT, SIG_DFL);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/06 14:57:47 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/06 15:21:34 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/12 16:33:04 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,18 @@
 
 char	*get_command_path(t_cmd *cmd)
 {
-	char	*cmd_path;
+	char		*cmd_path;
+	struct stat	path_stat;
+	char		*expanded_cmd;
 
+	expanded_cmd = exp_env_var(cmd->tokens[0], cmd->msh);
+	if (lstat(expanded_cmd, &path_stat) == 0 && S_ISDIR(path_stat.st_mode))
+	{
+		ft_printf("msh: %s: Is a directory\n", expanded_cmd);
+		cmd->msh->exit_status = 126;
+		free(expanded_cmd);
+		return (NULL);
+	}
 	cmd_path = find_path(cmd->tokens[0], cmd->env);
 	if (!cmd_path)
 	{
@@ -23,6 +33,7 @@ char	*get_command_path(t_cmd *cmd)
 		cmd->msh->exit_status = 127;
 		return (NULL);
 	}
+	free(expanded_cmd);
 	return (cmd_path);
 }
 

@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 09:43:39 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/12 05:38:46 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/12 16:49:07 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,10 @@
 # include <sys/wait.h>
 # include <signal.h>
 # include <sys/ioctl.h>
+# include <sys/stat.h>
 
 /* # include <sys/types.h>
-# include <sys/stat.h>
+
 # include <dirent.h>
  */
 
@@ -218,6 +219,9 @@ char	*get_multi_char_op(char **input, int *heredoc_flag);
 void	free_ast_node(t_ast *node);
 int		handle_malloc_failure(t_ast *node, const char *error_message);
 t_ast	*free_redir_node(t_redir *redir, t_ast *node);
+void	fork_and_execute(t_cmd *cmd, char *cmd_path);
+void	execute_command_helper(t_ast *root, t_msh *msh);
+void	parse_and_execute(t_token *tokens, t_msh *msh);
 
 /*					Exec utils					*/
 char	*get_command_path(t_cmd *cmd);
@@ -294,6 +298,7 @@ int		execute_builtin(t_cmd *cmd);
 int		count_ast_nodes(t_ast *root);
 void	populate_tokens_array(t_ast *root, char **tokens, int *index);
 void	*handle_buffer_overflow(const char *error_message);
+void	free_null(char *str);
 
 /*                                    module                                  */
 char	*exp_env_var(char *input, t_msh *msh);

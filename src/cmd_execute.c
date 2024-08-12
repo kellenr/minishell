@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 13:54:08 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/12 04:13:33 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/12 14:55:35 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ void	process_cmd(char *prompt, t_msh *msh)
 	char	*trimmed_prompt;
 	char	*preprocessed_input;
 	t_token	*tokens;
-	t_ast	*cmd_tree;
 
 	if (!prompt || !*prompt)
 		return ;
@@ -43,13 +42,7 @@ void	process_cmd(char *prompt, t_msh *msh)
 		msh->exit_status = 1;
 		return ;
 	}
-	cmd_tree = parse_tokens_to_ast(tokens);
-	free_tokens(tokens);
-	if (cmd_tree)
-	{
-		execute_ast(cmd_tree, msh);
-		free_ast(cmd_tree);
-	}
+	parse_and_execute(tokens, msh);
 }
 
 /*
@@ -122,4 +115,17 @@ char	**copy_tokens(char **args, int *count)
 	}
 	tokens[*count] = NULL;
 	return (tokens);
+}
+
+void	parse_and_execute(t_token *tokens, t_msh *msh)
+{
+	t_ast	*cmd_tree;
+
+	cmd_tree = parse_tokens_to_ast(tokens);
+	free_tokens(tokens);
+	if (cmd_tree)
+	{
+		execute_ast(cmd_tree, msh);
+		free_ast(cmd_tree);
+	}
 }
