@@ -1,4 +1,4 @@
-/* ************************************************************************** */
+ /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   cmd_exec_utils.c                                   :+:      :+:    :+:   */
@@ -31,4 +31,30 @@ void	handle_preprocessing(char *trimmed_prompt, char **preprocessed_input)
 	*preprocessed_input = process_input(trimmed_prompt);
 	if (!preprocessed_input)
 		ft_error("Error: failed to process input");
+}
+
+void	execute_simple_command(t_ast *root, t_msh *msh)
+{
+	t_cmd	*cmd;
+
+	cmd = ast_to_cmd(root);
+	if (!cmd)
+	{
+		ft_printf("Error: Failed to create command");
+		msh->exit_status = 1;
+		return ;
+	}
+	cmd->msh = msh;
+	if (init_env(cmd, msh->env) != 0)
+	{
+		ft_printf("Error: Failed to initialize env");
+		msh->exit_status = 1;
+		free_cmd(cmd);
+		return ;
+	}
+	if (is_builtin(cmd->cmd))
+		cmd->msh->exit_status = execute_builtin(cmd);
+	else
+		execute_command(cmd);
+	free_cmd(cmd);
 }

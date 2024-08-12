@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 15:48:01 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/12 15:12:41 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/12 16:08:28 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,3 +65,12 @@ int	handle_malloc_failure(t_ast *node, const char *error_message)
 	return (-1);
 }
 
+void	process_heredoc_flag(int *heredoc_flag, t_msh *msh, char *token)
+{
+	if (*heredoc_flag)
+	{
+		*heredoc_flag = 0;
+		if (has_quotes(token))
+			msh->heredoc_flag = 1;
+	}
+}
