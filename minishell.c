@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 12:07:43 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/11 16:25:05 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/11 21:41:07 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ int	main(int argc, char **argv, char **env)
 		exit(0);
 	}
 	ft_intro_art();
+	setup_signal_handlers();
 	receive_msg(msh);
 	free_all(msh);
 	rl_clear_history();
@@ -83,4 +84,15 @@ int	init_msh(char **env, t_msh *msh)
 void	free_all(t_msh *msh)
 {
 	free_msh(msh);
+}
+
+void	setup_signal_handlers(void)
+{
+	struct sigaction	sa;
+
+	sa.sa_handler = sig_handler_int;
+	sigemptyset(&sa.sa_mask);
+	sa.sa_flags = SA_RESTART;
+	sigaction(SIGINT, &sa, NULL);
+	signal(SIGQUIT, SIG_IGN);
 }

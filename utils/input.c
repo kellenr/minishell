@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 18:34:23 by keramos-          #+#    #+#             */
-/*   Updated: 2024/06/02 14:17:46 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/11 19:03:07 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ char	*read_input(void)
 {
 	char	*input;
 
-	input = readline(P_L "🌸 Minishel" RT "-> ");
+	input = readline("\001" P_L "\002🌸 Minishel\001" RT "\002-> ");
 	if (input && *input)
 		add_history(input);
 	return (input);

@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 16:33:38 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/11 18:03:19 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/12 05:47:27 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,79 +48,40 @@ t_ast	*handle_operator_redir_ast(t_token **current_token, t_ast *root)
 	if (!redir_node)
 		return (NULL);
 	(*current_token) = (*current_token)->next;
+	if (*current_token == NULL || is_operator((*current_token)->op))
+	{
+		ft_printf("msh: syntax error near unexpected token 'newline'\n");
+		return (free_redir_node(redir_node->redir, redir_node));
+	}
 	if (redir_node->op == REDIR_INPUT)
 	{
 		handle_redir_file(current_token, &redir_node->redir->input_file);
 		if (!redir_node->redir->input_file)
-		{
-			free_redir(redir_node->redir);
-			free(redir_node);
-			return (NULL);
-		}
+			return (free_redir_node(redir_node->redir, redir_node));
 	}
 	else if (redir_node->op == REDIR_REPLACE)
 	{
 		handle_redir_file(current_token, &redir_node->redir->output_file);
 		if (!redir_node->redir->output_file)
-		{
-			free_redir(redir_node->redir);
-			free(redir_node);
-			return (NULL);
-		}
+			return (free_redir_node(redir_node->redir, redir_node));
 	}
 	else if (redir_node->op == REDIR_APPEND)
 	{
 		handle_redir_file(current_token, &redir_node->redir->append_file);
 		if (!redir_node->redir->append_file)
-		{
-			free_redir(redir_node->redir);
-			free(redir_node);
-			return (NULL);
-		}
+			return (free_redir_node(redir_node->redir, redir_node));
 	}
 	else if (redir_node->op == REDIR_HERE_DOC)
 	{
 		handle_redir_file(current_token, &redir_node->redir->here_doc_delim);
 		if (!redir_node->redir->here_doc_delim)
-		{
-			free_redir(redir_node->redir);
-			free(redir_node);
-			return (NULL);
-		}
+			return (free_redir_node(redir_node->redir, redir_node));
 	}
 	else
 	{
 		redir_node->right = init_ast(current_token);
 		if (!redir_node->right)
-		{
-			free_redir(redir_node->redir);
-			free(redir_node);
-			return (NULL);
-		}
-	}
-	return (redir_node);
-}
-
-t_ast	*create_redir_node(int op, t_ast *root)
-{
-	t_ast	*redir_node;
-
-	redir_node = malloc(sizeof(t_ast));
-	if (!redir_node)
-	{
-		ft_error("malloc failed");
-		return (NULL);
-	}
-	redir_node->op = op;
-	redir_node->left = root;
-	redir_node->right = NULL;
-	redir_node->command = NULL;
-	redir_node->args = NULL;
-	redir_node->redir = init_redir();
-	if (!redir_node->redir)
-	{
-		free(redir_node);
-		return (NULL);
+			return (free_redir_node(redir_node->redir, redir_node));
 	}
 	return (redir_node);
 }
@@ -129,6 +90,12 @@ t_ast	*handle_operator_and_or_ast(t_token **current_token, t_ast *root)
 {
 	t_ast	*and_or_node;
 
+	if (root == NULL)
+	{
+		ft_printf("msh: syntax error near unexpected token '%s'\n", \
+				(*current_token)->value);
+		return (NULL);
+	}
 	and_or_node = malloc(sizeof(t_ast));
 	if (!and_or_node)
 	{
@@ -166,4 +133,40 @@ t_ast	*handle_operator_ast(t_token **current_token, t_ast *root)
 			return (handle_operator_and_or_ast(current_token, root));
 	}
 	return (NULL);
+}
+
+/*
+ * Function to handle non-operator tokens and update the AST.
+ * Takes the current token and the current AST node as arguments.
+ * Returns the updated current AST node.
+ *
+ * Add the argument to the command's args
+ * current_node->args = realloc(current_node->args, sizeof(char *) * (argc + 2));
+ * Error: too many arguments
+ * Free the AST and exit
+ */
+t_ast	*handle_non_operator(t_token **current_token, t_ast *current_node)
+{
+	int	argc;
+
+	if (current_node->command == NULL)
+		initialize_command_and_args(current_node, *current_token);
+	else
+	{
+		argc = 0;
+		while (current_node->args[argc] != NULL && argc < MAX_ARGUMENTS)
+			argc++;
+		if (argc < MAX_ARGUMENTS)
+		{
+			current_node->args[argc] = safe_strdup((*current_token)->value);
+			current_node->args[argc + 1] = NULL;
+		}
+		else
+		{
+			free_ast(current_node);
+			ft_error("Error: too many arguments");
+		}
+	}
+	(*current_token) = (*current_token)->next;
+	return (current_node);
 }
