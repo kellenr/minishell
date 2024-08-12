@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 13:40:58 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/12 06:30:56 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/12 06:40:12 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,11 +87,6 @@ t_ast	*create_ast_node(void)
 	}
 	node->command = NULL;
 	node->args = NULL;
-	node->redir = NULL;
-	node->left = NULL;
-	node->right = NULL;
-	node->op = NONE;
-	printf("Created AST node: %p\n", node);
 	return (node);
 }
 

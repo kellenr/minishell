@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 00:20:12 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/12 06:21:15 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/12 06:39:45 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,6 @@ void	free_ast(t_ast *root)
 {
 	if (!root)
 		return ;
-	printf("Freeing AST node: %p\n", root);
 	free_ast(root->left);
 	free_ast(root->right);
 	free_ast_node(root);
