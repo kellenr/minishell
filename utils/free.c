@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 00:20:12 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/11 16:44:19 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/12 06:39:45 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,35 +68,12 @@ void	free_tokens(t_token *tokens)
  */
 void	free_ast(t_ast *root)
 {
-	int	i;
-
 	if (!root)
 		return ;
 	free_ast(root->left);
 	free_ast(root->right);
-	if (root->redir)
-	{
-		free_redir(root->redir);
-		root->redir = NULL;
-	}
-	if (root->command)
-	{
-		free(root->command);
-		root->command = NULL;
-	}
-	if (root->args)
-	{
-		i = 0;
-		while (root->args[i])
-		{
-			free(root->args[i]);
-			root->args[i] = NULL;
-			i++;
-		}
-		free(root->args);
-		root->args = NULL;
-	}
-	free(root);
+	free_ast_node(root);
+	root = NULL;
 }
 
 void	free_msh(t_msh *msh)

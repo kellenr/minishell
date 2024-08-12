@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/13 23:14:16 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/11 16:42:29 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/12 04:12:11 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,4 +133,5 @@ void print_ast(t_ast *node)
 {
 	printf("AST:\n");
 	print_ast_helper(node, 0);
-} */
+}
+ */

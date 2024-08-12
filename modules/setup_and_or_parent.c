@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   setup_and_or_parent.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 16:17:06 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/09 16:23:14 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/11 23:04:56 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,35 +33,6 @@ void	handle_logical_op(t_ast *root, t_msh *msh)
 	}
 }
 
-t_ast	*handle_parentheses_ast(t_token **current_token, t_ast *root)
-{
-	t_ast	*parentheses_node;
-
-	parentheses_node = malloc(sizeof(t_ast));
-	if (!parentheses_node)
-		ft_error("malloc failed");
-	parentheses_node->op = SUBSHELL;
-	parentheses_node->left = NULL;
-	parentheses_node->right = NULL;
-	parentheses_node->command = NULL;
-	parentheses_node->args = NULL;
-	parentheses_node->redir = NULL;
-	(*current_token) = (*current_token)->next;
-	parentheses_node->left = parse_tokens_to_ast(*current_token);
-	if (!parentheses_node->left)
-	{
-		free(parentheses_node);
-		return (NULL);
-	}
-	while (*current_token && (*current_token)->op != CLOSE)
-		(*current_token) = (*current_token)->next;
-	if (*current_token)
-		(*current_token) = (*current_token)->next;
-	if (root)
-		root->right = parentheses_node;
-	return (parentheses_node);
-}
-
 void	handle_parentheses_op(t_ast *root, t_msh *msh)
 {
 	pid_t	pid;
@@ -86,4 +57,51 @@ void	handle_parentheses_op(t_ast *root, t_msh *msh)
 	}
 	else
 		perror("fork");
+}
+
+t_ast	*parse_parentheses(t_token **current_token)
+{
+	t_ast	*pthesis_node;
+
+	pthesis_node = NULL;
+	*current_token = (*current_token)->next;
+	pthesis_node = parse_tokens_to_ast(*current_token);
+	while (*current_token && (*current_token)->op != CLOSE)
+		*current_token = (*current_token)->next;
+	if (*current_token && (*current_token)->op == CLOSE)
+		*current_token = (*current_token)->next;
+	return (pthesis_node);
+}
+
+t_ast	*integrate_ast_node(t_ast *root, t_ast *pthesis_node)
+{
+	t_ast	*current_node;
+
+	if (root)
+	{
+		if (!root->left)
+			root->left = pthesis_node;
+		else if (!root->right)
+			root->right = pthesis_node;
+		else
+		{
+			current_node = root;
+			while (current_node->right)
+				current_node = current_node->right;
+			current_node->right = pthesis_node;
+		}
+		return (root);
+	}
+	else
+	{
+		return (pthesis_node);
+	}
+}
+
+t_ast	*handle_parentheses_ast(t_token **current_token, t_ast *root)
+{
+	t_ast	*pthesis_node;
+
+	pthesis_node = parse_parentheses(current_token);
+	return (integrate_ast_node(root, pthesis_node));
 }

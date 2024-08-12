@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 19:44:25 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/11 16:46:30 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/12 06:17:32 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,17 +20,6 @@ int	ft_isspace(char c)
 {
 	if (c == ' ' || c == '\t' || c == '\n' || c == '\v'
 		|| c == '\f' || c == '\r')
-		return (1);
-	return (0);
-}
-
-/*
- * Function to check if a character is an operator character.
- * Returns 1 if the character is an operator character, 0 otherwise.
- */
-int	is_operator(char c)
-{
-	if (c == '|' || c == '<' || c == '>' || c == '&' || c == '(' || c == ')')
 		return (1);
 	return (0);
 }
@@ -103,4 +92,33 @@ char	*safe_strdup(const char *s)
 	}
 	ft_memcpy(dest, s, len);
 	return (dest);
+}
+
+void	free_ast_node(t_ast *node)
+{
+	int	i;
+
+	if (node->redir)
+	{
+		free_redir(node->redir);
+		node->redir = NULL;
+	}
+	if (node->command)
+	{
+		free(node->command);
+		node->command = NULL;
+	}
+	if (node->args)
+	{
+		i = 0;
+		while (node->args[i])
+		{
+			free(node->args[i]);
+			node->args[i] = NULL;
+			i++;
+		}
+		free(node->args);
+		node->args = NULL;
+	}
+	free(node);
 }

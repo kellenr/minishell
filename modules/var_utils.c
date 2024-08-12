@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   var_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/13 21:10:35 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/09 16:57:42 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/11 23:23:08 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,4 +89,24 @@ int	is_var_btw_squote(const char *input, int start, int end)
 		i++;
 	}
 	return (0);
+}
+
+char	*extract_and_expand_var(const char *input, int *index, t_msh *msh)
+{
+	int		j;
+	char	*var;
+	char	*expanded;
+
+	j = *index + 2;
+	var = ft_substr(input, *index, 2);
+	if (!var)
+		return (NULL);
+	expanded = exp_single_var(var, msh);
+	if (!expanded)
+		return (NULL);
+	while (input[j] && (ft_isalnum(input[j]) || input[j] == '?' || \
+		input[j] == '_' || input[j] == '$'))
+		j++;
+	*index = j;
+	return (expanded);
 }

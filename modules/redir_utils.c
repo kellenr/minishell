@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/15 11:18:57 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/11 18:19:42 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/12 05:52:49 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,18 @@ void	handle_input_redir(t_ast *root, t_msh *msh)
 {
 	int	fd;
 
+	if (root->redir->input_file == NULL || access(root->redir->input_file, \
+		F_OK) == -1)
+	{
+		ft_printf("msh: %s: No such file or directory\n", \
+		root->redir->input_file);
+		msh->exit_status = 1;
+		return ;
+	}
 	fd = open(root->redir->input_file, O_RDONLY, 0);
 	if (fd == -1)
 	{
-		ft_printf("msh: %s, no such file or directory\n", \
-		root->redir->input_file);
+		perror("open");
 		msh->exit_status = 1;
 		return ;
 	}

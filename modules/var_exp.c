@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 01:41:45 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/11 18:01:18 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/11 23:40:55 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,49 +39,6 @@ char	*exp_env_var(char *input, t_msh *msh)
 }
 
 /*
- * Function to handle the special variable $? and any following suffix.
- * Takes the input string, the current index, the result string, and the
- * shell structure.
- * Returns the updated result string and updates the index.
- */
-char	*exp_special_var(const char *input, int *index, char *rst, t_msh *msh)
-{
-	int		j;
-	char	*var;
-	char	*expanded;
-	char	*suffix;
-	char	*tmp;
-
-	j = *index + 2;
-	var = ft_substr(input, *index, 2);
-	if (!var)
-		return (NULL);
-	expanded = exp_single_var(var, msh);
-	if (!expanded)
-		return (NULL);
-	while (input[j] && (ft_isalnum(input[j]) || input[j] == '?' \
-			|| input[j] == '_' || input[j] == '$'))
-		j++;
-	suffix = ft_substr(input, *index + 2, j - (*index + 2));
-	if (!suffix)
-	{
-		free(expanded);
-		return (NULL);
-	}
-	tmp = ft_strjoin(expanded, suffix);
-	free(suffix);
-	if (!tmp)
-		return (NULL);
-	expanded = ft_strjoin(rst, tmp);
-	free(rst);
-	free(tmp);
-	if (!expanded)
-		return (NULL);
-	*index = j;
-	return (expanded);
-}
-
-/*
  * Function to handle the general case of variable expansion.
  * Takes the input string, the current index, the result string, and the
  * shell structure.
@@ -89,34 +46,15 @@ char	*exp_special_var(const char *input, int *index, char *rst, t_msh *msh)
  */
 char	*exp_general_var(const char *input, int *index, char *rst, t_msh *msh)
 {
-	int		j;
-	char	*var;
 	char	*expanded;
-	char	*tmp;
 
-	j = *index + 1;
-	while (input[j] && (ft_isalnum(input[j]) || input[j] == '?' \
-			|| input[j] == '_'))
-		j++;
-	var = ft_substr(input, *index, j - *index);
-	if (!var)
-		return (NULL);
-	if (is_var_btw_squote(input, *index, j))
-		expanded = ft_strdup (var);
-	else
-		expanded = exp_single_var(var, msh);
+	expanded = ext_and_exp_var(input, index, msh);
 	if (!expanded)
 	{
 		free(rst);
 		return (NULL);
 	}
-	tmp = ft_strjoin(rst, expanded);
-	free(rst);
-	free(expanded);
-	if (!tmp)
-		return (NULL);
-	*index = j;
-	return (tmp);
+	return (combine_expanded_with_rest(expanded, rst));
 }
 
 /*
@@ -147,43 +85,46 @@ char	*exp_variable(const char *input, int *index, char *result, t_msh *msh)
 }
 
 /*
- * Function to expand a single environment variable.
- * Takes the token and the shell structure as arguments.
- * Returns the expanded value of the environment variable.
+ * Function to process a literal in the input string.
+ * Takes the input string, the current index, and the result string.
+ * Returns the updated result string and updates the index.
  */
-char	*exp_single_var(char *token, t_msh *msh)
+char	*const_final_exp(char *exp, const char *input, int *index, char *rst)
 {
-	char	*key;
-	char	*value;
-	char	*result;
+	char	*suffix;
+	char	*tmp;
+	char	*final_expansion;
 
-	if (ft_strcmp(token, "$?") == 0)
-		result = ft_itoa(msh->exit_status);
-	else if (token[0] != '$')
-	{
-		result = ft_strdup(token);
-		if (!result)
-		{
-			perror("malloc fail");
-			return (NULL);
-		}
-	}
-	else
-	{
-		key = token + 1;
-		value = get_env_value(key, msh->env);
-		if (value)
-		{
-			result = ft_strdup(value);
-			if (!result)
-			{
-				perror("malloc fail");
-				return (NULL);
-			}
-		}
-		else
-			result = ft_strdup("");
-	}
-	free(token);
-	return (result);
+	suffix = ft_substr(input, *index + 2, *index - (*index + 2));
+	if (!suffix)
+		return (NULL);
+	tmp = ft_strjoin(exp, suffix);
+	free(suffix);
+	free(exp);
+	if (!tmp)
+		return (NULL);
+	final_expansion = ft_strjoin(rst, tmp);
+	free(rst);
+	free(tmp);
+	if (!final_expansion)
+		return (NULL);
+	return (final_expansion);
+}
+
+/*
+ * Function to expand special variables in the input string.
+ * Takes the input string, the current index, the result string,
+ * and the shell structure.
+ * Returns the updated result string and updates the index.
+ * Special variables are $?. They are expanded to the exit status of the last
+ * command.
+ */
+char	*exp_special_var(const char *input, int *index, char *rst, t_msh *msh)
+{
+	char	*exp;
+
+	exp = extract_and_expand_var(input, index, msh);
+	if (!exp)
+		return (NULL);
+	return (const_final_exp(exp, input, index, rst));
 }

@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 09:43:39 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/11 17:29:12 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/12 05:38:46 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,8 @@
  */
 
 # define MAX_TKS 1024
-# define MAX_ARGUMENTS 10
+# define MAX_ARGUMENTS 100
+# define BUFFER_MULTIPLIER 3
 
 /* COLOR intro */
 # define RT			"\033[0m"
@@ -213,6 +214,10 @@ void	free_msh(t_msh *msh);
 void	free_all(t_msh *msh);
 void	free_redir(t_redir *redir);
 char	*handle_parenthesis(char **input);
+char	*get_multi_char_op(char **input, int *heredoc_flag);
+void	free_ast_node(t_ast *node);
+int		handle_malloc_failure(t_ast *node, const char *error_message);
+t_ast	*free_redir_node(t_redir *redir, t_ast *node);
 
 /*					Exec utils					*/
 char	*get_command_path(t_cmd *cmd);
@@ -228,6 +233,7 @@ void	add_env_node(t_env **env_list, t_env *node);
 int		array_len(char **arr);
 void	free_env(t_cmd *cmd);
 void	free_env_list(t_env *env_list);
+int		parse_env_str(const char *env_str, char **name, char **value);
 
 /*                                   BUILT                                    */
 
@@ -265,12 +271,21 @@ t_ast	*init_ast(t_token **current_token);
 t_ast	*handle_non_operator(t_token **current_token, t_ast *current_node);
 t_ast	*handle_operator_ast(t_token **current_token, t_ast *root);
 t_ast	*parse_tokens_to_ast(t_token *tokens);
+int		set_command_and_args(t_ast *node, t_token *current_token);
+t_ast	*create_ast_node(void);
+t_ast	*handle_pthesis_tk(t_token **cur_token, t_ast **root, t_ast **cur_node);
+t_ast	*handle_op_and_non_op_tokens(t_token *cur_token, t_ast *root);
+void	handle_token_op(t_token **cur_token, t_ast **cur_node, t_ast **root, \
+		t_ast **pthesis_node);
+void	*free_ast_return_null(t_ast *cur_node);
+void	*handle_nop_block(t_token **cur_token, t_ast **cur_node, t_ast **root);
 
 /*                                    src                                     */
 
 char	*process_input(const char *input);
 void	handle_quotes(const char **inp_ptr, char **res_ptr);
-void	handle_operator(const char **inp_ptr, char **res_ptr);
+void	handle_operator(const char **inp_ptr, char **res_ptr, char *result, \
+size_t buffer_size);
 t_cmd	*ast_to_cmd(t_ast *root);
 void	process_cmd(char *prompt, t_msh *msh);
 void	execute_ast(t_ast *root, t_msh *msh);
@@ -278,6 +293,7 @@ void	execute_command(t_cmd *cmd);
 int		execute_builtin(t_cmd *cmd);
 int		count_ast_nodes(t_ast *root);
 void	populate_tokens_array(t_ast *root, char **tokens, int *index);
+void	*handle_buffer_overflow(const char *error_message);
 
 /*                                    module                                  */
 char	*exp_env_var(char *input, t_msh *msh);
@@ -288,6 +304,16 @@ void	token_var_exp(t_token *head, t_msh *msh);
 char	*exp_single_var(char *token, t_msh *msh);
 char	*exp_special_var(const char *input, int *index, char *rst, t_msh *msh);
 char	*exp_general_var(const char *input, int *index, char *rst, t_msh *msh);
+void	handle_logical_op(t_ast *root, t_msh *msh);
+void	handle_parentheses_op(t_ast *root, t_msh *msh);
+t_ast	*parse_parentheses(t_token **current_token);
+t_ast	*integrate_ast_node(t_ast *root, t_ast *pthesis_node);
+t_ast	*handle_parentheses_ast(t_token **current_token, t_ast *root);
+char	*extract_and_expand_var(const char *input, int *index, t_msh *msh);
+char	*const_final_exp(char *exp, const char *input, int *index, char *rst);
+char	*get_expanded_value(char *token, t_msh *msh);
+char	*ext_and_exp_var(const char *input, int *index, t_msh *msh);
+char	*combine_expanded_with_rest(char *expanded, char *rst);
 
 /*                                    pipes                                  */
 pid_t	fork_first_child(t_ast *root, t_msh *msh, int pipefd[2]);
@@ -305,10 +331,7 @@ t_ast	*handle_operator_redir_ast(t_token **current_token, t_ast *root);
 t_redir	*init_redir(void);
 
 // Logical Execution Functions
-void	handle_logical_op(t_ast *root, t_msh *msh);
 t_ast	*handle_operator_and_or_ast(t_token **current_token, t_ast *root);
-t_ast	*handle_parentheses_ast(t_token **current_token, t_ast *root);
-void	handle_parentheses_op(t_ast *root, t_msh *msh);
 
 void	print_ast(t_ast *node);
 void	print_pipe(t_ast *node, int level, const char *label);
@@ -329,7 +352,6 @@ void	handle_redir_file(t_token **current_token, char **file_field);
 int		has_quotes(char *delimiter);
 char	*read_heredoc_line(char *delimiter);
 char	*expand_heredoc_line(char *line, t_msh *msh);
-t_ast	*handle_parenthesis_ast(t_token **current_token, t_ast *root);
 
 /*									SIGNALS								*/
 void	sig_handler_int(int signum);
@@ -337,6 +359,7 @@ void	handle_signals(void);
 void	sig_non_interactive(int signum);
 void	handle_non_interactive(void);
 void	sig_handle_heredoc(int signum);
+void	setup_signal_handlers(void);
 // void	heredoc_sig_handler(int signum, siginfo_t *info, void *context);
 // void	handle_signals_heredoc(void);
 

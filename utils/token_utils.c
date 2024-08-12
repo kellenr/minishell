@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/05 16:47:37 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/11 18:05:37 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/11 20:05:32 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,26 +39,12 @@ char	*handle_operator_token(char **input, int *heredoc_flag)
 {
 	char	*result;
 
-	if (is_multi_char_op(input, "<<"))
-	{
-		*heredoc_flag = 1;
-		result = (ft_strdup("<<"));
-	}
-	else if (is_multi_char_op(input, ">>"))
-		result = (ft_strdup(">>"));
-	else if (is_multi_char_op(input, "&&"))
-		result = (ft_strdup("&&"));
-	else if (is_multi_char_op(input, "||"))
-		result = (ft_strdup("||"));
-	else
-	{
-		(*input)++;
-		result = (ft_strndup(*input - 1, 1));
-	}
+	result = get_multi_char_op(input, heredoc_flag);
 	if (!result)
 	{
-		perror("malloc fail");
-		return (NULL);
+		result = ft_strndup((*input)++, 1);
+		if (!result)
+			perror("malloc fail");
 	}
 	return (result);
 }
