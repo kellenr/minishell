@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 16:57:00 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/12 21:41:45 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/12 21:58:20 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,13 @@
  */
 int	ft_export(t_cmd *cmd)
 {
-	t_env	*env_list;
+	t_env	*export_list;
 	int		i;
 
-	env_list = cmd->env_list;
+	export_list = cmd->export_list;
 	if (cmd->argc == 1)
 	{
-		print_export(env_list);
+		print_export(export_list);
 		return (0);
 	}
 	i = 1;
@@ -40,7 +40,7 @@ int	ft_export(t_cmd *cmd)
 			handle_export_vars(cmd, cmd->tokens[i]);
 		i++;
 	}
-	if (update_env_msh(cmd->msh, cmd->env_list) != 0)
+	if (update_env_msh(cmd->msh, cmd->export_list) != 0)
 	{
 		perror("Error updating msh env");
 		return (-1);
@@ -61,20 +61,21 @@ void	handle_export_vars(t_cmd *cmd, char *arg)
 		*equal_sign = '\0';
 		name = ft_strdup(arg);
 		value = ft_strdup(equal_sign + 1);
-		existing_var = find_env_var(cmd->env_list, name);
-		if (existing_var)
-		{
-			free(existing_var->value);
-			existing_var->value = value;
-			free(name);
-		}
-		else
-			add_env_var(&cmd->env_list, name, value);
 	}
 	else
 	{
-		
+		name = ft_strdup(arg);
+		value = ft_strdup("");
 	}
+	existing_var = find_env_var(cmd->export_list, name);
+	if (existing_var)
+	{
+		free(existing_var->value);
+		existing_var->value = value;
+		free(name);
+	}
+	else
+		add_env_var(&cmd->export_list, name, value);
 }
 
 t_env	*find_env_var(t_env *env_list, char *var)
@@ -88,15 +89,18 @@ t_env	*find_env_var(t_env *env_list, char *var)
 	return (NULL);
 }
 
-void	print_export(t_env *env_list)
+void	print_export(t_env *export_list)
 {
 	t_env	*sorted_list;
 
-	sorted_list = sort_env_list(env_list);
+	sorted_list = sort_env_list(export_list);
 	while (sorted_list != NULL)
 	{
-		ft_printf("declare -x %s=\"%s\"\n", sorted_list->name, \
+		if (sorted_list->value && *sorted_list->value)
+			ft_printf("declare -x %s=\"%s\"\n", sorted_list->name, \
 			sorted_list->value);
+		else
+			ft_printf("declare -x %s\n", sorted_list->name);
 		sorted_list = sorted_list->next;
 	}
 }
