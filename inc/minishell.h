@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 09:43:39 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/12 15:04:33 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/12 16:00:00 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -218,6 +218,10 @@ char	*get_multi_char_op(char **input, int *heredoc_flag);
 void	free_ast_node(t_ast *node);
 int		handle_malloc_failure(t_ast *node, const char *error_message);
 t_ast	*free_redir_node(t_redir *redir, t_ast *node);
+int		handle_redir_input(t_token **current_token, t_ast *redir_node);
+int		handle_redir_replace(t_token **current_token, t_ast *redir_node);
+int		handle_redir_append(t_token **current_token, t_ast *redir_node);
+int		handle_redir_heredoc(t_token **current_token, t_ast *redir_node);
 
 /*					Exec utils					*/
 char	*get_command_path(t_cmd *cmd);
@@ -362,15 +366,5 @@ void	sig_non_interactive(int signum);
 void	handle_non_interactive(void);
 void	sig_handle_heredoc(int signum);
 void	setup_signal_handlers(void);
-// void	heredoc_sig_handler(int signum, siginfo_t *info, void *context);
-// void	handle_signals_heredoc(void);
-
-//////////// 	TEST	////////
-// void	print_tokens(char **tokens);
-//void print_env_list(t_env *env_list);
-// void test_create_env_node();
-// void test_add_env_node();
-// void test_init_arr_and_list();
-// void test_init_env();
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 16:33:38 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/12 14:50:06 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/12 15:56:02 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,36 +48,16 @@ t_ast	*handle_operator_redir_ast(t_token **current_token, t_ast *root)
 	if (!redir_node)
 		return (NULL);
 	(*current_token) = (*current_token)->next;
-	
 	if (*current_token == NULL || is_operator((*current_token)->op))
 	{
 		ft_printf("msh: syntax error near unexpected token 'newline'\n");
 		return (free_redir_node(redir_node->redir, redir_node));
 	}
-	if (redir_node->op == REDIR_INPUT)
-	{
-		handle_redir_file(current_token, &redir_node->redir->input_file);
-		if (!redir_node->redir->input_file)
-			return (free_redir_node(redir_node->redir, redir_node));
-	}
-	else if (redir_node->op == REDIR_REPLACE)
-	{
-		handle_redir_file(current_token, &redir_node->redir->output_file);
-		if (!redir_node->redir->output_file)
-			return (free_redir_node(redir_node->redir, redir_node));
-	}
-	else if (redir_node->op == REDIR_APPEND)
-	{
-		handle_redir_file(current_token, &redir_node->redir->append_file);
-		if (!redir_node->redir->append_file)
-			return (free_redir_node(redir_node->redir, redir_node));
-	}
-	else if (redir_node->op == REDIR_HERE_DOC)
-	{
-		handle_redir_file(current_token, &redir_node->redir->here_doc_delim);
-		if (!redir_node->redir->here_doc_delim)
-			return (free_redir_node(redir_node->redir, redir_node));
-	}
+	if (handle_redir_input(current_token, redir_node) == 0 || \
+		handle_redir_replace(current_token, redir_node) == 0 || \
+		handle_redir_append(current_token, redir_node) == 0 || \
+		handle_redir_heredoc(current_token, redir_node) == 0)
+		return (redir_node);
 	else
 	{
 		redir_node->right = init_ast(current_token);
@@ -86,6 +66,50 @@ t_ast	*handle_operator_redir_ast(t_token **current_token, t_ast *root)
 	}
 	return (redir_node);
 }
+
+
+// t_ast	*handle_operator_redir_ast(t_token **current_token, t_ast *root)
+// {
+// 	t_ast	*redir_node;
+
+// 	redir_node = create_redir_node((*current_token)->op, root);
+// 	if (!redir_node)
+// 		return (NULL);
+// 	(*current_token) = (*current_token)->next;
+// 	if (*current_token == NULL || is_operator((*current_token)->op))
+// 	{
+// 		ft_printf("msh: syntax error near unexpected token 'newline'\n");
+// 		return (free_redir_node(redir_node->redir, redir_node));
+// 	}
+// 	if ((redir_node->op == REDIR_INPUT )&& (handle_redir_input(current_token, \
+// 	redir_node) == 0))
+// 			return (free_redir_node(redir_node->redir, redir_node));
+// 	else if (redir_node->op == REDIR_REPLACE)
+// 	{
+// 		handle_redir_file(current_token, &redir_node->redir->output_file);
+// 		if (!redir_node->redir->output_file)
+// 			return (free_redir_node(redir_node->redir, redir_node));
+// 	}
+// 	else if (redir_node->op == REDIR_APPEND)
+// 	{
+// 		handle_redir_file(current_token, &redir_node->redir->append_file);
+// 		if (!redir_node->redir->append_file)
+// 			return (free_redir_node(redir_node->redir, redir_node));
+// 	}
+// 	else if (redir_node->op == REDIR_HERE_DOC)
+// 	{
+// 		handle_redir_file(current_token, &redir_node->redir->here_doc_delim);
+// 		if (!redir_node->redir->here_doc_delim)
+// 			return (free_redir_node(redir_node->redir, redir_node));
+// 	}
+// 	else
+// 	{
+// 		redir_node->right = init_ast(current_token);
+// 		if (!redir_node->right)
+// 			return (free_redir_node(redir_node->redir, redir_node));
+// 	}
+// 	return (redir_node);
+// }
 
 t_ast	*handle_operator_and_or_ast(t_token **current_token, t_ast *root)
 {
