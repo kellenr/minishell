@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 13:54:08 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/12 17:51:15 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/12 17:58:39 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ void	execute_ast(t_ast *root, t_msh *msh)
 	else if (root->op == SUBSHELL)
 		handle_parentheses_op(root, msh);
 	else
-	execute_simple_command(root, msh);
+		execute_simple_command(root, msh);
 }
 
 /*
