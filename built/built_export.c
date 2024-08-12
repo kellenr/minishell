@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   built_export.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 16:57:00 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/11 16:29:40 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/12 21:41:45 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,10 @@ void	handle_export_vars(t_cmd *cmd, char *arg)
 		}
 		else
 			add_env_var(&cmd->env_list, name, value);
+	}
+	else
+	{
+		
 	}
 }
 
