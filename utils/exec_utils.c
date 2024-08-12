@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/06 14:57:47 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/12 16:33:04 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/12 20:07:10 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ char	*get_command_path(t_cmd *cmd)
 	{
 		ft_printf("msh: %s: command not found\n", cmd->tokens[0]);
 		cmd->msh->exit_status = 127;
+		free(expanded_cmd);
 		return (NULL);
 	}
 	free(expanded_cmd);
