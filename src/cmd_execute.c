@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_execute.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 13:54:08 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/12 04:13:33 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/12 15:09:19 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,18 +23,11 @@ void	process_cmd(char *prompt, t_msh *msh)
 	t_token	*tokens;
 	t_ast	*cmd_tree;
 
-	if (!prompt || !*prompt)
-		return ;
-	trimmed_prompt = trim_whitespace(prompt);
-	if (!*trimmed_prompt || !trimmed_prompt)
-	{
-		free(trimmed_prompt);
-		return ;
-	}
-	preprocessed_input = process_input(trimmed_prompt);
+	trimmed_prompt = NULL;
+	preprocessed_input = NULL;
+	handle_empty_prompt(prompt, &trimmed_prompt);
+	handle_preprocessing(trimmed_prompt, &preprocessed_input);
 	free(trimmed_prompt);
-	if (!preprocessed_input)
-		ft_error("Error: failed to process input");
 	tokens = tokenize(preprocessed_input, msh);
 	free(preprocessed_input);
 	if (!tokens)

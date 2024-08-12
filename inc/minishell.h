@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 09:43:39 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/12 05:38:46 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/12 17:50:41 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -218,12 +218,21 @@ char	*get_multi_char_op(char **input, int *heredoc_flag);
 void	free_ast_node(t_ast *node);
 int		handle_malloc_failure(t_ast *node, const char *error_message);
 t_ast	*free_redir_node(t_redir *redir, t_ast *node);
+int		handle_redir_input(t_token **current_token, t_ast *redir_node);
+int		handle_redir_replace(t_token **current_token, t_ast *redir_node);
+int		handle_redir_append(t_token **current_token, t_ast *redir_node);
+int		handle_redir_heredoc(t_token **current_token, t_ast *redir_node);
+void	process_heredoc_flag(int *heredoc_flag, t_msh *msh, char *token);
 
 /*					Exec utils					*/
 char	*get_command_path(t_cmd *cmd);
 void	execute_in_child(char *cmd_path, char **tokens, char **env);
 void	handle_child_status(t_cmd *cmd, int status);
 int		check_tokens(t_cmd *cmd);
+void	handle_empty_prompt(char *prompt, char **trimmed_prompt);
+void	handle_preprocessing(char *trimmed_prompt, char **preprocessed_input);
+void	fork_and_execute(char *cmd_path, t_cmd *cmd, pid_t *pid, int *status);
+void	execute_simple_command(t_ast *root, t_msh *msh);
 
 /*									ENV										  */
 int		init_env(t_cmd *cmd, char **envp);
@@ -360,15 +369,5 @@ void	sig_non_interactive(int signum);
 void	handle_non_interactive(void);
 void	sig_handle_heredoc(int signum);
 void	setup_signal_handlers(void);
-// void	heredoc_sig_handler(int signum, siginfo_t *info, void *context);
-// void	handle_signals_heredoc(void);
-
-//////////// 	TEST	////////
-// void	print_tokens(char **tokens);
-//void print_env_list(t_env *env_list);
-// void test_create_env_node();
-// void test_add_env_node();
-// void test_init_arr_and_list();
-// void test_init_env();
 
 #endif
