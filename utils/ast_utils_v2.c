@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ast_utils_v2.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 15:48:01 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/12 16:55:10 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/13 16:15:29 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,12 +64,3 @@ int	handle_malloc_failure(t_ast *node, const char *error_message)
 	perror(error_message);
 	return (-1);
 }
-
-// void	free_null(char *str)
-// {
-// 	if (str != NULL)
-// 	{
-// 		free(str);
-// 		return NULL;
-// 	}
-// }

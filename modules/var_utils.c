@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   var_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/13 21:10:35 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/11 23:23:08 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/13 17:40:53 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,19 @@ char	*process_literal(const char *input, int *index, char *result)
 	while (input[j] && input[j] != '$')
 		j++;
 	literal = ft_substr(input, *index, j - *index);
+	if (!literal)
+	{
+		free(result);
+		return (NULL);
+
+	}
 	tmp = ft_strjoin(result, literal);
-	free(result);
+	if (!tmp)
+	{
+		free(result);
+		free(literal);
+		return (NULL);
+	}
 	free(literal);
 	*index = j;
 	return (tmp);

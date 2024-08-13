@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   var_exp.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 01:41:45 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/12 17:02:56 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/13 18:03:46 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@
  */
 char	*exp_env_var(char *input, t_msh *msh)
 {
-	char	*result;
+		char	*result;
+	char	*tmp;
 	int		i;
 
 	if (!input)
@@ -31,9 +32,15 @@ char	*exp_env_var(char *input, t_msh *msh)
 	while (input[i])
 	{
 		if (input[i] == '$')
-			result = exp_variable(input, &i, result, msh);
+			tmp = exp_variable(input, &i, result, msh);
 		else
-			result = process_literal(input, &i, result);
+			tmp = process_literal(input, &i, result);
+		if (!tmp)
+		{
+			free(result);
+			return (NULL);
+		}
+		result = tmp;
 	}
 	return (result);
 }
@@ -69,9 +76,14 @@ char	*exp_variable(const char *input, int *index, char *result, t_msh *msh)
 	char	*expanded;
 
 	j = *index + 1;
-	if (input[j] == '\0' || input[j] == ' ')
+	if ((input[j] == '\0' || input[j] == ' ' || input[j] == '"' || input[j] == '\''))
 	{
 		expanded = ft_strjoin(result, "$");
+		if (!expanded)
+		{
+			free(result);
+			return (NULL);
+		}
 		(*index)++;
 		return (expanded);
 	}

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+         #
+#    By: keramos- <keramos-@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/07 17:06:07 by keramos-          #+#    #+#              #
-#    Updated: 2024/08/12 14:42:54 by keramos-         ###   ########.fr        #
+#    Updated: 2024/08/13 15:50:23 by keramos-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -130,4 +130,3 @@ fclean: clean
 re: fclean all
 
 .PHONY: all clean fclean re
-
