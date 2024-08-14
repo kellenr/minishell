@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 09:43:39 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/12 16:49:07 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/14 13:59:34 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -357,6 +357,12 @@ void	handle_redir_file(t_token **current_token, char **file_field);
 int		has_quotes(char *delimiter);
 char	*read_heredoc_line(char *delimiter);
 char	*expand_heredoc_line(char *line, t_msh *msh);
+void	process_heredoc_flag(int *heredoc_flag, t_msh *msh, char *token);
+int		handle_redir_input(t_token **current_token, t_ast *redir_node);
+int		handle_redir_replace(t_token **current_token, t_ast *redir_node);
+int		handle_redir_append(t_token **current_token, t_ast *redir_node);
+int		handle_redir_heredoc(t_token **current_token, t_ast *redir_node);
+void	process_heredoc_flag(int *heredoc_flag, t_msh *msh, char *token);
 
 /*									SIGNALS								*/
 void	sig_handler_int(int signum);

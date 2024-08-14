@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_ast_op.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 16:33:38 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/12 06:41:17 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/14 13:57:57 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,30 +53,11 @@ t_ast	*handle_operator_redir_ast(t_token **current_token, t_ast *root)
 		ft_printf("msh: syntax error near unexpected token 'newline'\n");
 		return (free_redir_node(redir_node->redir, redir_node));
 	}
-	if (redir_node->op == REDIR_INPUT)
-	{
-		handle_redir_file(current_token, &redir_node->redir->input_file);
-		if (!redir_node->redir->input_file)
-			return (free_redir_node(redir_node->redir, redir_node));
-	}
-	else if (redir_node->op == REDIR_REPLACE)
-	{
-		handle_redir_file(current_token, &redir_node->redir->output_file);
-		if (!redir_node->redir->output_file)
-			return (free_redir_node(redir_node->redir, redir_node));
-	}
-	else if (redir_node->op == REDIR_APPEND)
-	{
-		handle_redir_file(current_token, &redir_node->redir->append_file);
-		if (!redir_node->redir->append_file)
-			return (free_redir_node(redir_node->redir, redir_node));
-	}
-	else if (redir_node->op == REDIR_HERE_DOC)
-	{
-		handle_redir_file(current_token, &redir_node->redir->here_doc_delim);
-		if (!redir_node->redir->here_doc_delim)
-			return (free_redir_node(redir_node->redir, redir_node));
-	}
+	if (handle_redir_input(current_token, redir_node) == 0 || \
+		handle_redir_replace(current_token, redir_node) == 0 || \
+		handle_redir_append(current_token, redir_node) == 0 || \
+		handle_redir_heredoc(current_token, redir_node) == 0)
+		return (redir_node);
 	else
 	{
 		redir_node->right = init_ast(current_token);

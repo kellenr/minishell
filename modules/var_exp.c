@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 01:41:45 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/13 18:03:46 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/14 14:52:56 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,12 @@
  */
 char	*exp_env_var(char *input, t_msh *msh)
 {
-		char	*result;
+	char	*result;
 	char	*tmp;
 	int		i;
 
+	result = NULL;
+	tmp = NULL;
 	if (!input)
 		return (NULL);
 	result = ft_strdup("");
@@ -40,6 +42,7 @@ char	*exp_env_var(char *input, t_msh *msh)
 			free(result);
 			return (NULL);
 		}
+		free(result);
 		result = tmp;
 	}
 	return (result);
@@ -76,7 +79,8 @@ char	*exp_variable(const char *input, int *index, char *result, t_msh *msh)
 	char	*expanded;
 
 	j = *index + 1;
-	if ((input[j] == '\0' || input[j] == ' ' || input[j] == '"' || input[j] == '\''))
+	if ((input[j] == '\0' || input[j] == ' ' || input[j] == '"' \
+		|| input[j] == '\''))
 	{
 		expanded = ft_strjoin(result, "$");
 		if (!expanded)
