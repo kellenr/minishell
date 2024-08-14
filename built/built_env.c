@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 14:14:19 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/30 12:51:04 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/14 14:10:07 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,16 @@
  */
 int	ft_env(t_cmd *cmd)
 {
-	char	**env;
+	// char	**env;
+	// t_
 
-	env = cmd->env;
-	while (*env)
-	{
-		ft_printf("%s\n", *env);
-		env++;
-	}
+	// env = cmd->env;
+	// while (*env)
+	// {
+	// 	ft_printf("%s\n", *env);
+	// 	env++;
+	// }
+	print_env_list(cmd->env_list);
 	return (0);
 }
 

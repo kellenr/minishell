@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 14:12:05 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/05 16:52:01 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/13 18:30:45 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ char	**populate_env_array(t_env *env_list, char **env_array, int list_size)
 
 	current = env_list;
 	i = 0;
-	while (i < list_size)
+	while (current && (i < list_size))
 	{
 		len = ft_strlen(current->name) + ft_strlen(current->value) + 2;
 		env_array[i] = malloc(len * sizeof(char *));

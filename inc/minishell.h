@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 09:43:39 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/12 21:55:23 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/14 10:38:57 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -239,6 +239,7 @@ int		array_len(char **arr);
 void	free_env(t_cmd *cmd);
 void	free_env_list(t_env *env_list);
 int		parse_env_str(const char *env_str, char **name, char **value);
+int		init_env_and_export(t_cmd *cmd, char **envp);
 
 /*                                   BUILT                                    */
 
@@ -371,7 +372,7 @@ void	setup_signal_handlers(void);
 
 //////////// 	TEST	////////
 // void	print_tokens(char **tokens);
-//void print_env_list(t_env *env_list);
+void print_env_list(t_env *env_list);
 // void test_create_env_node();
 // void test_add_env_node();
 // void test_init_arr_and_list();

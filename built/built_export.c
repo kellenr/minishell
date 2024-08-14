@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 16:57:00 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/12 21:58:20 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/14 13:59:33 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,28 +61,42 @@ void	handle_export_vars(t_cmd *cmd, char *arg)
 		*equal_sign = '\0';
 		name = ft_strdup(arg);
 		value = ft_strdup(equal_sign + 1);
+		existing_var = find_env_var(cmd->export_list, name);
+		if (existing_var)
+		{
+			free(existing_var->value);
+			existing_var->value = value;
+		}
+		else
+			add_env_var(&cmd->export_list, name, value);
+		existing_var = find_env_var(cmd->env_list, name);
+		if (existing_var)
+		{
+			free(existing_var->value);
+			existing_var->value = ft_strdup(value);
+			free(name);
+		}
+		else
+			add_env_var(&cmd->env_list, ft_strdup(name), ft_strdup(value));
 	}
 	else
 	{
 		name = ft_strdup(arg);
-		value = ft_strdup("");
+		existing_var = find_env_var(cmd->export_list, name);
+		if (!existing_var)
+			add_env_var(&cmd->export_list, name, ft_strdup(""));
+		// else
+		// 	free(name);
 	}
-	existing_var = find_env_var(cmd->export_list, name);
-	if (existing_var)
-	{
-		free(existing_var->value);
-		existing_var->value = value;
-		free(name);
-	}
-	else
-		add_env_var(&cmd->export_list, name, value);
 }
 
 t_env	*find_env_var(t_env *env_list, char *var)
 {
+	if (env_list == NULL || var == NULL)
+		return (NULL);
 	while (env_list)
 	{
-		if (strcmp(env_list->name, var) == 0)
+		if (ft_strcmp(env_list->name, var) == 0)
 			return (env_list);
 		env_list = env_list->next;
 	}
