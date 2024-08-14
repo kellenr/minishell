@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exp_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/11 23:25:41 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/11 23:41:08 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/14 18:16:06 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ char	*combine_expanded_with_rest(char *expanded, char *rst)
 	char	*tmp;
 
 	tmp = ft_strjoin(rst, expanded);
-	free(rst);
+	//free(rst);
 	free(expanded);
 	if (!tmp)
 		return (NULL);
