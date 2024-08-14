@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 14:14:19 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/14 14:10:07 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/14 17:13:29 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,17 +18,11 @@
  */
 int	ft_env(t_cmd *cmd)
 {
-	// char	**env;
-	// t_
-
-	// env = cmd->env;
-	// while (*env)
-	// {
-	// 	ft_printf("%s\n", *env);
-	// 	env++;
-	// }
+	if (cmd->argc > 1)
+	{
+		ft_printf("msh: env: no arguments supported\n");
+		return (-1);
+	}
 	print_env_list(cmd->env_list);
 	return (0);
 }
-
-// add error handling if there's more arguments (check if this already exists)
