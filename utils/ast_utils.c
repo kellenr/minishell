@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ast_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/06 10:06:43 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/07 11:33:31 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/15 14:08:02 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,9 @@ void	handle_redir_file(t_token **current_token, char **file_field)
 {
 	*file_field = ft_strdup((*current_token)->value);
 	if (!*file_field)
+	{
+		perror("Memory allocation failed");
 		return ;
+	}
 	(*current_token) = (*current_token)->next;
 }

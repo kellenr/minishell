@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: keramos- <keramos-@student.42.fr>          +#+  +:+       +#+         #
+#    By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/07 17:06:07 by keramos-          #+#    #+#              #
-#    Updated: 2024/08/14 13:56:17 by keramos-         ###   ########.fr        #
+#    Updated: 2024/08/15 14:10:07 by keramos-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -102,7 +102,7 @@ $(LIBFT):
 
 $(NAME): $(OBJS) $(LIBFT)
 	$(call print_status,"Creating Minishell...")
-	@$(CC) $(INCLUDES) $(OBJS) $(LIBFT) $(RL_LIB) ${LDFLAGS} -o $@ > /dev/null
+	@$(CC) $(INCLUDES) $(OBJS) $(LIBFT) $(RL_LIB) $(LDFLAGS) -o $@ > /dev/null
 	@echo "${CHECK} Compiling utilities and sources"
 
 %.o: %.c

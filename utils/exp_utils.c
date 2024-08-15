@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exp_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/11 23:25:41 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/14 18:16:06 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/15 14:11:42 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,10 @@ char	*ext_and_exp_var(const char *input, int *index, t_msh *msh)
 	if (!var)
 		return (NULL);
 	if (is_var_btw_squote(input, *index, j))
+	{
 		expanded = ft_strdup(var);
+		free(var);
+	}
 	else
 		expanded = exp_single_var(var, msh);
 	if (!expanded)
