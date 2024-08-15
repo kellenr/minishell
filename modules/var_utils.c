@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/13 21:10:35 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/11 23:23:08 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/14 22:42:49 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,19 @@ char	*process_literal(const char *input, int *index, char *result)
 	while (input[j] && input[j] != '$')
 		j++;
 	literal = ft_substr(input, *index, j - *index);
+	if (!literal)
+	{
+		free(result);
+		return (NULL);
+	}
 	tmp = ft_strjoin(result, literal);
-	free(result);
+	//free(result);
+	if (!tmp)
+	{
+		free(result);
+		free(literal);
+		return (NULL);
+	}
 	free(literal);
 	*index = j;
 	return (tmp);
@@ -104,8 +115,8 @@ char	*extract_and_expand_var(const char *input, int *index, t_msh *msh)
 	expanded = exp_single_var(var, msh);
 	if (!expanded)
 		return (NULL);
-	while (input[j] && (ft_isalnum(input[j]) || input[j] == '?' || \
-		input[j] == '_' || input[j] == '$'))
+	while (input[j] && (ft_isalnum(input[j]) || input[j] == '?'
+		|| input[j] == '_' || input[j] == '$'))
 		j++;
 	*index = j;
 	return (expanded);

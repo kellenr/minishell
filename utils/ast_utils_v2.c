@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ast_utils_v2.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 15:48:01 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/12 16:55:10 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/14 13:59:23 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,11 +65,12 @@ int	handle_malloc_failure(t_ast *node, const char *error_message)
 	return (-1);
 }
 
-// void	free_null(char *str)
-// {
-// 	if (str != NULL)
-// 	{
-// 		free(str);
-// 		return NULL;
-// 	}
-// }
+void	process_heredoc_flag(int *heredoc_flag, t_msh *msh, char *token)
+{
+	if (*heredoc_flag)
+	{
+		*heredoc_flag = 0;
+		if (has_quotes(token))
+			msh->heredoc_flag = 1;
+	}
+}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_substr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 16:05:20 by keramos-          #+#    #+#             */
-/*   Updated: 2023/11/28 18:33:08 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/14 21:10:07 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	size_t	i;
 	size_t	slen;
 
+	if (!s)
+		return (NULL);
 	slen = len;
 	if (start >= ft_strlen(s))
 		return (ft_calloc(1, 1));

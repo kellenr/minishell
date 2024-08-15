@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   setup_pipe.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/09 14:35:09 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/06 15:27:52 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/15 12:58:10 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ void	execute_pipes(t_ast *root, t_msh *msh)
 	pid_t	p1;
 	pid_t	p2;
 
+	int     err_code;
+
 	if (root->op != PIPE)
 	{
 		execute_ast(root, msh);
@@ -33,7 +35,8 @@ void	execute_pipes(t_ast *root, t_msh *msh)
 	close(pipefd[0]);
 	close(pipefd[1]);
 	waitpid(p1, NULL, 0);
-	waitpid(p2, NULL, 0);
+	waitpid(p2, &err_code, 0);
+	msh->exit_status = WEXITSTATUS(err_code);
 	return ;
 }
 

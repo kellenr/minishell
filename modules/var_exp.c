@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 01:41:45 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/12 17:02:56 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/14 22:43:04 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,11 @@
 char	*exp_env_var(char *input, t_msh *msh)
 {
 	char	*result;
+	char	*tmp;
 	int		i;
 
+	result = NULL;
+	tmp = NULL;
 	if (!input)
 		return (NULL);
 	result = ft_strdup("");
@@ -31,9 +34,16 @@ char	*exp_env_var(char *input, t_msh *msh)
 	while (input[i])
 	{
 		if (input[i] == '$')
-			result = exp_variable(input, &i, result, msh);
+			tmp = exp_variable(input, &i, result, msh);
 		else
-			result = process_literal(input, &i, result);
+			tmp = process_literal(input, &i, result);
+		if (!tmp)
+		{
+			free(result);
+			return (NULL);
+		}
+		free(result);
+		result = tmp;
 	}
 	return (result);
 }
@@ -69,9 +79,15 @@ char	*exp_variable(const char *input, int *index, char *result, t_msh *msh)
 	char	*expanded;
 
 	j = *index + 1;
-	if (input[j] == '\0' || input[j] == ' ')
+	if ((input[j] == '\0' || input[j] == ' ' || input[j] == '"' \
+		|| input[j] == '\''))
 	{
 		expanded = ft_strjoin(result, "$");
+		if (!expanded)
+		{
+			free(result);
+			return (NULL);
+		}
 		(*index)++;
 		return (expanded);
 	}
@@ -95,19 +111,29 @@ char	*const_final_exp(char *exp, const char *input, int *index, char *rst)
 	char	*tmp;
 	char	*final_expansion;
 
+	//*index += 1;
 	suffix = ft_substr(input, *index + 2, *index - (*index + 2));
 	if (!suffix)
 		return (NULL);
 	tmp = ft_strjoin(exp, suffix);
 	free(suffix);
+	suffix = NULL;
 	free(exp);
+	exp = NULL;
 	if (!tmp)
 		return (NULL);
 	final_expansion = ft_strjoin(rst, tmp);
-	free(rst);
 	free(tmp);
+	tmp = NULL;
 	if (!final_expansion)
+	{
+		free(rst);
+		rst = NULL;
 		return (NULL);
+	}
+	//free(rst);
+	// if (!final_expansion)
+	// 	return (NULL);
 	return (final_expansion);
 }
 
