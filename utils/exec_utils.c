@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/06 14:57:47 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/13 14:23:13 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/14 14:54:28 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ char	*get_command_path(t_cmd *cmd)
 	cmd_path = find_path(cmd->tokens[0], cmd->env);
 	if (!cmd_path)
 	{
-		ft_printf("msh: %s: command not found\n", cmd->tokens[0]);
+		ft_printf("msh: %s: No such file or directory\n", cmd->tokens[0]);
 		cmd->msh->exit_status = 127;
 		free(expanded_cmd);
 		return (NULL);

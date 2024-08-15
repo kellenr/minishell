@@ -121,6 +121,7 @@ typedef struct s_cmd
 	char			**tokens;
 	t_msh			*msh;
 	t_env			*env_list;
+	t_env			*export_list;
 	char			**env;
 	int				argc;
 	int				exit_status;
@@ -238,6 +239,7 @@ int		array_len(char **arr);
 void	free_env(t_cmd *cmd);
 void	free_env_list(t_env *env_list);
 int		parse_env_str(const char *env_str, char **name, char **value);
+int		init_env_and_export(t_cmd *cmd, char **envp);
 
 /*                                   BUILT                                    */
 
@@ -376,7 +378,7 @@ void	setup_signal_handlers(void);
 
 //////////// 	TEST	////////
 // void	print_tokens(char **tokens);
-//void print_env_list(t_env *env_list);
+void print_env_list(t_env *env_list);
 // void test_create_env_node();
 // void test_add_env_node();
 // void test_init_arr_and_list();

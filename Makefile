@@ -3,7 +3,7 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+         #
+#    By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/07 17:06:07 by keramos-          #+#    #+#              #
 #    Updated: 2024/08/15 14:10:07 by keramos-         ###   ########.fr        #
@@ -72,6 +72,7 @@ SRCS = minishell.c \
 	parsing/ast.c parsing/token.c parsing/handle_ast_op.c \
 	built/built_cd.c built/built_echo.c built/built_pwd.c built/built_exit.c \
 	built/built_env.c built/export_utils.c built/built_export.c built/built_unset.c \
+	built/export_sort.c \
 	src/cmd_execute.c src/execute.c src/process.c src/path.c src/signals.c \
 	modules/var_exp.c modules/var_utils.c modules/setup_pipe.c \
 	modules/setup_redir.c modules/setup_and_or_parent.c modules/redir_utils.c \

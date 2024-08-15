@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/09 02:10:15 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/13 14:11:30 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/14 14:47:17 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ char	*find_path(char *cmd, char **env)
 				return (NULL);
 			break ;
 		}
+		else
+			return (NULL);
 		i++;
 	}
 	if (!path)

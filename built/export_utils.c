@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 11:27:05 by fibarros          #+#    #+#             */
-/*   Updated: 2024/07/10 10:57:30 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/14 10:54:07 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@ int	check_valid_token(char *token, char *error_message)
 	if (!token)
 		return (0);
 	if ((token[0] == '=') || ft_isdigit(token[0]) || \
-			ft_strchr(token, '\'') || ft_strchr(token, '"'))
+			ft_strchr(token, '\'') || ft_strchr(token, '"') || \
+			ft_strchr(token, '-'))
 	{
 		ft_strcpy(error_message, "export `");
 		ft_strcat(error_message, token);
@@ -41,51 +42,34 @@ int	is_valid_export(char *token)
 	return (1);
 }
 
-t_env	*sort_env_list(t_env *env_list)
+int	init_env_and_export(t_cmd *cmd, char **envp)
 {
-	t_env	*head;
+	int		i;
+	t_env	*export_node;
+	t_env	*env_node;
 
-	if (!env_list || !env_list->next)
-		return (env_list);
-	head = env_list;
-	list_bubble_sort(head);
-	return (head);
-}
-
-void	swap(t_env *a, t_env *b)
-{
-	char	*temp_name;
-	char	*temp_value;
-
-	temp_name = a->name;
-	temp_value = a->value;
-	a->name = b->name;
-	a->value = b->value;
-	b->name = temp_name;
-	b->value = temp_value;
-}
-
-void	list_bubble_sort(t_env *head)
-{
-	t_env	*current;
-	t_env	*last_sort;
-	int		swapped;
-
-	last_sort = NULL;
-	swapped = 1;
-	while (swapped)
+	i = 0;
+	while (envp[i])
 	{
-		swapped = 0;
-		current = head;
-		while (current->next != last_sort)
+		export_node = create_env_node(envp[i]);
+		if (!export_node)
 		{
-			if (ft_strcmp(current->name, current->next->name) > 0)
-			{
-				swap(current, current->next);
-				swapped = 1;
-			}
-			current = current->next;
+			free_env_list(cmd->export_list);
+			free_env_list(cmd->env_list);
+			return (-1);
 		}
-		last_sort = current;
+		add_env_node(&cmd->export_list, export_node);
+		env_node = create_env_node(envp[i]);
+		if (!env_node)
+		{
+			free_env_list(cmd->export_list);
+			free_env_list(cmd->env_list);
+			return (-1);
+		}
+		add_env_node(&cmd->env_list, env_node);
+		i++;
 	}
+	// print_env_list(cmd->env_list);
+	return (0);
 }
+

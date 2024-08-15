@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 00:20:12 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/12 06:39:45 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/14 09:27:05 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,11 @@ void	free_cmd(t_cmd *cmd)
 	{
 		free_env_list(cmd->env_list);
 		cmd->env_list = NULL;
+	}
+	if (cmd->export_list)
+	{
+		free_env_list(cmd->export_list);
+		cmd->export_list = NULL;
 	}
 	free(cmd);
 	cmd = NULL;
