@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   built_export.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kellenr <kellenr@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 16:57:00 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/14 13:59:33 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/15 12:19:03 by kellenr          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ int	ft_export(t_cmd *cmd)
 	if (update_env_msh(cmd->msh, cmd->export_list) != 0)
 	{
 		perror("Error updating msh env");
-		return (-1);
+		return (1);
 	}
 	return (0);
 }

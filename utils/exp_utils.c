@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exp_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: kellenr <kellenr@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/11 23:25:41 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/11 23:41:08 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/15 13:21:19 by kellenr          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ char	*combine_expanded_with_rest(char *expanded, char *rst)
 	char	*tmp;
 
 	tmp = ft_strjoin(rst, expanded);
-	free(rst);
+	// free(rst);
 	free(expanded);
 	if (!tmp)
 		return (NULL);
@@ -100,7 +100,10 @@ char	*ext_and_exp_var(const char *input, int *index, t_msh *msh)
 	if (!var)
 		return (NULL);
 	if (is_var_btw_squote(input, *index, j))
+	{
 		expanded = ft_strdup(var);
+		free(var);
+	}
 	else
 		expanded = exp_single_var(var, msh);
 	if (!expanded)
