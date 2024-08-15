@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   built_export.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kellenr <kellenr@student.42.fr>            +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 16:57:00 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/15 12:19:03 by kellenr          ###   ########.fr       */
+/*   Updated: 2024/08/15 16:21:22 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,8 @@ int	ft_export(t_cmd *cmd)
 	{
 		if (is_valid_export(cmd->tokens[i]))
 			handle_export_vars(cmd, cmd->tokens[i]);
+		else
+			return (1);
 		i++;
 	}
 	if (update_env_msh(cmd->msh, cmd->export_list) != 0)

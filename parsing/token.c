@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 14:18:00 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/14 14:36:50 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/15 21:09:13 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ t_token	*create_token(char *value)
 	token->value = ft_strdup(value);
 	token->op = valid_op(value);
 	token->next = NULL;
+	token->broken = false;
 	return (token);
 }
 
@@ -77,10 +78,12 @@ t_token	*tokenize(char *input, t_msh *msh)
 			token = extract_token(&input, msh, &heredoc_flag);
 			if (!token)
 			{
-				free_tokens(head);
-				return (NULL);
+				add_token(&head, "");
+				head->broken = true;
+				return (head);
 			}
-			add_token(&head, token);
+			if (ft_strlen(token) > 0)
+				add_token(&head, token);
 			free(token);
 		}
 		input = skip_spaces(input);

@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 16:05:20 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/14 21:10:07 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/15 16:37:26 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,22 +16,20 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
 	char	*sub;
 	size_t	i;
-	size_t	slen;
+	size_t	s_len;
 
 	if (!s)
 		return (NULL);
-	slen = len;
-	if (start >= ft_strlen(s))
+	s_len = ft_strlen(s);
+	if (start >= s_len)
 		return (ft_calloc(1, 1));
-	if (start + slen > ft_strlen(s))
-	{
-		slen = (ft_strlen(s) - start);
-	}
-	sub = (char *)malloc(slen + 1);
+	if (start + len > s_len)
+		len = s_len - start;
+	sub = (char *)malloc(len + 1);
 	if (!sub)
-		return (0);
+		return (NULL);
 	i = 0;
-	while (i < slen)
+	while (i < len)
 	{
 		sub[i] = s[i + start];
 		i++;

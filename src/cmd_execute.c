@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_execute.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 13:54:08 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/14 10:48:47 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/15 21:03:03 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,12 @@ void	process_cmd(char *prompt, t_msh *msh)
 	tokens = tokenize(preprocessed_input, msh);
 	free(preprocessed_input);
 	if (!tokens)
+		return ;
+	if (tokens->broken)
 	{
 		ft_printf("Error: Unmatched quote detected\n");
 		msh->exit_status = 1;
+		free_tokens(tokens);
 		return ;
 	}
 	parse_and_execute(tokens, msh);
@@ -121,10 +124,13 @@ void	parse_and_execute(t_token *tokens, t_msh *msh)
 {
 	t_ast	*cmd_tree;
 
+	if (!tokens)
+		return ;
 	cmd_tree = parse_tokens_to_ast(tokens);
 	free_tokens(tokens);
 	if (cmd_tree)
 	{
+
 		execute_ast(cmd_tree, msh);
 		free_ast(cmd_tree);
 	}

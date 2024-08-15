@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   path.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/09 02:10:15 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/14 14:47:17 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/15 16:49:00 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,8 @@ char	*find_path(char *cmd, char **env)
 				return (NULL);
 			break ;
 		}
-		else
-			return (NULL);
+		// else
+		// 	return (NULL);
 		i++;
 	}
 	if (!path)

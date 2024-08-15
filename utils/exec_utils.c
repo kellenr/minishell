@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/06 14:57:47 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/14 14:54:28 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/15 21:50:18 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,20 +19,43 @@ char	*get_command_path(t_cmd *cmd)
 	char		*expanded_cmd;
 
 	expanded_cmd = exp_env_var(cmd->tokens[0], cmd->msh);
-	if (lstat(expanded_cmd, &path_stat) == 0 && S_ISDIR(path_stat.st_mode))
+	if (!expanded_cmd || ft_strlen(expanded_cmd) == 0)
 	{
-		ft_printf("msh: %s: Is a directory\n", expanded_cmd);
-		cmd->msh->exit_status = 126;
+		cmd->msh->exit_status = 127;
+		ft_printf("msh: command not found: %s\n", cmd->tokens[0]);
 		free(expanded_cmd);
 		return (NULL);
 	}
-	cmd_path = find_path(cmd->tokens[0], cmd->env);
-	if (!cmd_path)
+	if (!ft_strchr(expanded_cmd, '/'))
 	{
-		ft_printf("msh: %s: No such file or directory\n", cmd->tokens[0]);
-		cmd->msh->exit_status = 127;
+		cmd_path = find_path(expanded_cmd, cmd->env);
+		if (!cmd_path)
+		{
+			ft_printf("msh: %s: command not found\n", expanded_cmd);
+			cmd->msh->exit_status = 127;
+		}
 		free(expanded_cmd);
-		return (NULL);
+		return (cmd_path);
+	}
+	if (lstat(expanded_cmd, &path_stat) == 0)
+	{
+		if (S_ISDIR(path_stat.st_mode))
+		{
+			ft_printf("msh: %s: Is a directory\n", expanded_cmd);
+			cmd->msh->exit_status = 126;
+		}
+		else if (!(path_stat.st_mode & S_IXUSR))
+		{
+			ft_printf("msh: %s: Permission denied\n", expanded_cmd);
+			cmd->msh->exit_status = 126;
+		}
+		else
+			cmd_path = ft_strdup(expanded_cmd);
+	}
+	else
+	{
+		ft_printf("msh: %s: No such file or directory\n", expanded_cmd);
+		cmd->msh->exit_status = 127;
 	}
 	free(expanded_cmd);
 	return (cmd_path);

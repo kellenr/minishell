@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 01:41:45 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/14 22:43:04 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/15 17:28:10 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,6 @@ char	*const_final_exp(char *exp, const char *input, int *index, char *rst)
 	char	*tmp;
 	char	*final_expansion;
 
-	//*index += 1;
 	suffix = ft_substr(input, *index + 2, *index - (*index + 2));
 	if (!suffix)
 		return (NULL);
