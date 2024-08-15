@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
+/*   By: filipa <filipa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 11:27:05 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/14 10:54:07 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/15 16:11:34 by filipa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int	is_valid_export(char *token)
 	ft_bzero(error_message, sizeof(error_message));
 	if (!check_valid_token(token, error_message))
 	{
-		ft_error(error_message);
+		ft_printf("%s\n", error_message);
 		return (0);
 	}
 	return (1);
