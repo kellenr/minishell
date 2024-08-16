@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 11:27:05 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/16 14:19:57 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/16 14:25:26 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,11 @@ int	check_valid_token(char *token, char *error_message)
 	i = 0;
 	if (!token)
 		return (0);
+	if (ft_strlen(token) == 1 && !(ft_isalnum(token[0])))
+	{
+		format_error_message(error_message, token);
+		return (0);
+	}
 	while (token[i] && token[i] != '=')
 	{
 		if (ft_isdigit(token[0]) || token[i] == '\'' || \
