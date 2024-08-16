@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 09:43:39 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/16 12:19:20 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/16 14:42:28 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -243,6 +243,7 @@ void	free_env_list(t_env *env_list);
 int		parse_env_str(const char *env_str, char **name, char **value);
 int		init_env_and_export(t_cmd *cmd, char **envp);
 int		find_path_var(char **env);
+char	*ft_getenv(char *name, t_cmd *cmd);
 
 /*                                   BUILT                                    */
 
