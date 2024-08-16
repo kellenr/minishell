@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/06 14:57:47 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/15 21:50:18 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/16 11:50:35 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ char	*get_command_path(t_cmd *cmd)
 			cmd->msh->exit_status = 126;
 		}
 		else
-			cmd_path = ft_strdup(expanded_cmd);
+			return ft_strdup(expanded_cmd);
 	}
 	else
 	{
@@ -58,7 +58,7 @@ char	*get_command_path(t_cmd *cmd)
 		cmd->msh->exit_status = 127;
 	}
 	free(expanded_cmd);
-	return (cmd_path);
+	return (NULL);
 }
 
 void	execute_in_child(char *cmd_path, char **tokens, char **env)

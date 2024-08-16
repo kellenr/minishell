@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 11:27:05 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/15 16:19:21 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/16 14:19:57 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,22 @@
 
 int	check_valid_token(char *token, char *error_message)
 {
+	int		i;
+
+	i = 0;
 	if (!token)
 		return (0);
-	if ((token[0] == '=') || ft_isdigit(token[0]) || \
-			ft_strchr(token, '\'') || ft_strchr(token, '"') || \
-			ft_strchr(token, '-'))
+	while (token[i] && token[i] != '=')
 	{
-		ft_strcpy(error_message, "export `");
-		ft_strcat(error_message, token);
-		ft_strcat(error_message, "': not a valid identifier");
-		return (0);
+		if (ft_isdigit(token[0]) || token[i] == '\'' || \
+		token[i] == '"' || token[i] == '-')
+		{
+			format_error_message(error_message, token);
+			return (0);
+		}
+		i++;
 	}
-	else
-		return (1);
+	return (1);
 }
 
 int	is_valid_export(char *token)
@@ -69,7 +72,12 @@ int	init_env_and_export(t_cmd *cmd, char **envp)
 		add_env_node(&cmd->env_list, env_node);
 		i++;
 	}
-	// print_env_list(cmd->env_list);
 	return (0);
 }
 
+void	format_error_message(char *error_message, char *token)
+{
+	ft_strcpy(error_message, "export `");
+	ft_strcat(error_message, token);
+	ft_strcat(error_message, "': not a valid identifier");
+}

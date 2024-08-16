@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 09:43:39 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/16 11:47:18 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/16 12:19:20 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -224,6 +224,7 @@ t_ast	*free_redir_node(t_redir *redir, t_ast *node);
 void	fork_and_execute(t_cmd *cmd, char *cmd_path);
 void	execute_command_helper(t_ast *root, t_msh *msh);
 void	parse_and_execute(t_token *tokens, t_msh *msh);
+void	format_error_message(char *error_message, char *token);
 
 /*					Exec utils					*/
 char	*get_command_path(t_cmd *cmd);
