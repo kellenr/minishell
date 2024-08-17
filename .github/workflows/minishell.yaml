@@ -28,5 +28,12 @@ jobs:
     - name: Build project
       run: make
 
+    - name: run tests
+      run: |
+      git clone https://github.com/LucasKuhn/minishell_tester.git
+      cd minishell_tester
+      cp ../inc/minishell.h .
+      ./tester
+
     - name: clean
       run: make fclean
