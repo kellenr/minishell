@@ -6,7 +6,7 @@
 /*   By: filipa <filipa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 13:54:08 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/17 19:42:52 by filipa           ###   ########.fr       */
+/*   Updated: 2024/08/17 20:17:05 by filipa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ void	execute_command(t_cmd *cmd)
 	}
 	handle_non_interactive();
 	fork_and_execute(cmd, cmd_path);
-	if (cmd_flag == 1)
+	if (cmd_flag == 1 )
 		free(cmd_path);
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);

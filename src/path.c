@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   path.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
+/*   By: filipa <filipa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/09 02:10:15 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/16 11:46:57 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/17 20:12:09 by filipa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ int	find_path_var(char **env)
 	int	i;
 
 	i = 0;
-	while (*env[i])
+	while (env[i])
 	{
 		if (ft_strncmp("PATH=", env[i], 5) == 0)
 			return (1);
