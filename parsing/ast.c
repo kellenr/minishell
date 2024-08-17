@@ -63,7 +63,8 @@ t_ast	*parse_tokens_to_ast(t_token *tokens)
 			root = handle_operator_ast(&cur_token, root);
 			if (!root)
 				return (free_ast_return_null(cur_node));
-			cur_node = root->right;
+			if(root->right)
+				cur_node = root->right;
 		}
 		else
 			handle_nop_block(&cur_token, &cur_node, &root);
