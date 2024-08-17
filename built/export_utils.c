@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   export_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 11:27:05 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/16 14:25:26 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/18 01:00:12 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	check_valid_token(char *token, char *error_message)
+int	check_valid_token(char *token)
 {
 	int		i;
 
@@ -21,7 +21,8 @@ int	check_valid_token(char *token, char *error_message)
 		return (0);
 	if (ft_strlen(token) == 1 && !(ft_isalnum(token[0])))
 	{
-		format_error_message(error_message, token);
+		prt_error("msh: export '%s': not a valid identifier\n", token);
+		//format_error_message(error_message, token);
 		return (0);
 	}
 	while (token[i] && token[i] != '=')
@@ -29,7 +30,7 @@ int	check_valid_token(char *token, char *error_message)
 		if (ft_isdigit(token[0]) || token[i] == '\'' || \
 		token[i] == '"' || token[i] == '-')
 		{
-			format_error_message(error_message, token);
+			prt_error("msh: export '%s': not a valid identifier\n", token);
 			return (0);
 		}
 		i++;
@@ -42,7 +43,7 @@ int	is_valid_export(char *token)
 	char	error_message[100];
 
 	ft_bzero(error_message, sizeof(error_message));
-	if (!check_valid_token(token, error_message))
+	if (!check_valid_token(token))
 	{
 		ft_printf("%s\n", error_message);
 		return (0);

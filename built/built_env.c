@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   built_env.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kellenr <kellenr@student.42.fr>            +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 14:14:19 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/15 12:19:24 by kellenr          ###   ########.fr       */
+/*   Updated: 2024/08/18 00:17:29 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	ft_env(t_cmd *cmd)
 {
 	if (cmd->argc > 1)
 	{
-		ft_printf("msh: env: no arguments supported\n");
+		prt_error("msh: env: no arguments supported\n", NULL);
 		return (1);
 	}
 	print_env_list(cmd->env_list);

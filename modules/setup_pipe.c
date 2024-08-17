@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/09 14:35:09 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/15 12:58:10 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/18 00:07:34 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,7 @@ void	execute_pipes(t_ast *root, t_msh *msh)
 	int		pipefd[2];
 	pid_t	p1;
 	pid_t	p2;
-
-	int     err_code;
+	int		err_code;
 
 	if (root->op != PIPE)
 	{

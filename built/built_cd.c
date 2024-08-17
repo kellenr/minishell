@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   built_cd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 21:17:54 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/16 14:43:21 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/18 00:22:59 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ char	*get_dir(t_cmd *cmd, char *prev_dir)
 		home = ft_getenv("HOME", cmd);
 		if (!home)
 		{
-			ft_printf("cd: HOME not set\n");
+			prt_error("cd: HOME not set\n", NULL);
 			return (NULL);
 		}
 		return (home);
@@ -36,7 +36,7 @@ char	*get_dir(t_cmd *cmd, char *prev_dir)
 	{
 		if (!prev_dir)
 		{
-			ft_printf("cd: OLDPWD not set\n");
+			prt_error("cd: OLDPWD not set\n", NULL);
 			return (NULL);
 		}
 		ft_printf("%s\n", prev_dir);
@@ -59,7 +59,7 @@ int	ft_cd(t_cmd *cmd)
 
 	if (cmd->argc > 2)
 	{
-		ft_printf("cd: too many arguments\n");
+		prt_error("cd: too many arguments\n", NULL);
 		return (EXIT_FAILURE);
 	}
 	target_dir = get_dir(cmd, prev_dir);
