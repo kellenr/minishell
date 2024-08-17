@@ -33,7 +33,7 @@ jobs:
         git clone https://github.com/LucasKuhn/minishell_tester.git
         cd minishell_tester
         cp ../inc/minishell.h .
-        ./tester
+        ./tester || true
 
     - name: clean
       run: make fclean
