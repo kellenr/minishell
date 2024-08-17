@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
+/*   By: filipa <filipa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 09:43:39 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/16 14:42:28 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/17 19:43:25 by filipa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -227,7 +227,7 @@ void	parse_and_execute(t_token *tokens, t_msh *msh);
 void	format_error_message(char *error_message, char *token);
 
 /*					Exec utils					*/
-char	*get_command_path(t_cmd *cmd);
+char	*get_command_path(t_cmd *cmd, int *allocated);
 void	execute_in_child(char *cmd_path, char **tokens, char **env);
 void	handle_child_status(t_cmd *cmd, int status);
 int		check_tokens(t_cmd *cmd);

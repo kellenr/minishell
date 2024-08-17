@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: filipa <filipa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 13:54:08 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/15 22:07:22 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/17 19:42:52 by filipa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,10 +97,12 @@ int	execute_builtin(t_cmd *cmd)
 void	execute_command(t_cmd *cmd)
 {
 	char	*cmd_path;
+	int		cmd_flag;
 
+	cmd_flag = 0;
 	if (!check_tokens(cmd))
 		return ;
-	cmd_path = get_command_path(cmd);
+	cmd_path = get_command_path(cmd, &cmd_flag);
 	if (!cmd_path)
 	{
 		cmd->msh->exit_status = 127;
@@ -108,7 +110,7 @@ void	execute_command(t_cmd *cmd)
 	}
 	handle_non_interactive();
 	fork_and_execute(cmd, cmd_path);
-	if (!(ft_strcmp(cmd->tokens[0], cmd_path) == 0))
+	if (cmd_flag == 1)
 		free(cmd_path);
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);

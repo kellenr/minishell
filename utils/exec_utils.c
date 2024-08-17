@@ -3,21 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
+/*   By: filipa <filipa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/06 14:57:47 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/16 11:50:35 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/17 19:42:14 by filipa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*get_command_path(t_cmd *cmd)
+char	*get_command_path(t_cmd *cmd, int *allocated)
 {
 	char		*cmd_path;
 	struct stat	path_stat;
 	char		*expanded_cmd;
+	char		*result;
 
+	*allocated = 0;
 	expanded_cmd = exp_env_var(cmd->tokens[0], cmd->msh);
 	if (!expanded_cmd || ft_strlen(expanded_cmd) == 0)
 	{
@@ -29,7 +31,9 @@ char	*get_command_path(t_cmd *cmd)
 	if (!ft_strchr(expanded_cmd, '/'))
 	{
 		cmd_path = find_path(expanded_cmd, cmd->env);
-		if (!cmd_path)
+		if (cmd_path)
+			*allocated = 1;
+		else
 		{
 			ft_printf("msh: %s: command not found\n", expanded_cmd);
 			cmd->msh->exit_status = 127;
@@ -50,7 +54,12 @@ char	*get_command_path(t_cmd *cmd)
 			cmd->msh->exit_status = 126;
 		}
 		else
-			return ft_strdup(expanded_cmd);
+		{
+			result = ft_strdup(expanded_cmd);
+			*allocated = 1;
+			free(expanded_cmd);
+			return (result);
+		}
 	}
 	else
 	{
