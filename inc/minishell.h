@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 09:43:39 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/15 20:30:59 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/16 14:42:28 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -224,6 +224,7 @@ t_ast	*free_redir_node(t_redir *redir, t_ast *node);
 void	fork_and_execute(t_cmd *cmd, char *cmd_path);
 void	execute_command_helper(t_ast *root, t_msh *msh);
 void	parse_and_execute(t_token *tokens, t_msh *msh);
+void	format_error_message(char *error_message, char *token);
 
 /*					Exec utils					*/
 char	*get_command_path(t_cmd *cmd);
@@ -241,6 +242,8 @@ void	free_env(t_cmd *cmd);
 void	free_env_list(t_env *env_list);
 int		parse_env_str(const char *env_str, char **name, char **value);
 int		init_env_and_export(t_cmd *cmd, char **envp);
+int		find_path_var(char **env);
+char	*ft_getenv(char *name, t_cmd *cmd);
 
 /*                                   BUILT                                    */
 

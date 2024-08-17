@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   built_unset.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 15:21:51 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/15 16:17:16 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/16 14:47:10 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,7 @@ int	ft_unset(t_cmd *cmd)
 	int		i;
 
 	if (cmd->argc == 1)
-	{
-		ft_printf("unset: not enough arguments\n");
 		return (0);
-	}
 	i = 1;
 	while (i < cmd->argc)
 	{
