@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: filipa <filipa@student.42.fr>              +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 13:54:08 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/17 20:17:05 by filipa           ###   ########.fr       */
+/*   Updated: 2024/08/18 00:47:13 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,6 @@ void	execute_command(t_cmd *cmd)
 	cmd_path = get_command_path(cmd, &cmd_flag);
 	if (!cmd_path)
 	{
-		cmd->msh->exit_status = 127;
 		return ;
 	}
 	handle_non_interactive();

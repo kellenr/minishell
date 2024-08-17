@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 16:33:38 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/15 14:07:41 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/18 00:14:59 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ t_ast	*handle_operator_pipe_ast(t_token **current_token, t_ast *root)
 
 	if (root == NULL)
 	{
-		ft_printf("msh: syntax error near unexpected token '|'\n");
+		prt_error("msh: syntax error near unexpected token '|'\n", NULL);
 		return (NULL);
 	}
 	pipe_node = malloc(sizeof(t_ast));
@@ -50,7 +50,7 @@ t_ast	*handle_operator_redir_ast(t_token **current_token, t_ast *root)
 	(*current_token) = (*current_token)->next;
 	if (*current_token == NULL || is_operator((*current_token)->op))
 	{
-		ft_printf("msh: syntax error near unexpected token 'newline'\n");
+		prt_error("msh: syntax error near unexpected token 'newline'\n", NULL);
 		return (free_redir_node(redir_node->redir, redir_node));
 	}
 	if (handle_redir_input(current_token, redir_node) == 0 || \
@@ -73,7 +73,7 @@ t_ast	*handle_operator_and_or_ast(t_token **current_token, t_ast *root)
 
 	if (root == NULL)
 	{
-		ft_printf("msh: syntax error near unexpected token '%s'\n", \
+		prt_error("msh: syntax error near unexpected token '%s'\n", \
 				(*current_token)->value);
 		return (NULL);
 	}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   built_exit.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 21:04:23 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/08 17:14:49 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/18 00:49:10 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,8 @@ void	ft_exit(t_cmd *cmd)
 
 	if (cmd->argc > 2)
 	{
-		ft_printf("msh: exit: too many arguments\n");
+		prt_error("msh: exit: too many arguments\n", NULL);
+		exit(1);
 		return ;
 	}
 	if (cmd->argc == 2)
@@ -57,9 +58,9 @@ void	ft_exit(t_cmd *cmd)
 		}
 		else
 		{
-			ft_printf("msh: exit: %s: numeric argument required\n", \
+			prt_error("msh: exit: %s: numeric argument required\n", \
 				cmd->tokens[1]);
-			exit(255);
+			exit(2);
 		}
 	}
 	else

@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 13:54:08 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/15 21:03:03 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/18 00:25:51 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	process_cmd(char *prompt, t_msh *msh)
 		return ;
 	if (tokens->broken)
 	{
-		ft_printf("Error: Unmatched quote detected\n");
+		prt_error("Error: Unmatched quote detected\n", NULL);
 		msh->exit_status = 1;
 		free_tokens(tokens);
 		return ;

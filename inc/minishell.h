@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: filipa <filipa@student.42.fr>              +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 09:43:39 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/17 19:43:25 by filipa           ###   ########.fr       */
+/*   Updated: 2024/08/18 01:00:55 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -256,7 +256,7 @@ int		ft_export(t_cmd *cmd);
 int		ft_unset(t_cmd *cmd);
 
 /*									BUILT UTILS								  */
-int		check_valid_token(char *token, char *error_message);
+int		check_valid_token(char *token);
 int		is_valid_export(char *token);
 t_env	*sort_env_list(t_env *env_list);
 void	swap(t_env *a, t_env *b);
@@ -387,5 +387,6 @@ void print_env_list(t_env *env_list);
 // void test_add_env_node();
 // void test_init_arr_and_list();
 // void test_init_env();
+void	prt_error(const char *format, char *arg);
 
 #endif
