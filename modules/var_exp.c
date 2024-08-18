@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   var_exp.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: filipa <filipa@student.42.fr>              +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 01:41:45 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/17 19:33:37 by filipa           ###   ########.fr       */
+/*   Updated: 2024/08/18 15:16:48 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,7 @@ char	*exp_variable(const char *input, int *index, char *result, t_msh *msh)
 	if (input[j] == '?')
 	{
 		expanded = exp_special_var(input, index, result, msh);
+		*index += 2;
 		return (expanded);
 	}
 	expanded = exp_general_var(input, index, result, msh);
@@ -105,36 +106,33 @@ char	*exp_variable(const char *input, int *index, char *result, t_msh *msh)
  * Takes the input string, the current index, and the result string.
  * Returns the updated result string and updates the index.
  */
-char	*const_final_exp(char *exp, const char *input, int *index, char *rst)
-{
-	char	*suffix;
-	char	*tmp;
-	char	*final_expansion;
+// char	*const_final_exp(char *exp, const char *input, int *index, char *rst)
+// {
+// 	char	*suffix;
+// 	char	*tmp;
+// 	char	*final_expansion;
 
-	suffix = ft_substr(input, *index + 2, *index - (*index + 2));
-	if (!suffix)
-		return (NULL);
-	tmp = ft_strjoin(exp, suffix);
-	free(suffix);
-	suffix = NULL;
-	free(exp);
-	exp = NULL;
-	if (!tmp)
-		return (NULL);
-	final_expansion = ft_strjoin(rst, tmp);
-	free(tmp);
-	tmp = NULL;
-	if (!final_expansion)
-	{
-		free(rst);
-		rst = NULL;
-		return (NULL);
-	}
-	//free(rst);
-	// if (!final_expansion)
-	// 	return (NULL);
-	return (final_expansion);
-}
+// 	suffix = ft_substr(input, *index + 2, *index - (*index + 2));
+// 	if (!suffix)
+// 		return (NULL);
+// 	tmp = ft_strjoin(exp, suffix);
+// 	free(suffix);
+// 	suffix = NULL;
+// 	free(exp);
+// 	exp = NULL;
+// 	if (!tmp)
+// 		return (NULL);
+// 	final_expansion = ft_strjoin(rst, tmp);
+// 	free(tmp);
+// 	tmp = NULL;
+// 	if (!final_expansion)
+// 	{
+// 		free(rst);
+// 		rst = NULL;
+// 		return (NULL);
+// 	}
+// 	return (final_expansion);
+// }
 
 /*
  * Function to expand special variables in the input string.
@@ -147,9 +145,13 @@ char	*const_final_exp(char *exp, const char *input, int *index, char *rst)
 char	*exp_special_var(const char *input, int *index, char *rst, t_msh *msh)
 {
 	char	*exp;
+	char	*final_expansion;
 
 	exp = extract_and_expand_var(input, index, msh);
 	if (!exp)
 		return (NULL);
-	return (const_final_exp(exp, input, index, rst));
+	// return (const_final_exp(exp, input, index, rst));
+	final_expansion = ft_strjoin(rst, exp);
+	free(exp);
+	return (final_expansion);
 }

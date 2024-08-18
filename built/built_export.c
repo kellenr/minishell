@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 16:57:00 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/18 00:59:51 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/18 02:11:12 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,8 +87,6 @@ void	handle_export_vars(t_cmd *cmd, char *arg)
 		existing_var = find_env_var(cmd->export_list, name);
 		if (!existing_var)
 			add_env_var(&cmd->export_list, name, ft_strdup(""));
-		// else
-		// 	free(name);
 	}
 }
 

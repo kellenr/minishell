@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 11:27:05 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/18 01:00:12 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/18 01:59:36 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ int	check_valid_token(char *token)
 	if (ft_strlen(token) == 1 && !(ft_isalnum(token[0])))
 	{
 		prt_error("msh: export '%s': not a valid identifier\n", token);
-		//format_error_message(error_message, token);
 		return (0);
 	}
 	while (token[i] && token[i] != '=')

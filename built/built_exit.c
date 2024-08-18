@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 21:04:23 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/18 00:49:10 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/18 01:58:48 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,5 @@ void	ft_exit(t_cmd *cmd)
 		}
 	}
 	else
-	{
 		exit(cmd->msh->exit_status);
-	}
 }

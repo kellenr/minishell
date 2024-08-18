@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/13 21:10:35 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/15 17:37:38 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/18 15:17:37 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,6 @@ char	*process_literal(const char *input, int *index, char *result)
 		return (NULL);
 	}
 	tmp = ft_strjoin(result, literal);
-	//free(result);
 	if (!tmp)
 	{
 		free(result);
@@ -104,20 +103,20 @@ int	is_var_btw_squote(const char *input, int start, int end)
 
 char	*extract_and_expand_var(const char *input, int *index, t_msh *msh)
 {
-	int		j;
+	// int		j;
 	char	*var;
 	char	*expanded;
 
-	j = *index + 2;
+	// j = *index + 2;
 	var = ft_substr(input, *index, 2);
 	if (!var)
 		return (NULL);
 	expanded = exp_single_var(var, msh);
 	if (!expanded)
 		return (NULL);
-	while (input[j] && (ft_isalnum(input[j]) || input[j] == '?'
-		|| input[j] == '_' || input[j] == '$'))
-		j++;
-	*index = j;
+	// while (input[j] && (ft_isalnum(input[j]) || input[j] == '?' 
+	// 	|| input[j] == '_' || input[j] == '$'))
+	// 	j++;
+	// *index = j;
 	return (expanded);
 }

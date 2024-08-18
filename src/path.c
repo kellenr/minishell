@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   path.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: filipa <filipa@student.42.fr>              +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/09 02:10:15 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/17 20:12:09 by filipa           ###   ########.fr       */
+/*   Updated: 2024/08/18 02:02:30 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ char	*find_path(char *cmd, char **env)
 	i = 0;
 	path = NULL;
 	if (find_path_var(env) == 0)
-		return(NULL);
+		return (NULL);
 	while (*env[i])
 	{
 		if (ft_strncmp("PATH=", env[i], 5) == 0)

@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 09:43:39 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/18 01:00:55 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/18 03:37:23 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -279,14 +279,14 @@ t_token	*tokenize(char *input, t_msh *msh);
 char	*extract_token(char **input, t_msh *msh, int *heredoc_flag);
 t_ast	*init_ast(t_token **current_token);
 t_ast	*handle_non_operator(t_token **current_token, t_ast *current_node);
-t_ast	*handle_operator_ast(t_token **current_token, t_ast *root);
-t_ast	*parse_tokens_to_ast(t_token *tokens);
+t_ast	*handle_operator_ast(t_token **current_token, t_ast *root, t_msh *msh);
+t_ast	*parse_tokens_to_ast(t_token *tokens, t_msh *msh);
 int		set_command_and_args(t_ast *node, t_token *current_token);
 t_ast	*create_ast_node(void);
 t_ast	*handle_pthesis_tk(t_token **cur_token, t_ast **root, t_ast **cur_node);
 t_ast	*handle_op_and_non_op_tokens(t_token *cur_token, t_ast *root);
 void	handle_token_op(t_token **cur_token, t_ast **cur_node, t_ast **root, \
-		t_ast **pthesis_node);
+		t_ast **pthesis_node, t_msh *msh);
 void	*free_ast_return_null(t_ast *cur_node);
 void	*handle_nop_block(t_token **cur_token, t_ast **cur_node, t_ast **root);
 
@@ -317,9 +317,9 @@ char	*exp_special_var(const char *input, int *index, char *rst, t_msh *msh);
 char	*exp_general_var(const char *input, int *index, char *rst, t_msh *msh);
 void	handle_logical_op(t_ast *root, t_msh *msh);
 void	handle_parentheses_op(t_ast *root, t_msh *msh);
-t_ast	*parse_parentheses(t_token **current_token);
+t_ast	*parse_parentheses(t_token **current_token, t_msh *msh);
 t_ast	*integrate_ast_node(t_ast *root, t_ast *pthesis_node);
-t_ast	*handle_parentheses_ast(t_token **current_token, t_ast *root);
+t_ast	*handle_parentheses_ast(t_token **current_token, t_ast *root, t_msh *msh);
 char	*extract_and_expand_var(const char *input, int *index, t_msh *msh);
 char	*const_final_exp(char *exp, const char *input, int *index, char *rst);
 char	*get_expanded_value(char *token, t_msh *msh);
@@ -382,7 +382,7 @@ void	setup_signal_handlers(void);
 
 //////////// 	TEST	////////
 // void	print_tokens(char **tokens);
-void print_env_list(t_env *env_list);
+void	print_env_list(t_env *env_list);
 // void test_create_env_node();
 // void test_add_env_node();
 // void test_init_arr_and_list();
