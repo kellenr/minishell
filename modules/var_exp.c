@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 01:41:45 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/18 15:16:48 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/18 17:42:01 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ char	*exp_env_var(char *input, t_msh *msh)
 	char	*tmp;
 	int		i;
 
+	if (input[0] == '\'' && input[1] != '\'')
+		return (ft_strdup(input));
 	result = NULL;
 	tmp = NULL;
 	if (!input)
