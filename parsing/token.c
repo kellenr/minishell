@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 14:18:00 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/15 21:09:13 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/18 17:25:35 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ char	*extract_token(char **input, t_msh *msh, int *heredoc_flag)
 	token = NULL;
 	cleaned_token = NULL;
 	expanded_token = NULL;
-	if (is_operator(**input))
+	if (is_operator(**input) && !check_for_operators_in_quotes(*input))
 		return (handle_operator_token(input, heredoc_flag));
 	result = advance_past_token(input);
 	if (result == -1)
@@ -117,6 +117,10 @@ char	*extract_token(char **input, t_msh *msh, int *heredoc_flag)
 	if (!token)
 		return (NULL);
 	process_heredoc_flag(heredoc_flag, msh, token);
+	// if (!msh->heredoc_flag)
+	// 	expanded_token = exp_env_var(token, msh);
+	// else
+	// 	expanded_token = ft_strdup(token);
 	expanded_token = exp_env_var(token, msh);
 	free(token);
 	token = expanded_token;
@@ -157,4 +161,27 @@ char	*remove_quotes(const char *token)
 	}
 	output[j] = '\0';
 	return (output);
+}
+
+bool check_op(char c)
+{
+    return (c == '|' || c == '<' || c == '>' || c == '&' || c == '!');
+}
+
+bool check_op_quotes(const char *str)
+{
+    bool in_single_quote = false;
+    bool in_double_quote = false;
+
+    while (*str) {
+        if (*str == '\'' && !in_double_quote) {
+            in_single_quote = !in_single_quote;
+        } else if (*str == '"' && !in_single_quote) {
+            in_double_quote = !in_double_quote;
+        } else if ((in_single_quote || in_double_quote) && check_op(*str)) {
+            return true;  // Operator found inside quotes
+        }
+        str++;
+    }
+    return false;  // No operator inside quotes
 }

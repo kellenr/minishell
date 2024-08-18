@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 09:43:39 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/18 03:37:23 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/18 17:25:52 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -388,5 +388,7 @@ void	print_env_list(t_env *env_list);
 // void test_init_arr_and_list();
 // void test_init_env();
 void	prt_error(const char *format, char *arg);
+bool check_op(char c);
+bool check_op_quotes(const char *str);
 
 #endif
