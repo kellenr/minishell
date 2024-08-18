@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/11 23:25:41 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/15 19:59:29 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/18 02:03:42 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,6 @@ char	*combine_expanded_with_rest(char *expanded, char *rst)
 	char	*tmp;
 
 	tmp = ft_strjoin(rst, expanded);
-	// free(rst);
 	free(expanded);
 	if (!tmp)
 		return (NULL);

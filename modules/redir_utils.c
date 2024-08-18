@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/15 11:18:57 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/18 00:06:59 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/18 03:02:11 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	handle_input_redir(t_ast *root, t_msh *msh)
 	fd = open(root->redir->input_file, O_RDONLY, 0);
 	if (fd == -1)
 	{
-		perror("open");
+		prt_error("msh: %s: No such file or directory\n", root->redir->input_file);
 		msh->exit_status = 1;
 		return ;
 	}
@@ -41,7 +41,7 @@ void	handle_output_replace(t_ast *root, t_msh *msh)
 	fd = open(root->redir->output_file, O_WRONLY | O_CREAT | O_TRUNC, 0777);
 	if (fd == -1)
 	{
-		perror("open");
+		prt_error("msh: %s: No such file or directory\n", root->redir->output_file);
 		msh->exit_status = 1;
 		return ;
 	}
@@ -55,7 +55,7 @@ void	handle_output_append(t_ast *root, t_msh *msh)
 	fd = open(root->redir->append_file, O_WRONLY | O_CREAT | O_APPEND, 0777);
 	if (fd == -1)
 	{
-		perror("open");
+		prt_error("msh: %s: No such file or directory\n", root->redir->append_file);
 		msh->exit_status = 1;
 		return ;
 	}

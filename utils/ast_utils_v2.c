@@ -3,19 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   ast_utils_v2.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 15:48:01 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/14 13:59:23 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/18 03:37:03 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	handle_token_op(t_token **cur_token, t_ast **cur_node, t_ast **root, \
-t_ast **pthesis_node)
+void	handle_token_op(t_token **cur_token, t_ast **cur_node, t_ast **root, t_ast **pthesis_node, t_msh *msh)
 {
-	*pthesis_node = handle_parentheses_ast(cur_token, *root);
+	*pthesis_node = handle_parentheses_ast(cur_token, *root, msh);
 	if (!(*root))
 	{
 		*root = *pthesis_node;

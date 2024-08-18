@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 13:40:58 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/15 20:15:45 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/18 03:37:38 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ t_redir	*init_redir(void)
  * in the future we can manage here the other kind of operators
  * like AND, OR, SEMICOLON, REDICTION, etc.
  */
-t_ast	*parse_tokens_to_ast(t_token *tokens)
+t_ast	*parse_tokens_to_ast(t_token *tokens, t_msh *msh)
 {
 	t_ast	*root;
 	t_ast	*cur_node;
@@ -55,15 +55,15 @@ t_ast	*parse_tokens_to_ast(t_token *tokens)
 	while (cur_token != NULL)
 	{
 		if (cur_token->op == OPEN)
-			handle_token_op(&cur_token, &cur_node, &root, &pthesis_node);
+			handle_token_op(&cur_token, &cur_node, &root, &pthesis_node, msh);
 		else if (cur_token->op == CLOSE)
 			return (root);
 		else if (is_op_token(cur_token))
 		{
-			root = handle_operator_ast(&cur_token, root);
+			root = handle_operator_ast(&cur_token, root, msh);
 			if (!root)
 				return (free_ast_return_null(cur_node));
-			if(root->right)
+			if (root->right)
 				cur_node = root->right;
 		}
 		else

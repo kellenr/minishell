@@ -6,19 +6,20 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 16:33:38 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/18 00:14:59 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/18 03:30:43 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_ast	*handle_operator_pipe_ast(t_token **current_token, t_ast *root)
+t_ast	*handle_operator_pipe_ast(t_token **current_token, t_ast *root, t_msh *msh)
 {
 	t_ast	*pipe_node;
 
 	if (root == NULL)
 	{
 		prt_error("msh: syntax error near unexpected token '|'\n", NULL);
+		msh->exit_status = 2;
 		return (NULL);
 	}
 	pipe_node = malloc(sizeof(t_ast));
@@ -99,12 +100,12 @@ t_ast	*handle_operator_and_or_ast(t_token **current_token, t_ast *root)
  * Takes the current token and the root of the AST as arguments.
  * Returns the updated root of the AST.
  */
-t_ast	*handle_operator_ast(t_token **current_token, t_ast *root)
+t_ast	*handle_operator_ast(t_token **current_token, t_ast *root, t_msh *msh)
 {
 	if (current_token && *current_token)
 	{
 		if ((*current_token)->op == PIPE)
-			return (handle_operator_pipe_ast(current_token, root));
+			return (handle_operator_pipe_ast(current_token, root, msh));
 		else if ((*current_token)->op == REDIR_APPEND || \
 				(*current_token)->op == REDIR_REPLACE || \
 				(*current_token)->op == REDIR_HERE_DOC || \

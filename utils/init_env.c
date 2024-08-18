@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_env.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 16:48:37 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/14 09:41:20 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/18 02:03:27 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,6 @@ int	init_arr_and_list(t_cmd *cmd, char **envp)
 	}
 	return (0);
 }
-
 
 int	parse_env_str(const char *env_str, char **name, char **value)
 {

@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 21:17:54 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/18 00:22:59 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/18 01:58:37 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ char	*get_dir(t_cmd *cmd, char *prev_dir)
 
 	if (cmd->argc < 2 || ft_strcmp(cmd->tokens[1], "~") == 0)
 	{
-		// home = getenv("HOME");
 		home = ft_getenv("HOME", cmd);
 		if (!home)
 		{

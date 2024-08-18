@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 13:19:54 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/18 00:27:26 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/18 01:55:38 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ void	ft_error(char *str)
 
 void	prt_error(const char *format, char *arg)
 {
-
 	int	saved_stdout;
 
 	saved_stdout = dup(1);
