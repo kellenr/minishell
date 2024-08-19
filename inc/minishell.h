@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 09:43:39 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/19 11:13:56 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/19 11:53:55 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -270,6 +270,8 @@ int		check_valid_unset_token(char *token, char *error_message);
 void	remove_env_var(t_env **env_list, char *name);
 void	initialize_echo(bool *flg, bool *eflg, int *i);
 void	parse_options(t_cmd *scmd, int *i, bool *flg, bool *eflg);
+void	add_or_update_env_list(t_env **env_list, char *name, char *value);
+void	handle_var_assignment(t_cmd *cmd, char *name, char *value);
 
 /*                                  Parsing                                   */
 
