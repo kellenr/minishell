@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 11:54:56 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/18 00:28:20 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/19 16:05:35 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,7 @@ char	*read_heredoc_line(char *delimiter)
 	{
 		prt_error("msh: warning: here-document delimited by end-of-file \
 		(wanted %s')\n", delimiter);
+		return (NULL);
 	}
 	return (line);
 }

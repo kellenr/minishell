@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 09:43:39 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/19 11:13:56 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/19 15:52:08 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -388,6 +388,6 @@ void	print_env_list(t_env *env_list);
 // void test_init_arr_and_list();
 // void test_init_env();
 void	prt_error(const char *format, char *arg);
-void	handle_multiple_outputs(t_ast *root, t_msh *msh);
+void	pipe_heredoc(t_ast *root, t_msh *msh);
 
 #endif
