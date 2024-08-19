@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/09 14:35:09 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/22 17:03:05 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/22 17:06:33 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,6 @@ void	execute_pipes(t_ast *root, t_msh *msh)
 	}
 	if (pipe(pipefd) == -1)
 		ft_error("pipe");
-	if (root->left->op == REDIR_HERE_DOC)
-		pipe_heredoc(root->left, msh);
-	p1 = fork_first_child(root, msh, pipefd);
 	if (root->left->op == REDIR_HERE_DOC)
 	{
 		heredoc_fd = handle_heredoc_pipe(root->left, msh);
@@ -63,21 +60,12 @@ void	wait_for_childs(pid_t p1, pid_t p2, int pipefd[2], t_msh *msh)
 pid_t	fork_first_child(t_ast *root, t_msh *msh, int pipefd[2])
 {
 	pid_t	p1;
-	int		fd;
 
 	p1 = fork();
 	if (p1 == -1)
 		ft_error("fork p1");
 	if (p1 == 0)
 	{
-		if (root->left->op == REDIR_HERE_DOC)
-		{
-			fd = open("tmp_file", O_RDONLY);
-			if (fd == -1)
-				ft_error("open tmp_file");
-			dup2(fd, STDIN_FILENO);
-			close(fd);
-		}
 		dup2(pipefd[1], STDOUT_FILENO);
 		close(pipefd[0]);
 		close(pipefd[1]);
