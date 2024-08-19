@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   var_exp.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 01:41:45 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/18 17:51:09 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/19 12:16:57 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,7 +152,6 @@ char	*exp_special_var(const char *input, int *index, char *rst, t_msh *msh)
 	exp = extract_and_expand_var(input, index, msh);
 	if (!exp)
 		return (NULL);
-	// return (const_final_exp(exp, input, index, rst));
 	final_expansion = ft_strjoin(rst, exp);
 	free(exp);
 	return (final_expansion);

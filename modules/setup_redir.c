@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   setup_redir.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 18:37:49 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/19 11:22:04 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/19 12:16:03 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,4 +70,3 @@ t_ast	*free_redir_node(t_redir *redir, t_ast *node)
 	free(node);
 	return (NULL);
 }
-
