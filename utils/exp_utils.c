@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exp_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/11 23:25:41 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/18 02:03:42 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/19 15:20:48 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,4 +109,10 @@ char	*ext_and_exp_var(const char *input, int *index, t_msh *msh)
 		return (NULL);
 	*index = j;
 	return (expanded);
+}
+
+char	*initialize_result_and_tmp(char **tmp)
+{
+	*tmp = NULL;
+	return (ft_strdup(""));
 }

@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 16:57:00 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/19 12:05:36 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/19 12:07:18 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,4 +103,3 @@ void	handle_var_assignment(t_cmd *cmd, char *name, char *value)
 		add_env_var(&cmd->export_list, name, value);
 	add_or_update_env_list(&cmd->env_list, name, value);
 }
-

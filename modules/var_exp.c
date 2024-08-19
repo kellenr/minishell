@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 01:41:45 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/19 12:16:57 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/19 15:21:18 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,20 +25,15 @@ char	*exp_env_var(char *input, t_msh *msh)
 
 	if (input[0] == '\'' && input[1] != '\'')
 		return (ft_strdup(input));
-	result = NULL;
-	tmp = NULL;
 	if (!input)
 		return (NULL);
-	result = ft_strdup("");
+	result = initialize_result_and_tmp(&tmp);
 	if (!result)
 		return (NULL);
 	i = 0;
 	while (input[i])
 	{
-		if (input[i] == '$')
-			tmp = exp_variable(input, &i, result, msh);
-		else
-			tmp = process_literal(input, &i, result);
+		tmp = expand_or_process_literal(input, &i, result, msh);
 		if (!tmp)
 		{
 			free(result);
@@ -104,39 +99,6 @@ char	*exp_variable(const char *input, int *index, char *result, t_msh *msh)
 }
 
 /*
- * Function to process a literal in the input string.
- * Takes the input string, the current index, and the result string.
- * Returns the updated result string and updates the index.
- */
-// char	*const_final_exp(char *exp, const char *input, int *index, char *rst)
-// {
-// 	char	*suffix;
-// 	char	*tmp;
-// 	char	*final_expansion;
-
-// 	suffix = ft_substr(input, *index + 2, *index - (*index + 2));
-// 	if (!suffix)
-// 		return (NULL);
-// 	tmp = ft_strjoin(exp, suffix);
-// 	free(suffix);
-// 	suffix = NULL;
-// 	free(exp);
-// 	exp = NULL;
-// 	if (!tmp)
-// 		return (NULL);
-// 	final_expansion = ft_strjoin(rst, tmp);
-// 	free(tmp);
-// 	tmp = NULL;
-// 	if (!final_expansion)
-// 	{
-// 		free(rst);
-// 		rst = NULL;
-// 		return (NULL);
-// 	}
-// 	return (final_expansion);
-// }
-
-/*
  * Function to expand special variables in the input string.
  * Takes the input string, the current index, the result string,
  * and the shell structure.
@@ -155,4 +117,16 @@ char	*exp_special_var(const char *input, int *index, char *rst, t_msh *msh)
 	final_expansion = ft_strjoin(rst, exp);
 	free(exp);
 	return (final_expansion);
+}
+
+char	*expand_or_process_literal(char *input, int *i, char *result, \
+		t_msh *msh)
+{
+	char	*temp;
+
+	if (input[*i] == '$')
+		temp = exp_variable(input, i, result, msh);
+	else
+		temp = process_literal(input, i, result);
+	return (temp);
 }

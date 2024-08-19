@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 11:27:05 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/19 11:41:39 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/19 12:09:37 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,8 +56,8 @@ int	init_env_and_export(t_cmd *cmd, char **envp)
 	t_env	*export_node;
 	t_env	*env_node;
 
-	i = 0;
-	while (envp[i])
+	i = -1;
+	while (envp[++i])
 	{
 		export_node = create_env_node(envp[i]);
 		if (!export_node)
@@ -75,7 +75,6 @@ int	init_env_and_export(t_cmd *cmd, char **envp)
 			return (-1);
 		}
 		add_env_node(&cmd->env_list, env_node);
-		i++;
 	}
 	return (0);
 }
