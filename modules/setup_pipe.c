@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/09 14:35:09 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/19 16:42:57 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/19 20:06:11 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,9 @@ void	execute_pipes(t_ast *root, t_msh *msh)
 	int		pipefd[2];
 	pid_t	p1;
 	pid_t	p2;
-	int		err_code;
+	int		heredoc_fd;
 
+	heredoc_fd = -1;
 	if (root->op != PIPE)
 	{
 		execute_ast(root, msh);
@@ -30,15 +31,27 @@ void	execute_pipes(t_ast *root, t_msh *msh)
 	if (pipe(pipefd) == -1)
 		ft_error("pipe");
 	if (root->left->op == REDIR_HERE_DOC)
-		pipe_heredoc(root->left, msh);
-	p1 = fork_first_child(root, msh, pipefd);
+	{
+		heredoc_fd = handle_heredoc_pipe(root->left, msh);
+		if (heredoc_fd == -1)
+			ft_error("heredoc_fd");
+		p1 = fork_first_child_heredoc(root, msh, pipefd, heredoc_fd);
+	}
+	else
+		p1 = fork_first_child(root, msh, pipefd);
 	p2 = fork_second_child(root, msh, pipefd);
+	return (wait_for_childs(p1, p2, pipefd, msh));
+}
+
+void	wait_for_childs(pid_t p1, pid_t p2, int pipefd[2], t_msh *msh)
+{
+	int	err_code;
+
 	close(pipefd[0]);
 	close(pipefd[1]);
 	waitpid(p1, NULL, 0);
 	waitpid(p2, &err_code, 0);
 	msh->exit_status = WEXITSTATUS(err_code);
-	return ;
 }
 
 /*
@@ -47,21 +60,12 @@ void	execute_pipes(t_ast *root, t_msh *msh)
 pid_t	fork_first_child(t_ast *root, t_msh *msh, int pipefd[2])
 {
 	pid_t	p1;
-	int		fd;
 
 	p1 = fork();
 	if (p1 == -1)
 		ft_error("fork p1");
 	if (p1 == 0)
 	{
-		if (root->left->op == REDIR_HERE_DOC)
-		{
-			fd = open("tmp_file", O_RDONLY);
-			if (fd == -1)
-				ft_error("open tmp_file");
-			dup2(fd, STDIN_FILENO);
-			close(fd);
-		}
 		dup2(pipefd[1], STDOUT_FILENO);
 		close(pipefd[0]);
 		close(pipefd[1]);
@@ -92,23 +96,29 @@ pid_t	fork_second_child(t_ast *root, t_msh *msh, int pipefd[2])
 	return (p2);
 }
 
-void pipe_heredoc(t_ast *root, t_msh *msh)
+pid_t	fork_first_child_heredoc(t_ast *root, t_msh *msh, int pipefd[2], int heredoc_fd)
 {
-	int fd;
+	pid_t	p1;
+	int 	saved_fd;
 
-	fd = open_tmp_file(msh);  // Open a temporary file to store heredoc content
-	if (fd == -1)
-		return ;
-
-	// Parse and write heredoc content to the temporary file
-	if (parse_heredoc(root->redir->here_doc_delim, fd, msh))
+	p1 = fork();
+	if (p1 == -1)
+		ft_error("fork p1");
+	if (p1 == 0)
 	{
-		if (g_signal == 2)
-			msh->exit_status = 130;
-		else
-			msh->exit_status = 1;
-		close(fd);
-		return ;
+		saved_fd = dup(STDIN_FILENO);
+		dup2(heredoc_fd, STDIN_FILENO);
+		close(heredoc_fd);
+
+		dup2(pipefd[1], STDOUT_FILENO);
+		close(pipefd[0]);
+		close(pipefd[1]);
+
+		execute_ast(root->left->left, msh);
+		dup2(saved_fd, STDIN_FILENO);
+		close(saved_fd);
+		exit(msh->exit_status);
 	}
-	close(fd);
+	return (p1);
 }
+
