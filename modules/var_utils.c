@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/13 21:10:35 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/18 15:17:37 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/18 16:49:15 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ char	*extract_and_expand_var(const char *input, int *index, t_msh *msh)
 	expanded = exp_single_var(var, msh);
 	if (!expanded)
 		return (NULL);
-	// while (input[j] && (ft_isalnum(input[j]) || input[j] == '?' 
+	// while (input[j] && (ft_isalnum(input[j]) || input[j] == '?'
 	// 	|| input[j] == '_' || input[j] == '$'))
 	// 	j++;
 	// *index = j;

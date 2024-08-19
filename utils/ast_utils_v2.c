@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 15:48:01 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/18 03:37:03 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/18 17:03:30 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,5 +71,7 @@ void	process_heredoc_flag(int *heredoc_flag, t_msh *msh, char *token)
 		*heredoc_flag = 0;
 		if (has_quotes(token))
 			msh->heredoc_flag = 1;
+		else
+			msh->heredoc_flag = 0;
 	}
 }

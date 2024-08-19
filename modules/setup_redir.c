@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 18:37:49 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/12 05:46:19 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/19 11:22:04 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@
  * to restore it after the redirection is done. Otherwise the
  * next readline call will return NULL because the STDIN is closed.
 */
-
 void	handle_redirection(t_ast *root, t_msh *msh)
 {
 	if (root->op == REDIR_INPUT)
@@ -71,3 +70,4 @@ t_ast	*free_redir_node(t_redir *redir, t_ast *node)
 	free(node);
 	return (NULL);
 }
+
