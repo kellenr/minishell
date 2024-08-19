@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 09:43:39 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/19 15:20:59 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/19 15:34:07 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -228,6 +228,8 @@ void	format_error_message(char *error_message, char *token);
 char	*expand_or_process_literal(char *input, int *i, char *result, \
 		t_msh *msh);
 char	*initialize_result_and_tmp(char **tmp);
+void	init_vars_ast(t_ast **root, t_ast **cur_node, t_token **cur_token, \
+		t_token *tokens);
 
 /*					Exec utils					*/
 char	*get_command_path(t_cmd *cmd, int *allocated);
@@ -324,7 +326,8 @@ void	handle_logical_op(t_ast *root, t_msh *msh);
 void	handle_parentheses_op(t_ast *root, t_msh *msh);
 t_ast	*parse_parentheses(t_token **current_token, t_msh *msh);
 t_ast	*integrate_ast_node(t_ast *root, t_ast *pthesis_node);
-t_ast	*handle_parentheses_ast(t_token **current_token, t_ast *root, t_msh *msh);
+t_ast	*handle_parentheses_ast(t_token **current_token, t_ast *root, \
+		t_msh *msh);
 char	*extract_and_expand_var(const char *input, int *index, t_msh *msh);
 char	*const_final_exp(char *exp, const char *input, int *index, char *rst);
 char	*get_expanded_value(char *token, t_msh *msh);

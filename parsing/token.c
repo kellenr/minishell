@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 14:18:00 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/19 09:57:49 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/19 15:24:35 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,7 +182,8 @@ t_token	*tokenize(char *input, t_msh *msh)
  *    - Intermediate tokens are freed appropriately within the function to
  * avoid unnecessary memory consumption.
 */
-char	*extract_token(char **input, t_msh *msh, int *heredoc_flag, bool *quoted_flag)
+char	*extract_token(char **input, t_msh *msh, int *heredoc_flag, \
+		bool *quoted_flag)
 {
 	char	*start;
 	char	*token;
@@ -194,7 +195,8 @@ char	*extract_token(char **input, t_msh *msh, int *heredoc_flag, bool *quoted_fl
 	token = NULL;
 	cleaned_token = NULL;
 	expanded_token = NULL;
-	if ((*input[0] == '\'' || *input[0] == '\"') && ft_strlen(*input) > 1 && ((*input)[1] != (*input)[0]))
+	if ((*input[0] == '\'' || *input[0] == '\"') && ft_strlen(*input) > 1 && \
+		((*input)[1] != (*input)[0]))
 		*quoted_flag = true;
 	if (*quoted_flag == false && is_operator(**input))
 		return (handle_operator_token(input, heredoc_flag));
