@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 09:43:39 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/19 17:37:52 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/19 18:56:19 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -234,6 +234,7 @@ void	init_ext_vars( char **token, char **clean_token, char **input, \
 		bool *quoted_flag);
 char	*process_new_token(t_token **head, char *input, t_msh *msh, \
 		int *heredoc_flag);
+char	*trim_and_validate_prompt(char *prompt);
 
 /*					Exec utils					*/
 char	*get_command_path(t_cmd *cmd, int *allocated);
@@ -337,6 +338,10 @@ char	*const_final_exp(char *exp, const char *input, int *index, char *rst);
 char	*get_expanded_value(char *token, t_msh *msh);
 char	*ext_and_exp_var(const char *input, int *index, t_msh *msh);
 char	*combine_expanded_with_rest(char *expanded, char *rst);
+char	*expand_command(t_cmd *cmd);
+char	*handle_path_search(char *expanded_cmd, t_cmd *cmd, int *allocated);
+char	*process_path_stat(char *expanded_cmd, struct stat *path_stat, \
+		t_cmd *cmd, int *allocated);
 
 /*                                    pipes                                  */
 pid_t	fork_first_child(t_ast *root, t_msh *msh, int pipefd[2]);
