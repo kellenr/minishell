@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/15 11:18:57 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/18 03:02:11 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/19 11:11:51 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ int	handle_fd_redirection(int fd, int target_fd)
 	{
 		perror("dup");
 		close(fd);
-		close(saved_fd);
+		// close(saved_fd);
 		return (-1);
 	}
 	if (dup2(fd, target_fd) == -1)
@@ -99,3 +99,4 @@ void	redirect_and_execute(int fd, int std_fd, t_ast *root, t_msh *msh)
 	dup2(saved_fd, std_fd);
 	close(saved_fd);
 }
+

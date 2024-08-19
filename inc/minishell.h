@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 09:43:39 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/18 17:25:52 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/19 11:13:56 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -273,10 +273,10 @@ void	parse_options(t_cmd *scmd, int *i, bool *flg, bool *eflg);
 
 /*                                  Parsing                                   */
 
-t_token	*create_token(char *value);
-void	add_token(t_token **head, char *value);
+t_token	*create_token(char *value, bool quoted_flag);
+void	add_token(t_token **head, char *value, bool quoted_flag);
 t_token	*tokenize(char *input, t_msh *msh);
-char	*extract_token(char **input, t_msh *msh, int *heredoc_flag);
+char	*extract_token(char **input, t_msh *msh, int *heredoc_flag, bool *quoted_flag);
 t_ast	*init_ast(t_token **current_token);
 t_ast	*handle_non_operator(t_token **current_token, t_ast *current_node);
 t_ast	*handle_operator_ast(t_token **current_token, t_ast *root, t_msh *msh);
@@ -388,7 +388,6 @@ void	print_env_list(t_env *env_list);
 // void test_init_arr_and_list();
 // void test_init_env();
 void	prt_error(const char *format, char *arg);
-bool check_op(char c);
-bool check_op_quotes(const char *str);
+void	handle_multiple_outputs(t_ast *root, t_msh *msh);
 
 #endif
