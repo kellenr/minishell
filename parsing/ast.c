@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 13:40:58 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/19 15:35:17 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/19 15:37:58 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,5 +86,3 @@ int	set_command_and_args(t_ast *node, t_token *current_token)
 	node->args[1] = NULL;
 	return (0);
 }
-
-

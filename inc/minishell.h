@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 09:43:39 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/19 15:34:07 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/19 17:37:52 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -230,6 +230,10 @@ char	*expand_or_process_literal(char *input, int *i, char *result, \
 char	*initialize_result_and_tmp(char **tmp);
 void	init_vars_ast(t_ast **root, t_ast **cur_node, t_token **cur_token, \
 		t_token *tokens);
+void	init_ext_vars( char **token, char **clean_token, char **input, \
+		bool *quoted_flag);
+char	*process_new_token(t_token **head, char *input, t_msh *msh, \
+		int *heredoc_flag);
 
 /*					Exec utils					*/
 char	*get_command_path(t_cmd *cmd, int *allocated);

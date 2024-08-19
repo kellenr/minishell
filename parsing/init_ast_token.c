@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init_ast.c                                         :+:      :+:    :+:   */
+/*   init_ast_token.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/19 15:30:15 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/19 15:31:13 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/19 17:39:14 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,4 +71,52 @@ t_ast	*create_ast_node(void)
 	node->command = NULL;
 	node->args = NULL;
 	return (node);
+}
+
+/*
+ * Function to create a new token.
+ * Takes the token value as an argument.
+ * Returns a pointer to the new token.
+ */
+t_token	*create_token(char *value, bool quoted_flag)
+{
+	t_token	*token;
+
+	token = (t_token *)malloc(sizeof(t_token));
+	if (!token)
+		return (NULL);
+	token->value = ft_strdup(value);
+	if (quoted_flag)
+		token->op = NONE;
+	else
+		token->op = valid_op(value);
+	token->next = NULL;
+	token->broken = false;
+	return (token);
+}
+
+/*
+ * Function to add a token to the end of the token list.
+ * Takes a pointer to the head of the list and the token value as arguments.
+ */
+void	add_token(t_token **head, char *value, bool quoted_flag)
+{
+	t_token	*new;
+	t_token	*temp;
+
+	new = create_token(value, quoted_flag);
+	if (!new)
+		return ;
+	if (!*head)
+	{
+		*head = new;
+		return ;
+	}
+	else
+	{
+		temp = *head;
+		while (temp->next)
+			temp = temp->next;
+		temp->next = new;
+	}
 }

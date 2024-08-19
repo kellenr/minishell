@@ -6,59 +6,11 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 14:18:00 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/19 15:24:35 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/19 17:38:26 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-/*
- * Function to create a new token.
- * Takes the token value as an argument.
- * Returns a pointer to the new token.
- */
-t_token	*create_token(char *value, bool quoted_flag)
-{
-	t_token	*token;
-
-	token = (t_token *)malloc(sizeof(t_token));
-	if (!token)
-		return (NULL);
-	token->value = ft_strdup(value);
-	if (quoted_flag)
-		token->op = NONE;
-	else
-		token->op = valid_op(value);
-	token->next = NULL;
-	token->broken = false;
-	return (token);
-}
-
-/*
- * Function to add a token to the end of the token list.
- * Takes a pointer to the head of the list and the token value as arguments.
- */
-void	add_token(t_token **head, char *value, bool quoted_flag)
-{
-	t_token	*new;
-	t_token	*temp;
-
-	new = create_token(value, quoted_flag);
-	if (!new)
-		return ;
-	if (!*head)
-	{
-		*head = new;
-		return ;
-	}
-	else
-	{
-		temp = *head;
-		while (temp->next)
-			temp = temp->next;
-		temp->next = new;
-	}
-}
 
 /*
  * Function to tokenize the input string into a linked list of tokens.
@@ -68,32 +20,42 @@ void	add_token(t_token **head, char *value, bool quoted_flag)
 t_token	*tokenize(char *input, t_msh *msh)
 {
 	t_token	*head;
-	char	*token;
 	int		heredoc_flag;
-	bool	quoted_flag;
 
 	heredoc_flag = 0;
 	head = NULL;
 	while (*input)
 	{
-		quoted_flag = false;
-		input = skip_spaces(input);
-		if (*input)
-		{
-			token = extract_token(&input, msh, &heredoc_flag, &quoted_flag);
-			if (!token)
-			{
-				add_token(&head, "", false);
-				head->broken = true;
-				return (head);
-			}
-			if (ft_strlen(token) > 0)
-				add_token(&head, token, quoted_flag);
-			free(token);
-		}
-		input = skip_spaces(input);
+		input = process_new_token(&head, input, msh, &heredoc_flag);
+		if (!input)
+			return (head);
 	}
 	return (head);
+}
+
+char	*process_new_token(t_token **head, char *input, t_msh *msh, \
+		int *heredoc_flag)
+{
+	char	*token;
+	bool	quoted_flag;
+
+	quoted_flag = false;
+	input = skip_spaces(input);
+	if (*input)
+	{
+		token = extract_token(&input, msh, heredoc_flag, &quoted_flag);
+		if (!token)
+		{
+			add_token(head, "", false);
+			(*head)->broken = true;
+			return (NULL);
+		}
+		if (ft_strlen(token) > 0)
+			add_token(head, token, quoted_flag);
+		free(token);
+	}
+	input = skip_spaces(input);
+	return (input);
 }
 
 /*
@@ -192,12 +154,8 @@ char	*extract_token(char **input, t_msh *msh, int *heredoc_flag, \
 	char	*expanded_token;
 
 	start = *input;
-	token = NULL;
-	cleaned_token = NULL;
 	expanded_token = NULL;
-	if ((*input[0] == '\'' || *input[0] == '\"') && ft_strlen(*input) > 1 && \
-		((*input)[1] != (*input)[0]))
-		*quoted_flag = true;
+	init_ext_vars(&token, &cleaned_token, input, quoted_flag);
 	if (*quoted_flag == false && is_operator(**input))
 		return (handle_operator_token(input, heredoc_flag));
 	result = advance_past_token(input);
@@ -213,6 +171,16 @@ char	*extract_token(char **input, t_msh *msh, int *heredoc_flag, \
 	cleaned_token = remove_quotes(token);
 	free(token);
 	return (cleaned_token);
+}
+
+void	init_ext_vars( char **token, char **clean_token, char **input, \
+		bool *quoted_flag)
+{
+	*token = NULL;
+	*clean_token = NULL;
+	if ((*input[0] == '\'' || *input[0] == '\"') && ft_strlen(*input) > 1 && \
+		((*input)[1] != (*input)[0]))
+		*quoted_flag = true;
 }
 
 /*
