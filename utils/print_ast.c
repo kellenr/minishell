@@ -6,13 +6,13 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/13 23:14:16 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/12 04:12:11 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/19 14:14:53 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/* const char *op_to_string(t_op op)
+const char *op_to_string(t_op op)
 {
 	switch (op) {
 		case NONE: return "NONE";
@@ -25,7 +25,7 @@
 		case OR: return "OR";
 		default: return "UNKNOWN";
 	}
-} */
+}
 
 /* void print_ast(t_ast *root, int level, char *branch)
 {
@@ -52,7 +52,7 @@
 	}
 } */
 
-/* void print_ast_helper(t_ast *node, int level)
+void print_ast_helper(t_ast *node, int level)
 {
 	if (node == NULL) return;
 	for (int i = 0; i < level; i++) printf("  ");
@@ -134,4 +134,4 @@ void print_ast(t_ast *node)
 	printf("AST:\n");
 	print_ast_helper(node, 0);
 }
- */
+

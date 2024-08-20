@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 13:54:08 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/18 04:02:03 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/19 15:21:36 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,6 +130,7 @@ void	parse_and_execute(t_token *tokens, t_msh *msh)
 	free_tokens(tokens);
 	if (cmd_tree)
 	{
+		//print_ast(cmd_tree);
 		execute_ast(cmd_tree, msh);
 		free_ast(cmd_tree);
 	}

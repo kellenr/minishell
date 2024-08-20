@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 18:37:49 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/19 11:22:04 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/19 15:07:31 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,18 @@ void	handle_redirection(t_ast *root, t_msh *msh)
 		handle_output_append(root, msh);
 	else if (root->op == REDIR_HERE_DOC)
 		handle_heredoc(root, msh);
+
+	// if (root->left)
+    //     handle_redirection(root->left, msh);
+
+    // // Then, handle the current node's redirection
+    // if (root->op == REDIR_INPUT)
+    //     handle_input_redir(root, msh);
+    // else if (root->op == REDIR_REPLACE)
+    //     handle_output_replace(root, msh);
+    // else if (root->op == REDIR_APPEND)
+    //     handle_output_append(root, msh);
+
 }
 
 /**

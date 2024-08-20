@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 09:43:39 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/19 11:13:56 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/19 19:57:22 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -328,8 +328,10 @@ char	*combine_expanded_with_rest(char *expanded, char *rst);
 
 /*                                    pipes                                  */
 pid_t	fork_first_child(t_ast *root, t_msh *msh, int pipefd[2]);
+pid_t	fork_first_child_heredoc(t_ast *root, t_msh *msh, int pipefd[2], int heredoc_fd);
 pid_t	fork_second_child(t_ast *root, t_msh *msh, int pipefd[2]);
 void	execute_pipes(t_ast *root, t_msh *msh);
+void 	wait_for_childs(pid_t p1, pid_t p2, int pipefd[2], t_msh *msh);
 
 t_ast	*get_command(t_ast *root, int *current_index, int target_index);
 int		count_commands(t_ast *root);
@@ -353,11 +355,15 @@ char	*safe_strdup(const char *s);
 void	handle_input_redir(t_ast *root, t_msh *msh);
 void	handle_output_replace(t_ast *root, t_msh *msh);
 void	handle_output_append(t_ast *root, t_msh *msh);
+// int	handle_input_redir(t_ast *root, t_msh *msh);
+// int	handle_output_replace(t_ast *root, t_msh *msh);
+// int	handle_output_append(t_ast *root, t_msh *msh);
 int		handle_fd_redirection(int fd, int target_fd);
 void	redirect_and_execute(int fd, int std_fd, t_ast *root, t_msh *msh);
 int		open_tmp_file(t_msh *msh);
 int		parse_heredoc(char *delimiter, int fd, t_msh *msh);
 void	handle_heredoc(t_ast *root, t_msh *msh);
+int		handle_heredoc_pipe(t_ast *root, t_msh *msh);
 t_ast	*create_redir_node(int op, t_ast *root);
 void	handle_redir_file(t_token **current_token, char **file_field);
 int		has_quotes(char *delimiter);
@@ -388,6 +394,7 @@ void	print_env_list(t_env *env_list);
 // void test_init_arr_and_list();
 // void test_init_env();
 void	prt_error(const char *format, char *arg);
-void	handle_multiple_outputs(t_ast *root, t_msh *msh);
+void	pipe_heredoc(t_ast *root, t_msh *msh);
+void handle_multiple_redirections(t_ast *root, t_msh *msh);
 
 #endif
