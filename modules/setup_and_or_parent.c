@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 16:17:06 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/18 03:34:35 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/20 22:18:16 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,8 @@ t_ast	*integrate_ast_node(t_ast *root, t_ast *pthesis_node)
 	}
 }
 
-t_ast	*handle_parentheses_ast(t_token **current_token, t_ast *root, t_msh *msh)
+t_ast	*handle_parentheses_ast(t_token **current_token, \
+		t_ast *root, t_msh *msh)
 {
 	t_ast	*pthesis_node;
 
