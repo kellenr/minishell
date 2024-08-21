@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 01:41:45 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/20 21:58:28 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/22 00:35:42 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,20 +25,15 @@ char	*exp_env_var(char *input, t_msh *msh)
 
 	if (input[0] == '\'' && input[1] != '\'')
 		return (ft_strdup(input));
-	result = NULL;
-	tmp = NULL;
 	if (!input)
 		return (NULL);
-	result = ft_strdup("");
+	result = initialize_result_and_tmp(&tmp);
 	if (!result)
 		return (NULL);
 	i = 0;
 	while (input[i])
 	{
-		if (input[i] == '$')
-			tmp = exp_variable(input, &i, result, msh);
-		else
-			tmp = process_literal(input, &i, result);
+		tmp = expand_or_process_literal(input, &i, result, msh);
 		if (!tmp)
 		{
 			free(result);
@@ -122,4 +117,16 @@ char	*exp_special_var(const char *input, int *index, char *rst, t_msh *msh)
 	final_expansion = ft_strjoin(rst, exp);
 	free(exp);
 	return (final_expansion);
+}
+
+char	*expand_or_process_literal(char *input, int *i, char *result, \
+		t_msh *msh)
+{
+	char	*temp;
+
+	if (input[*i] == '$')
+		temp = exp_variable(input, i, result, msh);
+	else
+		temp = process_literal(input, i, result);
+	return (temp);
 }

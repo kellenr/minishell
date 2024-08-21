@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/09 14:35:09 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/20 22:03:28 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/22 00:37:12 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,7 @@ pid_t	fork_first_child_heredoc(t_ast *root, t_msh *msh, int pipefd[2], \
 		saved_fd = dup(STDIN_FILENO);
 		dup2(heredoc_fd, STDIN_FILENO);
 		close(heredoc_fd);
+		unlink("tmp_file");
 		dup2(pipefd[1], STDOUT_FILENO);
 		close(pipefd[0]);
 		close(pipefd[1]);
@@ -120,4 +121,3 @@ pid_t	fork_first_child_heredoc(t_ast *root, t_msh *msh, int pipefd[2], \
 	}
 	return (p1);
 }
-
