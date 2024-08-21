@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 11:27:05 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/18 01:59:36 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/19 12:09:37 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,8 +56,8 @@ int	init_env_and_export(t_cmd *cmd, char **envp)
 	t_env	*export_node;
 	t_env	*env_node;
 
-	i = 0;
-	while (envp[i])
+	i = -1;
+	while (envp[++i])
 	{
 		export_node = create_env_node(envp[i]);
 		if (!export_node)
@@ -75,7 +75,6 @@ int	init_env_and_export(t_cmd *cmd, char **envp)
 			return (-1);
 		}
 		add_env_node(&cmd->env_list, env_node);
-		i++;
 	}
 	return (0);
 }
@@ -85,4 +84,17 @@ void	format_error_message(char *error_message, char *token)
 	ft_strcpy(error_message, "export `");
 	ft_strcat(error_message, token);
 	ft_strcat(error_message, "': not a valid identifier");
+}
+
+void	add_env_var(t_env **env_list, char *name, char *value)
+{
+	t_env	*new_var;
+
+	new_var = malloc(sizeof(t_env));
+	if (!new_var)
+		ft_error("Memory allocation error");
+	new_var->name = (name);
+	new_var->value = (value);
+	new_var->next = *env_list;
+	*env_list = new_var;
 }

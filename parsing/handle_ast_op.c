@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_ast_op.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 16:33:38 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/20 21:57:44 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/19 15:24:07 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,8 +124,7 @@ t_ast	*handle_operator_ast(t_token **current_token, t_ast *root, t_msh *msh)
  * Returns the updated current AST node.
  *
  * Add the argument to the command's args
- * current_node->args = realloc(current_node->args, sizeof(char *) *
- * (argc + 2));
+ * current_node->args = realloc(current_node->args, sizeof(char *) * (argc + 2));
  * Error: too many arguments
  * Free the AST and exit
  */

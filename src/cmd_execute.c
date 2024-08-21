@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_execute.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 13:54:08 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/20 21:56:34 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/19 18:01:25 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,9 @@ void	process_cmd(char *prompt, t_msh *msh)
 	char	*preprocessed_input;
 	t_token	*tokens;
 
-	if (!prompt || !*prompt)
+	trimmed_prompt = trim_and_validate_prompt(prompt);
+	if (!trimmed_prompt)
 		return ;
-	trimmed_prompt = trim_whitespace(prompt);
-	if (!*trimmed_prompt || !trimmed_prompt)
-	{
-		free(trimmed_prompt);
-		return ;
-	}
 	preprocessed_input = process_input(trimmed_prompt);
 	free(trimmed_prompt);
 	if (!preprocessed_input)
@@ -48,35 +43,19 @@ void	process_cmd(char *prompt, t_msh *msh)
 	parse_and_execute(tokens, msh);
 }
 
-/*
- * Function to create a command structure from an AST node.
- * Takes the AST node as an argument.
- * Returns a pointer to the created command structure.
- */
-t_cmd	*ast_to_cmd(t_ast *root)
+char	*trim_and_validate_prompt(char *prompt)
 {
-	t_cmd	*cmd;
-	int		count;
+	char	*trimmed_prompt;
 
-	count = 0;
-	cmd = init_cmd();
-	if (!cmd)
+	if (!prompt || !*prompt)
 		return (NULL);
-	cmd->tokens = copy_tokens(root->args, &count);
-	if (!cmd->tokens)
+	trimmed_prompt = trim_whitespace(prompt);
+	if (!*trimmed_prompt || !trimmed_prompt)
 	{
-		free(cmd);
+		free(trimmed_prompt);
 		return (NULL);
 	}
-	cmd->cmd = ft_strdup(root->command);
-	if (!cmd->cmd)
-	{
-		free_array(cmd->tokens, count);
-		free_cmd(cmd);
-		return (NULL);
-	}
-	cmd->argc = count;
-	return (cmd);
+	return (trimmed_prompt);
 }
 
 t_cmd	*init_cmd(void)

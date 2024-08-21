@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 09:43:39 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/22 17:08:25 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/22 17:10:16 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,6 +179,13 @@ typedef struct s_token
 	bool			broken;
 }		t_token;
 
+typedef struct s_ast_pointers
+{
+	t_ast	**cur_node;
+	t_ast	**root;
+	t_ast	**pthesis_node;
+} t_ast_ptrs;
+
 /* ************************************************************************** */
 /*                                 SOURCES                                    */
 /* ************************************************************************** */
@@ -236,6 +243,16 @@ void	fork_and_execute(t_cmd *cmd, char *cmd_path);
 void	execute_command_helper(t_ast *root, t_msh *msh);
 void	parse_and_execute(t_token *tokens, t_msh *msh);
 void	format_error_message(char *error_message, char *token);
+char	*expand_or_process_literal(char *input, int *i, char *result, \
+		t_msh *msh);
+char	*initialize_result_and_tmp(char **tmp);
+void	init_vars_ast(t_ast **root, t_ast **cur_node, t_token **cur_token, \
+		t_token *tokens);
+void	init_ext_vars( char **token, char **clean_token, char **input, \
+		bool *quoted_flag);
+char	*process_new_token(t_token **head, char *input, t_msh *msh, \
+		int *heredoc_flag);
+char	*trim_and_validate_prompt(char *prompt);
 
 /*					Exec utils					*/
 char	*get_command_path(t_cmd *cmd, int *allocated);
@@ -281,14 +298,15 @@ int		check_valid_unset_token(char *token, char *error_message);
 void	remove_env_var(t_env **env_list, char *name);
 void	initialize_echo(bool *flg, bool *eflg, int *i);
 void	parse_options(t_cmd *scmd, int *i, bool *flg, bool *eflg);
+void	add_or_update_env_list(t_env **env_list, char *name, char *value);
+void	handle_var_assignment(t_cmd *cmd, char *name, char *value);
 
 /*                                  Parsing                                   */
 
 t_token	*create_token(char *value, bool quoted_flag);
 void	add_token(t_token **head, char *value, bool quoted_flag);
 t_token	*tokenize(char *input, t_msh *msh);
-char	*extract_token(char **input, t_msh *msh, int *heredoc_flag, \
-		bool *quoted_flag);
+char	*extract_token(char **input, t_msh *msh, int *heredoc_flag, bool *quoted_flag);
 t_ast	*init_ast(t_token **current_token);
 t_ast	*handle_non_operator(t_token **current_token, t_ast *current_node);
 t_ast	*handle_operator_ast(t_token **current_token, t_ast *root, t_msh *msh);
@@ -338,6 +356,10 @@ char	*const_final_exp(char *exp, const char *input, int *index, char *rst);
 char	*get_expanded_value(char *token, t_msh *msh);
 char	*ext_and_exp_var(const char *input, int *index, t_msh *msh);
 char	*combine_expanded_with_rest(char *expanded, char *rst);
+char	*expand_command(t_cmd *cmd);
+char	*handle_path_search(char *expanded_cmd, t_cmd *cmd, int *allocated);
+char	*process_path_stat(char *expanded_cmd, struct stat *path_stat, \
+		t_cmd *cmd, int *allocated);
 
 /*                                    pipes                                  */
 pid_t	fork_first_child(t_ast *root, t_msh *msh, int pipefd[2]);
@@ -369,15 +391,11 @@ char	*safe_strdup(const char *s);
 void	handle_input_redir(t_ast *root, t_msh *msh);
 void	handle_output_replace(t_ast *root, t_msh *msh);
 void	handle_output_append(t_ast *root, t_msh *msh);
-// int	handle_input_redir(t_ast *root, t_msh *msh);
-// int	handle_output_replace(t_ast *root, t_msh *msh);
-// int	handle_output_append(t_ast *root, t_msh *msh);
 int		handle_fd_redirection(int fd, int target_fd);
 void	redirect_and_execute(int fd, int std_fd, t_ast *root, t_msh *msh);
 int		open_tmp_file(t_msh *msh);
 int		parse_heredoc(char *delimiter, int fd, t_msh *msh);
 void	handle_heredoc(t_ast *root, t_msh *msh);
-int		handle_heredoc_pipe(t_ast *root, t_msh *msh);
 t_ast	*create_redir_node(int op, t_ast *root);
 void	handle_redir_file(t_token **current_token, char **file_field);
 int		has_quotes(char *delimiter);
@@ -392,6 +410,7 @@ void	process_heredoc_flag(int *heredoc_flag, t_msh *msh, char *token);
 bool	check_input_file(t_ast *root, t_msh *msh);
 bool	check_redir_has_command(t_ast *root, t_msh *msh);
 void	handle_multiple_redir_files(t_ast *root);
+int		handle_heredoc_pipe(t_ast *root, t_msh *msh);
 
 /*									SIGNALS								*/
 void	sig_handler_int(int signum);
@@ -411,7 +430,6 @@ void	print_env_list(t_env *env_list);
 // void test_init_arr_and_list();
 // void test_init_env();
 void	prt_error(const char *format, char *arg);
-void	pipe_heredoc(t_ast *root, t_msh *msh);
-void	handle_multiple_redirections(t_ast *root, t_msh *msh);
+void	handle_multiple_outputs(t_ast *root, t_msh *msh);
 
 #endif

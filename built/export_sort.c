@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/12 21:32:09 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/12 21:32:38 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/19 11:42:28 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,4 +59,33 @@ void	list_bubble_sort(t_env *head)
 		}
 		last_sort = current;
 	}
+}
+
+void	print_export(t_env *export_list)
+{
+	t_env	*sorted_list;
+
+	sorted_list = sort_env_list(export_list);
+	while (sorted_list != NULL)
+	{
+		if (sorted_list->value && *sorted_list->value)
+			ft_printf("declare -x %s=\"%s\"\n", sorted_list->name, \
+			sorted_list->value);
+		else
+			ft_printf("declare -x %s\n", sorted_list->name);
+		sorted_list = sorted_list->next;
+	}
+}
+
+t_env	*find_env_var(t_env *env_list, char *var)
+{
+	if (env_list == NULL || var == NULL)
+		return (NULL);
+	while (env_list)
+	{
+		if (ft_strcmp(env_list->name, var) == 0)
+			return (env_list);
+		env_list = env_list->next;
+	}
+	return (NULL);
 }

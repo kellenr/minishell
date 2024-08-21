@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/15 11:18:57 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/22 17:09:00 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/22 17:10:21 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,4 +112,3 @@ void	redirect_and_execute(int fd, int std_fd, t_ast *root, t_msh *msh)
 	dup2(saved_fd, std_fd);
 	close(saved_fd);
 }
-

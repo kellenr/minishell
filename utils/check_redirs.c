@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 23:11:16 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/21 23:11:26 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/21 23:46:08 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,4 +97,3 @@ void	handle_multiple_redir_files(t_ast *root)
 		tmp = tmp->left;
 	}
 }
-
