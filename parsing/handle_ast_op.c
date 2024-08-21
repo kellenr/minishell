@@ -6,13 +6,14 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 16:33:38 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/18 19:50:30 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/20 21:57:44 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_ast	*handle_operator_pipe_ast(t_token **current_token, t_ast *root, t_msh *msh)
+t_ast	*handle_operator_pipe_ast(t_token **current_token, t_ast *root, \
+		t_msh *msh)
 {
 	t_ast	*pipe_node;
 
@@ -123,7 +124,8 @@ t_ast	*handle_operator_ast(t_token **current_token, t_ast *root, t_msh *msh)
  * Returns the updated current AST node.
  *
  * Add the argument to the command's args
- * current_node->args = realloc(current_node->args, sizeof(char *) * (argc + 2));
+ * current_node->args = realloc(current_node->args, sizeof(char *) *
+ * (argc + 2));
  * Error: too many arguments
  * Free the AST and exit
  */

@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 09:43:39 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/19 19:57:22 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/21 23:16:50 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,15 @@
 # define P_M		"\033[1;38;5;183m"
 # define P_P		"\033[1;38;2;255;209;220m"
 # define P_R		"\033[38;2;255;179;186m"
+
+#define M_HANDLE_REDIRECTION_FILE(tmp, tmpfd) \
+do { \
+	if (tmp->op == REDIR_APPEND) \
+		tmpfd = open(tmp->redir->append_file, O_WRONLY | O_CREAT | O_APPEND, 0644); \
+	else \
+		tmpfd = open(tmp->redir->output_file, O_WRONLY | O_CREAT | O_TRUNC, 0644); \
+	close(tmpfd); \
+} while (0)
 
 // Enumeration for different operators
 typedef enum e_op
@@ -146,6 +155,8 @@ typedef struct s_ast
 	char			**args;
 	t_op			op;
 	t_redir			*redir;
+	int				fd;
+	int				saved_fd;
 	struct s_ast	*left;
 	struct s_ast	*right;
 }		t_ast;
@@ -276,7 +287,8 @@ void	parse_options(t_cmd *scmd, int *i, bool *flg, bool *eflg);
 t_token	*create_token(char *value, bool quoted_flag);
 void	add_token(t_token **head, char *value, bool quoted_flag);
 t_token	*tokenize(char *input, t_msh *msh);
-char	*extract_token(char **input, t_msh *msh, int *heredoc_flag, bool *quoted_flag);
+char	*extract_token(char **input, t_msh *msh, int *heredoc_flag, \
+		bool *quoted_flag);
 t_ast	*init_ast(t_token **current_token);
 t_ast	*handle_non_operator(t_token **current_token, t_ast *current_node);
 t_ast	*handle_operator_ast(t_token **current_token, t_ast *root, t_msh *msh);
@@ -319,7 +331,8 @@ void	handle_logical_op(t_ast *root, t_msh *msh);
 void	handle_parentheses_op(t_ast *root, t_msh *msh);
 t_ast	*parse_parentheses(t_token **current_token, t_msh *msh);
 t_ast	*integrate_ast_node(t_ast *root, t_ast *pthesis_node);
-t_ast	*handle_parentheses_ast(t_token **current_token, t_ast *root, t_msh *msh);
+t_ast	*handle_parentheses_ast(t_token **current_token, t_ast *root, \
+		t_msh *msh);
 char	*extract_and_expand_var(const char *input, int *index, t_msh *msh);
 char	*const_final_exp(char *exp, const char *input, int *index, char *rst);
 char	*get_expanded_value(char *token, t_msh *msh);
@@ -328,10 +341,11 @@ char	*combine_expanded_with_rest(char *expanded, char *rst);
 
 /*                                    pipes                                  */
 pid_t	fork_first_child(t_ast *root, t_msh *msh, int pipefd[2]);
-pid_t	fork_first_child_heredoc(t_ast *root, t_msh *msh, int pipefd[2], int heredoc_fd);
+pid_t	fork_first_child_heredoc(t_ast *root, t_msh *msh, int pipefd[2], \
+		int heredoc_fd);
 pid_t	fork_second_child(t_ast *root, t_msh *msh, int pipefd[2]);
 void	execute_pipes(t_ast *root, t_msh *msh);
-void 	wait_for_childs(pid_t p1, pid_t p2, int pipefd[2], t_msh *msh);
+void	wait_for_childs(pid_t p1, pid_t p2, int pipefd[2], t_msh *msh);
 
 t_ast	*get_command(t_ast *root, int *current_index, int target_index);
 int		count_commands(t_ast *root);
@@ -375,6 +389,9 @@ int		handle_redir_replace(t_token **current_token, t_ast *redir_node);
 int		handle_redir_append(t_token **current_token, t_ast *redir_node);
 int		handle_redir_heredoc(t_token **current_token, t_ast *redir_node);
 void	process_heredoc_flag(int *heredoc_flag, t_msh *msh, char *token);
+bool	check_input_file(t_ast *root, t_msh *msh);
+bool	check_redir_has_command(t_ast *root, t_msh *msh);
+void	handle_multiple_redir_files(t_ast *root);
 
 /*									SIGNALS								*/
 void	sig_handler_int(int signum);
@@ -395,6 +412,6 @@ void	print_env_list(t_env *env_list);
 // void test_init_env();
 void	prt_error(const char *format, char *arg);
 void	pipe_heredoc(t_ast *root, t_msh *msh);
-void handle_multiple_redirections(t_ast *root, t_msh *msh);
+void	handle_multiple_redirections(t_ast *root, t_msh *msh);
 
 #endif

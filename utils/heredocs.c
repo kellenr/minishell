@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 11:54:56 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/19 20:05:45 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/20 21:56:06 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int	handle_heredoc_pipe(t_ast *root, t_msh *msh)
 		else
 			msh->exit_status = 1;
 		close(heredoc_fd);
-		return -1;
+		return (-1);
 	}
 	close(heredoc_fd);
 	heredoc_fd = open("tmp_file", O_RDONLY, 0);
@@ -63,9 +63,9 @@ int	handle_heredoc_pipe(t_ast *root, t_msh *msh)
 	{
 		perror("handle_heredoc: open tmp_file");
 		msh->exit_status = 1;
-		return -1;
+		return (-1);
 	}
-	return heredoc_fd;
+	return (heredoc_fd);
 }
 
 int	parse_heredoc(char *delimiter, int fd, t_msh *msh)
