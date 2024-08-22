@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/12 14:41:55 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/22 00:28:53 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/22 23:43:40 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,14 @@ void	execute_command_helper(t_ast *root, t_msh *msh)
 	cmd = ast_to_cmd(root);
 	if (!cmd)
 	{
-		ft_printf("Error: Failed to create command");
+		ft_printf("Error: Failed to create command\n");
 		msh->exit_status = 1;
 		return ;
 	}
 	cmd->msh = msh;
 	if (init_env(cmd, msh->env) != 0)
 	{
-		ft_printf("Error: Failed to initialize env");
+		ft_printf("Error: Failed to initialize env\n");
 		msh->exit_status = 1;
 		free_cmd(cmd);
 		return ;

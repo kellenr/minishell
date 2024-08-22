@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 23:11:16 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/21 23:46:08 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/23 01:03:00 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ bool	check_redir_has_command(t_ast *root, t_msh *msh)
 	int		tmpfd;
 
 	tmp = root;
+	tmpfd = 0;
 	while (tmp->left)
 		tmp = tmp->left;
 	if (!tmp->command)
@@ -68,7 +69,7 @@ bool	check_redir_has_command(t_ast *root, t_msh *msh)
 		while (tmp)
 		{
 			if (tmp->op == REDIR_APPEND || tmp->op == REDIR_REPLACE)
-				M_HANDLE_REDIRECTION_FILE(tmp, tmpfd);
+				handle_redirection_file(tmp, tmpfd);
 			tmp = tmp->left;
 		}
 		return (false);
@@ -90,10 +91,21 @@ void	handle_multiple_redir_files(t_ast *root)
 	int		tmpfd;
 
 	tmp = root;
+	tmpfd = 0;
 	while (tmp->left && (tmp->left->op == tmp->op
 			|| tmp->op == REDIR_APPEND || tmp->op == REDIR_REPLACE))
 	{
-		M_HANDLE_REDIRECTION_FILE(tmp, tmpfd);
+		handle_redirection_file(tmp, tmpfd);
 		tmp = tmp->left;
 	}
+}
+
+int	handle_redirection_file(t_ast *tmp, int fd)
+{
+	if (tmp->op == REDIR_APPEND)
+		fd = open(tmp->redir->append_file, O_WRONLY | O_CREAT | O_APPEND, 0777);
+	else
+		fd = open(tmp->redir->output_file, O_WRONLY | O_CREAT | O_TRUNC, 0777);
+	close(fd);
+	return (0);
 }

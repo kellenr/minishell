@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_execute.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 13:54:08 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/19 18:01:25 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/22 23:41:42 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,8 @@ char	**copy_tokens(char **args, int *count)
 	int		i;
 
 	i = 0;
+	if (!args)
+		return (NULL);
 	while (args[*count] != NULL)
 		(*count)++;
 	tokens = (char **)malloc(sizeof(char *) * (*count + 1));

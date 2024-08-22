@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 09:43:39 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/22 17:10:16 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/23 01:04:34 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,15 +42,6 @@
 # define P_M		"\033[1;38;5;183m"
 # define P_P		"\033[1;38;2;255;209;220m"
 # define P_R		"\033[38;2;255;179;186m"
-
-#define M_HANDLE_REDIRECTION_FILE(tmp, tmpfd) \
-do { \
-	if (tmp->op == REDIR_APPEND) \
-		tmpfd = open(tmp->redir->append_file, O_WRONLY | O_CREAT | O_APPEND, 0644); \
-	else \
-		tmpfd = open(tmp->redir->output_file, O_WRONLY | O_CREAT | O_TRUNC, 0644); \
-	close(tmpfd); \
-} while (0)
 
 // Enumeration for different operators
 typedef enum e_op
@@ -184,7 +175,7 @@ typedef struct s_ast_pointers
 	t_ast	**cur_node;
 	t_ast	**root;
 	t_ast	**pthesis_node;
-} t_ast_ptrs;
+}	t_ast_ptrs;
 
 /* ************************************************************************** */
 /*                                 SOURCES                                    */
@@ -306,7 +297,8 @@ void	handle_var_assignment(t_cmd *cmd, char *name, char *value);
 t_token	*create_token(char *value, bool quoted_flag);
 void	add_token(t_token **head, char *value, bool quoted_flag);
 t_token	*tokenize(char *input, t_msh *msh);
-char	*extract_token(char **input, t_msh *msh, int *heredoc_flag, bool *quoted_flag);
+char	*extract_token(char **input, t_msh *msh, int *heredoc_flag, \
+		bool *quoted_flag);
 t_ast	*init_ast(t_token **current_token);
 t_ast	*handle_non_operator(t_token **current_token, t_ast *current_node);
 t_ast	*handle_operator_ast(t_token **current_token, t_ast *root, t_msh *msh);
@@ -325,7 +317,7 @@ void	*handle_nop_block(t_token **cur_token, t_ast **cur_node, t_ast **root);
 char	*process_input(const char *input);
 void	handle_quotes(const char **inp_ptr, char **res_ptr);
 void	handle_operator(const char **inp_ptr, char **res_ptr, char *result, \
-size_t buffer_size);
+		size_t buffer_size);
 t_cmd	*ast_to_cmd(t_ast *root);
 void	process_cmd(char *prompt, t_msh *msh);
 void	execute_ast(t_ast *root, t_msh *msh);
@@ -411,6 +403,7 @@ bool	check_input_file(t_ast *root, t_msh *msh);
 bool	check_redir_has_command(t_ast *root, t_msh *msh);
 void	handle_multiple_redir_files(t_ast *root);
 int		handle_heredoc_pipe(t_ast *root, t_msh *msh);
+int		handle_redirection_file(t_ast *tmp, int fd);
 
 /*									SIGNALS								*/
 void	sig_handler_int(int signum);
