@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 00:20:12 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/19 18:09:22 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/23 00:21:35 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,8 +66,10 @@ void	free_ast(t_ast *root)
 {
 	if (!root)
 		return ;
-	free_ast(root->left);
-	free_ast(root->right);
+	if (root->left)
+		free_ast(root->left);
+	if (root->right)
+		free_ast(root->right);
 	free_ast_node(root);
 	root = NULL;
 }

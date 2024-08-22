@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 11:54:56 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/22 17:10:27 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/23 00:11:33 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	handle_heredoc(t_ast *root, t_msh *msh)
 	close(fd);
 }
 
-int	handle_heredoc_pipe(t_ast *root, t_msh *msh)
+int	parse_and_get_heredoc_fd(t_ast *root, t_msh *msh)
 {
 	int	heredoc_fd;
 

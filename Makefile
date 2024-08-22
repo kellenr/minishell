@@ -6,7 +6,7 @@
 #    By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/07 17:06:07 by keramos-          #+#    #+#              #
-#    Updated: 2024/08/21 23:42:41 by keramos-         ###   ########.fr        #
+#    Updated: 2024/08/23 00:22:14 by keramos-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -77,7 +77,7 @@ SRCS = minishell.c \
 	modules/var_exp.c modules/var_utils.c modules/setup_pipe.c \
 	modules/setup_redir.c modules/setup_and_or_parent.c modules/redir_utils.c \
 	utils/op_utils.c utils/exp_utils.c utils/ast_utils_v2.c utils/execute_utils.c \
-	utils/handle_ast_utils.c utils/check_redirs.c
+	utils/handle_ast_utils.c utils/check_redirs.c utils/heredoc_redir.c
 
 OBJS = $(SRCS:.c=.o)
 
