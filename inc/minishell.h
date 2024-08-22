@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 09:43:39 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/22 17:10:16 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/23 00:23:53 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # include <signal.h>
 # include <sys/ioctl.h>
 # include <sys/stat.h>
+# include <errno.h>
 
 /* # include <sys/types.h>
 
@@ -179,12 +180,13 @@ typedef struct s_token
 	bool			broken;
 }		t_token;
 
-typedef struct s_ast_pointers
+typedef struct s_heredoc_redir
 {
-	t_ast	**cur_node;
-	t_ast	**root;
-	t_ast	**pthesis_node;
-} t_ast_ptrs;
+	char	*output_file;
+	int		open_flags;
+	int		open_mode;
+	int		heredoc_fd;
+}		t_hrd;
 
 /* ************************************************************************** */
 /*                                 SOURCES                                    */
@@ -410,7 +412,11 @@ void	process_heredoc_flag(int *heredoc_flag, t_msh *msh, char *token);
 bool	check_input_file(t_ast *root, t_msh *msh);
 bool	check_redir_has_command(t_ast *root, t_msh *msh);
 void	handle_multiple_redir_files(t_ast *root);
-int		handle_heredoc_pipe(t_ast *root, t_msh *msh);
+int		parse_and_get_heredoc_fd(t_ast *root, t_msh *msh);
+int		handle_heredoc_output_redir(t_ast *root, t_msh *msh);
+int		copy_file(int src_fd, int dest_fd);
+t_hrd	new_heredoc_redir(t_ast *root, t_msh *msh);
+int		handle_heredoc_output_redir(t_ast *root, t_msh *msh);
 
 /*									SIGNALS								*/
 void	sig_handler_int(int signum);

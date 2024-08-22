@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/06 10:06:43 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/15 14:08:02 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/23 00:20:50 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,9 @@ t_ast	*init_ast_node(void)
 	node->left = NULL;
 	node->right = NULL;
 	node->op = NONE;
+	node->redir = NULL;
+	node->fd = -1;
+	node->saved_fd = -1;
 	node->redir = NULL;
 	return (node);
 }

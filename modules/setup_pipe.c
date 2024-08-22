@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/09 14:35:09 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/22 17:10:06 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/23 00:11:33 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	execute_pipes(t_ast *root, t_msh *msh)
 		ft_error("pipe");
 	if (root->left->op == REDIR_HERE_DOC)
 	{
-		heredoc_fd = handle_heredoc_pipe(root->left, msh);
+		heredoc_fd = parse_and_get_heredoc_fd(root->left, msh);
 		if (heredoc_fd == -1)
 			ft_error("heredoc_fd");
 		p1 = fork_first_child_heredoc(root, msh, pipefd, heredoc_fd);
