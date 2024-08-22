@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_env.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 16:48:37 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/18 02:03:27 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/19 12:42:43 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,35 +32,6 @@ int	init_env(t_cmd *cmd, char **envp)
 	}
 	return (0);
 }
-
-// int	init_arr_and_list(t_cmd *cmd, char **envp)
-// {
-// 	int		i;
-// 	t_env	*new_node;
-
-// 	i = 0;
-// 	while (envp[i])
-// 	{
-// 		cmd->env[i] = ft_strdup(envp[i]);
-// 		if (!cmd->env[i])
-// 		{
-// 			free_array(cmd->env, i + 1);
-// 			free_env_list(cmd->export_list);
-// 			return (-1);
-// 		}
-// 		new_node = create_env_node(envp[i]);
-// 		if (!new_node)
-// 		{
-// 			free_array(cmd->env, i + 1);
-// 			free_env_list(cmd->export_list);
-// 			return (-1);
-// 		}
-// 		add_env_node(&cmd->export_list, new_node);
-// 		i++;
-// 	}
-// 	cmd->env[i] = NULL;
-// 	return (0);
-// }
 
 int	init_arr_and_list(t_cmd *cmd, char **envp)
 {

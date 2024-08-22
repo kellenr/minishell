@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   handle_ast_op.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 16:33:38 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/18 19:50:30 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/19 15:24:07 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_ast	*handle_operator_pipe_ast(t_token **current_token, t_ast *root, t_msh *msh)
+t_ast	*handle_operator_pipe_ast(t_token **current_token, t_ast *root, \
+		t_msh *msh)
 {
 	t_ast	*pipe_node;
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   built_export.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 16:57:00 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/18 02:11:12 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/19 12:07:18 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,23 +63,7 @@ void	handle_export_vars(t_cmd *cmd, char *arg)
 		*equal_sign = '\0';
 		name = ft_strdup(arg);
 		value = ft_strdup(equal_sign + 1);
-		existing_var = find_env_var(cmd->export_list, name);
-		if (existing_var)
-		{
-			free(existing_var->value);
-			existing_var->value = value;
-		}
-		else
-			add_env_var(&cmd->export_list, name, value);
-		existing_var = find_env_var(cmd->env_list, name);
-		if (existing_var)
-		{
-			free(existing_var->value);
-			existing_var->value = ft_strdup(value);
-			free(name);
-		}
-		else
-			add_env_var(&cmd->env_list, ft_strdup(name), ft_strdup(value));
+		handle_var_assignment(cmd, name, value);
 	}
 	else
 	{
@@ -90,44 +74,32 @@ void	handle_export_vars(t_cmd *cmd, char *arg)
 	}
 }
 
-t_env	*find_env_var(t_env *env_list, char *var)
+void	add_or_update_env_list(t_env **env_list, char *name, char *value)
 {
-	if (env_list == NULL || var == NULL)
-		return (NULL);
-	while (env_list)
+	t_env	*existing_var;
+
+	existing_var = find_env_var(*env_list, name);
+	if (existing_var)
 	{
-		if (ft_strcmp(env_list->name, var) == 0)
-			return (env_list);
-		env_list = env_list->next;
+		free(existing_var->value);
+		existing_var->value = ft_strdup(value);
+		free(name);
 	}
-	return (NULL);
+	else
+		add_env_var(env_list, ft_strdup(name), ft_strdup(value));
 }
 
-void	print_export(t_env *export_list)
+void	handle_var_assignment(t_cmd *cmd, char *name, char *value)
 {
-	t_env	*sorted_list;
+	t_env	*existing_var;
 
-	sorted_list = sort_env_list(export_list);
-	while (sorted_list != NULL)
+	existing_var = find_env_var(cmd->export_list, name);
+	if (existing_var)
 	{
-		if (sorted_list->value && *sorted_list->value)
-			ft_printf("declare -x %s=\"%s\"\n", sorted_list->name, \
-			sorted_list->value);
-		else
-			ft_printf("declare -x %s\n", sorted_list->name);
-		sorted_list = sorted_list->next;
+		free(existing_var->value);
+		existing_var->value = value;
 	}
-}
-
-void	add_env_var(t_env **env_list, char *name, char *value)
-{
-	t_env	*new_var;
-
-	new_var = malloc(sizeof(t_env));
-	if (!new_var)
-		ft_error("Memory allocation error");
-	new_var->name = (name);
-	new_var->value = (value);
-	new_var->next = *env_list;
-	*env_list = new_var;
+	else
+		add_env_var(&cmd->export_list, name, value);
+	add_or_update_env_list(&cmd->env_list, name, value);
 }

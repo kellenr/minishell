@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/06 14:57:47 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/18 00:44:52 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/19 18:57:47 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,52 +14,20 @@
 
 char	*get_command_path(t_cmd *cmd, int *allocated)
 {
-	char		*cmd_path;
-	struct stat	path_stat;
 	char		*expanded_cmd;
 	char		*result;
+	struct stat	path_stat;
 
 	*allocated = 0;
-	expanded_cmd = exp_env_var(cmd->tokens[0], cmd->msh);
-	if (!expanded_cmd || ft_strlen(expanded_cmd) == 0)
-	{
-		prt_error("msh: command not found: %s\n", cmd->tokens[0]);
-		cmd->msh->exit_status = 126;
-		free(expanded_cmd);
+	expanded_cmd = expand_command(cmd);
+	if (!expanded_cmd)
 		return (NULL);
-	}
 	if (!ft_strchr(expanded_cmd, '/'))
-	{
-		cmd_path = find_path(expanded_cmd, cmd->env);
-		if (cmd_path)
-			*allocated = 1;
-		else
-		{
-			prt_error("msh: %s: command not found\n", expanded_cmd);
-			cmd->msh->exit_status = 127;
-		}
-		free(expanded_cmd);
-		return (cmd_path);
-	}
+		return (handle_path_search(expanded_cmd, cmd, allocated));
 	if (lstat(expanded_cmd, &path_stat) == 0)
 	{
-		if (S_ISDIR(path_stat.st_mode))
-		{
-			prt_error("msh: %s: Is a directory\n", expanded_cmd);
-			cmd->msh->exit_status = 126;
-		}
-		else if (!(path_stat.st_mode & S_IXUSR))
-		{
-			prt_error("msh: %s: Permission denied\n", expanded_cmd);
-			cmd->msh->exit_status = 126;
-		}
-		else
-		{
-			result = ft_strdup(expanded_cmd);
-			*allocated = 1;
-			free(expanded_cmd);
-			return (result);
-		}
+		result = process_path_stat(expanded_cmd, &path_stat, cmd, allocated);
+		return (result);
 	}
 	else
 	{

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/12 14:41:55 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/14 13:46:34 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/22 00:28:53 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,4 +56,62 @@ void	fork_and_execute(t_cmd *cmd, char *cmd_path)
 		perror("fork");
 		cmd->msh->exit_status = 1;
 	}
+}
+
+char	*expand_command(t_cmd *cmd)
+{
+	char	*expanded_cmd;
+
+	expanded_cmd = exp_env_var(cmd->tokens[0], cmd->msh);
+	if (!expanded_cmd || ft_strlen(expanded_cmd) == 0)
+	{
+		prt_error("msh: command not found: %s\n", cmd->tokens[0]);
+		cmd->msh->exit_status = 126;
+		free(expanded_cmd);
+		return (NULL);
+	}
+	return (expanded_cmd);
+}
+
+char	*handle_path_search(char *expanded_cmd, t_cmd *cmd, int *allocated)
+{
+	char	*cmd_path;
+
+	cmd_path = find_path(expanded_cmd, cmd->env);
+	if (cmd_path)
+		*allocated = 1;
+	else
+	{
+		prt_error("msh: %s: command not found\n", expanded_cmd);
+		cmd->msh->exit_status = 127;
+	}
+	free(expanded_cmd);
+	expanded_cmd = NULL;
+	return (cmd_path);
+}
+
+char	*process_path_stat(char *expanded_cmd, struct stat *path_stat, \
+		t_cmd *cmd, int *allocated)
+{
+	char	*result;
+
+	if (S_ISDIR(path_stat->st_mode))
+	{
+		prt_error("msh: %s: Is a directory\n", expanded_cmd);
+		cmd->msh->exit_status = 126;
+	}
+	else if (!(path_stat->st_mode & S_IXUSR))
+	{
+		prt_error("msh: %s: Permission denied\n", expanded_cmd);
+		cmd->msh->exit_status = 126;
+	}
+	else
+	{
+		result = ft_strdup(expanded_cmd);
+		*allocated = 1;
+		free(expanded_cmd);
+		return (result);
+	}
+	free(expanded_cmd);
+	return (NULL);
 }

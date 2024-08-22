@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 00:20:12 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/14 09:27:05 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/19 18:09:22 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,7 @@ void	free_cmd(t_cmd *cmd)
 	if (!cmd)
 		return ;
 	if (cmd->cmd)
-	{
 		free(cmd->cmd);
-		cmd->cmd = NULL;
-	}
 	if (cmd->tokens)
 	{
 		free_array(cmd->tokens, array_len(cmd->tokens));
@@ -37,15 +34,9 @@ void	free_cmd(t_cmd *cmd)
 		cmd->env = NULL;
 	}
 	if (cmd->env_list)
-	{
 		free_env_list(cmd->env_list);
-		cmd->env_list = NULL;
-	}
 	if (cmd->export_list)
-	{
 		free_env_list(cmd->export_list);
-		cmd->export_list = NULL;
-	}
 	free(cmd);
 	cmd = NULL;
 }
