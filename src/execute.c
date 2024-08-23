@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 13:54:08 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/23 10:53:15 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/23 13:32:31 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,6 @@ void	execute_command(t_cmd *cmd)
 	if (!check_tokens(cmd))
 		return ;
 	cmd_path = get_command_path(cmd, &cmd_flag);
-	// printf("command_path: %s\n", cmd_path);
 	if (!cmd_path)
 	{
 		return ;

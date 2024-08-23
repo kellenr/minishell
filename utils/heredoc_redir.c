@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc_redir.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 00:16:43 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/23 09:39:53 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/23 14:08:19 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@ int	copy_file(int src_fd, int dest_fd)
 	ssize_t	bytes_written;
 	char	buffer[1024];
 
-	bytes_read = read(src_fd, buffer, sizeof(buffer));
-	while (bytes_read > 0)
+	bytes_read = 0;
+	while ((bytes_read = read(src_fd, buffer, sizeof(buffer))) > 0)
 	{
 		bytes_written = write(dest_fd, buffer, bytes_read);
 		if (bytes_written != bytes_read)
