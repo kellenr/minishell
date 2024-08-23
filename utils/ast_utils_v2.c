@@ -6,24 +6,24 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 15:48:01 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/22 01:38:22 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/23 10:26:08 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	handle_token_op(t_token **cur_token, t_ast **cur_node, t_ast **root, t_ast **pthesis_node, t_msh *msh)
+void	handle_token_op(t_pth *pth, t_msh *msh)
 {
-	*pthesis_node = handle_parentheses_ast(cur_token, *root, msh);
-	if (!(*root))
+	pth->pthesis_node = handle_parentheses_ast(&pth->cur_token, pth->root, msh);
+	if (!(pth->root))
 	{
-		*root = *pthesis_node;
-		*cur_node = *root;
+		pth->root = pth->pthesis_node;
+		pth->cur_node = pth->root;
 	}
 	else
 	{
-		(*cur_node)->right = *pthesis_node;
-		(*cur_node) = (*cur_node)->right;
+		(pth->cur_node)->right = pth->pthesis_node;
+		(pth->cur_node) = (pth->cur_node)->right;
 	}
 }
 
