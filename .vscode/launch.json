@@ -12,13 +12,6 @@
         "environment": [],
         "externalConsole": false,
         "MIMode": "gdb",
-        "setupCommands": [
-          {
-			"description": "run",
-			"text": "run < input",
-            "ignoreFailures": true
-          }
-        ],
         "preLaunchTask": "build minishell",
         "miDebuggerPath": "/usr/bin/gdb",
         "logging": {

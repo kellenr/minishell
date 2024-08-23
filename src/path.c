@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   path.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/09 02:10:15 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/18 02:02:30 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/23 09:26:21 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
  * Function to search for a command in the PATH.
  * Returns the full path to the command if found, otherwise NULL.
  */
-char	*find_path(char *cmd, char **env)
+char	*find_path(char *cmd, char **env, int *flag)
 {
 	char	**path;
 	int		i;
@@ -39,7 +39,7 @@ char	*find_path(char *cmd, char **env)
 	}
 	if (!path)
 		return (NULL);
-	full_path = get_path(cmd, path);
+	full_path = get_path(cmd, path, flag);
 	free_array(path, array_len(path));
 	return (full_path);
 }
@@ -49,15 +49,16 @@ char	*find_path(char *cmd, char **env)
  * Takes the command name and the paths as arguments.
  * Returns the full path of the command.
  */
-char	*get_path(char *cmd, char **paths)
+char	*get_path(char *cmd, char **paths, int *flag)
 {
 	char	*path;
 	char	*tmp;
 	int		i;
 
 	i = 0;
-	if (access(cmd, X_OK) == 0)
+	if (check_access(cmd, flag))
 		return (cmd);
+	*flag = 0;
 	while (paths[i])
 	{
 		tmp = ft_strjoin(paths[i], "/");
@@ -85,6 +86,16 @@ int	find_path_var(char **env)
 		if (ft_strncmp("PATH=", env[i], 5) == 0)
 			return (1);
 		i++;
+	}
+	return (0);
+}
+
+int	check_access(char *cmd, int *flag)
+{
+	if (access(cmd, X_OK) == 0)
+	{
+		*flag = 1;
+		return (1);
 	}
 	return (0);
 }
