@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 09:43:39 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/23 00:23:53 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/23 09:28:06 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,15 +43,6 @@
 # define P_M		"\033[1;38;5;183m"
 # define P_P		"\033[1;38;2;255;209;220m"
 # define P_R		"\033[38;2;255;179;186m"
-
-#define M_HANDLE_REDIRECTION_FILE(tmp, tmpfd) \
-do { \
-	if (tmp->op == REDIR_APPEND) \
-		tmpfd = open(tmp->redir->append_file, O_WRONLY | O_CREAT | O_APPEND, 0644); \
-	else \
-		tmpfd = open(tmp->redir->output_file, O_WRONLY | O_CREAT | O_TRUNC, 0644); \
-	close(tmpfd); \
-} while (0)
 
 // Enumeration for different operators
 typedef enum e_op
@@ -417,6 +408,7 @@ int		handle_heredoc_output_redir(t_ast *root, t_msh *msh);
 int		copy_file(int src_fd, int dest_fd);
 t_hrd	new_heredoc_redir(t_ast *root, t_msh *msh);
 int		handle_heredoc_output_redir(t_ast *root, t_msh *msh);
+int		handle_redirection_file(t_ast *tmp, int fd);
 
 /*									SIGNALS								*/
 void	sig_handler_int(int signum);
