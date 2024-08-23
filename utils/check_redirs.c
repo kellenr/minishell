@@ -88,11 +88,14 @@ void	handle_multiple_redir_files(t_ast *root)
 
 	tmp = root;
 	tmpfd = 0;
-	while (tmp->left && (tmp->left->op == tmp->op \
-			|| tmp->op == REDIR_APPEND || tmp->op == REDIR_REPLACE))
+	if (tmp->left && (tmp->left->op == tmp->op \
+			|| tmp->left->op == REDIR_APPEND || tmp->left->op == REDIR_REPLACE))
 	{
-		handle_redirection_file(tmp, tmpfd);
-		tmp = tmp->left;
+		while (tmp && (tmp->op == REDIR_APPEND || tmp->op == REDIR_REPLACE))
+		{
+			handle_redirection_file(tmp, tmpfd);
+			tmp = tmp->left;
+		}
 	}
 }
 
