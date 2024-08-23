@@ -48,7 +48,6 @@ int	main(int argc, char **argv, char **env)
 		ft_printf(P_R"💢\tThis program doesn't need arguments\n"RT);
 		exit(0);
 	}
-	ft_intro_art();
 	setup_signal_handlers();
 	receive_msg(msh);
 	err_code = msh->exit_status;

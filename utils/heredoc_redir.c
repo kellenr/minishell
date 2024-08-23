@@ -24,6 +24,9 @@ int	copy_file(int src_fd, int dest_fd)
 		bytes_written = write(dest_fd, buffer, bytes_read);
 		if (bytes_written != bytes_read)
 			return (-1);
+		bytes_read = read(src_fd, buffer, sizeof(buffer));
+		if (bytes_read <= 0)
+			break ;
 	}
 	if (bytes_read < 0)
 		return (-1);
