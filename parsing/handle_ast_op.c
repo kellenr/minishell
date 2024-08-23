@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 16:33:38 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/19 15:24:07 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/23 13:50:09 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,7 @@ t_ast	*handle_operator_ast(t_token **current_token, t_ast *root, t_msh *msh)
  */
 t_ast	*handle_non_operator(t_token **current_token, t_ast *current_node)
 {
-	int	argc;
+	int		argc;
 
 	if (current_node->command == NULL)
 		initialize_command_and_args(current_node, *current_token);

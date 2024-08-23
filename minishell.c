@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 12:07:43 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/23 10:29:54 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/23 13:49:19 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ int	main(int argc, char **argv, char **env)
 		ft_printf(P_R"💢\tThis program doesn't need arguments\n"RT);
 		exit(0);
 	}
+	//ft_intro_art();
 	setup_signal_handlers();
 	receive_msg(msh);
 	err_code = msh->exit_status;
