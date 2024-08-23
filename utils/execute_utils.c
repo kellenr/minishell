@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/12 14:41:55 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/22 00:28:53 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/23 11:00:45 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,14 +76,16 @@ char	*expand_command(t_cmd *cmd)
 char	*handle_path_search(char *expanded_cmd, t_cmd *cmd, int *allocated)
 {
 	char	*cmd_path;
+	int		flag;
 
-	cmd_path = find_path(expanded_cmd, cmd->env);
-	if (cmd_path)
+	cmd_path = find_path(expanded_cmd, cmd->env, &flag);
+	if (cmd_path && flag == 0)
 		*allocated = 1;
 	else
 	{
 		prt_error("msh: %s: command not found\n", expanded_cmd);
 		cmd->msh->exit_status = 127;
+		cmd_path = NULL;
 	}
 	free(expanded_cmd);
 	expanded_cmd = NULL;

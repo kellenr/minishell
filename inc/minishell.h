@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 09:43:39 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/23 09:28:06 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/23 10:29:47 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -207,8 +207,8 @@ char	*skip_spaces(char *input);
 int		is_number(const char *str);
 char	*get_dir(t_cmd *cmd, char *prev_dir);
 void	print_with_escapes(const char *str);
-char	*find_path(char *cmd, char **env);
-char	*get_path(char *cmd, char **paths);
+char	*find_path(char *cmd, char **env, int *flag);
+char	*get_path(char *cmd, char **paths, int *flag);
 int		is_var_btw_squote(const char *input, int start, int end);
 int		update_env_msh(t_msh *msh, t_env *env_list);
 char	**list_to_array(t_env *env_list);
@@ -246,6 +246,7 @@ void	init_ext_vars( char **token, char **clean_token, char **input, \
 char	*process_new_token(t_token **head, char *input, t_msh *msh, \
 		int *heredoc_flag);
 char	*trim_and_validate_prompt(char *prompt);
+int		check_access(char *cmd, int *flag);
 
 /*					Exec utils					*/
 char	*get_command_path(t_cmd *cmd, int *allocated);
@@ -299,7 +300,8 @@ void	handle_var_assignment(t_cmd *cmd, char *name, char *value);
 t_token	*create_token(char *value, bool quoted_flag);
 void	add_token(t_token **head, char *value, bool quoted_flag);
 t_token	*tokenize(char *input, t_msh *msh);
-char	*extract_token(char **input, t_msh *msh, int *heredoc_flag, bool *quoted_flag);
+char	*extract_token(char **input, t_msh *msh, int *heredoc_flag, \
+		bool *quoted_flag);
 t_ast	*init_ast(t_token **current_token);
 t_ast	*handle_non_operator(t_token **current_token, t_ast *current_node);
 t_ast	*handle_operator_ast(t_token **current_token, t_ast *root, t_msh *msh);
