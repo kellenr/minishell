@@ -23,38 +23,36 @@
  */
 t_ast	*parse_tokens_to_ast(t_token *tokens, t_msh *msh)
 {
-	t_ast	*root;
-	t_ast	*cur_node;
-	t_token	*cur_token;
-	t_ast	*pthesis_node;
+	t_pth	pth;
 
-	init_vars_ast(&root, &cur_node, &cur_token, tokens);
-	while (cur_token != NULL)
+	init_vars_ast(&pth, tokens);
+	while (pth.cur_token != NULL)
 	{
-		if (cur_token->op == OPEN)
-			handle_token_op(&cur_token, &cur_node, &root, &pthesis_node, msh);
-		else if (cur_token->op == CLOSE)
-			return (root);
-		else if (is_op_token(cur_token))
+		if (pth.cur_token->op == OPEN)
 		{
-			root = handle_operator_ast(&cur_token, root, msh);
-			if (!root)
-				return (free_ast_return_null(cur_node));
-			if (root->right)
-				cur_node = root->right;
+			handle_token_op(&pth, msh);
+		}
+		else if (pth.cur_token->op == CLOSE)
+			return (pth.root);
+		else if (is_op_token(pth.cur_token))
+		{
+			pth.root = handle_operator_ast(&pth.cur_token, pth.root, msh);
+			if (!pth.root)
+				return (free_ast_return_null(pth.cur_node));
+			if (pth.root->right)
+				pth.cur_node = pth.root->right;
 		}
 		else
-			handle_nop_block(&cur_token, &cur_node, &root);
+			handle_nop_block(&pth.cur_token, &pth.cur_node, &pth.root);
 	}
-	return (root);
+	return (pth.root);
 }
 
-void	init_vars_ast(t_ast **root, t_ast **cur_node, t_token **cur_token, \
-	t_token *tokens)
+void	init_vars_ast(t_pth *pth, t_token *tokens)
 {
-	*root = NULL;
-	*cur_node = NULL;
-	*cur_token = tokens;
+	pth->root = NULL;
+	pth->cur_node = NULL;
+	pth->cur_token = tokens;
 }
 
 /*

@@ -179,6 +179,14 @@ typedef struct s_heredoc_redir
 	int		heredoc_fd;
 }		t_hrd;
 
+typedef struct s_pthesis
+{
+	t_token	*cur_token;
+	t_ast	*root;
+	t_ast	*cur_node;
+	t_ast	*pthesis_node;
+}		t_pth;
+
 /* ************************************************************************** */
 /*                                 SOURCES                                    */
 /* ************************************************************************** */
@@ -239,8 +247,7 @@ void	format_error_message(char *error_message, char *token);
 char	*expand_or_process_literal(char *input, int *i, char *result, \
 		t_msh *msh);
 char	*initialize_result_and_tmp(char **tmp);
-void	init_vars_ast(t_ast **root, t_ast **cur_node, t_token **cur_token, \
-		t_token *tokens);
+void	init_vars_ast(t_pth *pth, t_token *tokens);
 void	init_ext_vars( char **token, char **clean_token, char **input, \
 		bool *quoted_flag);
 char	*process_new_token(t_token **head, char *input, t_msh *msh, \
@@ -310,8 +317,7 @@ int		set_command_and_args(t_ast *node, t_token *current_token);
 t_ast	*create_ast_node(void);
 t_ast	*handle_pthesis_tk(t_token **cur_token, t_ast **root, t_ast **cur_node);
 t_ast	*handle_op_and_non_op_tokens(t_token *cur_token, t_ast *root);
-void	handle_token_op(t_token **cur_token, t_ast **cur_node, t_ast **root, \
-		t_ast **pthesis_node, t_msh *msh);
+void	handle_token_op(t_pth *pth, t_msh *msh);
 void	*free_ast_return_null(t_ast *cur_node);
 void	*handle_nop_block(t_token **cur_token, t_ast **cur_node, t_ast **root);
 
@@ -320,7 +326,7 @@ void	*handle_nop_block(t_token **cur_token, t_ast **cur_node, t_ast **root);
 char	*process_input(const char *input);
 void	handle_quotes(const char **inp_ptr, char **res_ptr);
 void	handle_operator(const char **inp_ptr, char **res_ptr, char *result, \
-size_t buffer_size);
+		size_t buffer_size);
 t_cmd	*ast_to_cmd(t_ast *root);
 void	process_cmd(char *prompt, t_msh *msh);
 void	execute_ast(t_ast *root, t_msh *msh);
