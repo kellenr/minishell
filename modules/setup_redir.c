@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 18:37:49 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/12 05:46:19 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/23 00:14:59 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,20 @@
  * to restore it after the redirection is done. Otherwise the
  * next readline call will return NULL because the STDIN is closed.
 */
-
 void	handle_redirection(t_ast *root, t_msh *msh)
 {
 	if (root->op == REDIR_INPUT)
 		handle_input_redir(root, msh);
+	else if (root->left \
+		&& (root->op == REDIR_REPLACE || root->op == REDIR_APPEND) \
+		&& root->left->op == REDIR_HERE_DOC)
+	{
+		if (handle_heredoc_output_redir(root, msh) == -1)
+		{
+			perror("Error executing heredoc");
+			return ;
+		}
+	}
 	else if (root->op == REDIR_REPLACE)
 		handle_output_replace(root, msh);
 	else if (root->op == REDIR_APPEND)

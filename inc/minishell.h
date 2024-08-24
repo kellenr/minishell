@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 09:43:39 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/12 17:50:41 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/23 10:29:47 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,11 @@
 # include <sys/wait.h>
 # include <signal.h>
 # include <sys/ioctl.h>
+# include <sys/stat.h>
+# include <errno.h>
 
 /* # include <sys/types.h>
-# include <sys/stat.h>
+
 # include <dirent.h>
  */
 
@@ -120,6 +122,7 @@ typedef struct s_cmd
 	char			**tokens;
 	t_msh			*msh;
 	t_env			*env_list;
+	t_env			*export_list;
 	char			**env;
 	int				argc;
 	int				exit_status;
@@ -144,6 +147,8 @@ typedef struct s_ast
 	char			**args;
 	t_op			op;
 	t_redir			*redir;
+	int				fd;
+	int				saved_fd;
 	struct s_ast	*left;
 	struct s_ast	*right;
 }		t_ast;
@@ -163,7 +168,24 @@ typedef struct s_token
 	t_op			op;
 	int				quoted;
 	struct s_token	*next;
+	bool			broken;
 }		t_token;
+
+typedef struct s_heredoc_redir
+{
+	char	*output_file;
+	int		open_flags;
+	int		open_mode;
+	int		heredoc_fd;
+}		t_hrd;
+
+typedef struct s_pthesis
+{
+	t_token	*cur_token;
+	t_ast	*root;
+	t_ast	*cur_node;
+	t_ast	*pthesis_node;
+}		t_pth;
 
 /* ************************************************************************** */
 /*                                 SOURCES                                    */
@@ -193,8 +215,8 @@ char	*skip_spaces(char *input);
 int		is_number(const char *str);
 char	*get_dir(t_cmd *cmd, char *prev_dir);
 void	print_with_escapes(const char *str);
-char	*find_path(char *cmd, char **env);
-char	*get_path(char *cmd, char **paths);
+char	*find_path(char *cmd, char **env, int *flag);
+char	*get_path(char *cmd, char **paths, int *flag);
 int		is_var_btw_squote(const char *input, int start, int end);
 int		update_env_msh(t_msh *msh, t_env *env_list);
 char	**list_to_array(t_env *env_list);
@@ -218,14 +240,23 @@ char	*get_multi_char_op(char **input, int *heredoc_flag);
 void	free_ast_node(t_ast *node);
 int		handle_malloc_failure(t_ast *node, const char *error_message);
 t_ast	*free_redir_node(t_redir *redir, t_ast *node);
-int		handle_redir_input(t_token **current_token, t_ast *redir_node);
-int		handle_redir_replace(t_token **current_token, t_ast *redir_node);
-int		handle_redir_append(t_token **current_token, t_ast *redir_node);
-int		handle_redir_heredoc(t_token **current_token, t_ast *redir_node);
-void	process_heredoc_flag(int *heredoc_flag, t_msh *msh, char *token);
+void	fork_and_execute(t_cmd *cmd, char *cmd_path);
+void	execute_command_helper(t_ast *root, t_msh *msh);
+void	parse_and_execute(t_token *tokens, t_msh *msh);
+void	format_error_message(char *error_message, char *token);
+char	*expand_or_process_literal(char *input, int *i, char *result, \
+		t_msh *msh);
+char	*initialize_result_and_tmp(char **tmp);
+void	init_vars_ast(t_pth *pth, t_token *tokens);
+void	init_ext_vars( char **token, char **clean_token, char **input, \
+		bool *quoted_flag);
+char	*process_new_token(t_token **head, char *input, t_msh *msh, \
+		int *heredoc_flag);
+char	*trim_and_validate_prompt(char *prompt);
+int		check_access(char *cmd, int *flag);
 
 /*					Exec utils					*/
-char	*get_command_path(t_cmd *cmd);
+char	*get_command_path(t_cmd *cmd, int *allocated);
 void	execute_in_child(char *cmd_path, char **tokens, char **env);
 void	handle_child_status(t_cmd *cmd, int status);
 int		check_tokens(t_cmd *cmd);
@@ -243,6 +274,9 @@ int		array_len(char **arr);
 void	free_env(t_cmd *cmd);
 void	free_env_list(t_env *env_list);
 int		parse_env_str(const char *env_str, char **name, char **value);
+int		init_env_and_export(t_cmd *cmd, char **envp);
+int		find_path_var(char **env);
+char	*ft_getenv(char *name, t_cmd *cmd);
 
 /*                                   BUILT                                    */
 
@@ -255,7 +289,7 @@ int		ft_export(t_cmd *cmd);
 int		ft_unset(t_cmd *cmd);
 
 /*									BUILT UTILS								  */
-int		check_valid_token(char *token, char *error_message);
+int		check_valid_token(char *token);
 int		is_valid_export(char *token);
 t_env	*sort_env_list(t_env *env_list);
 void	swap(t_env *a, t_env *b);
@@ -269,23 +303,25 @@ int		check_valid_unset_token(char *token, char *error_message);
 void	remove_env_var(t_env **env_list, char *name);
 void	initialize_echo(bool *flg, bool *eflg, int *i);
 void	parse_options(t_cmd *scmd, int *i, bool *flg, bool *eflg);
+void	add_or_update_env_list(t_env **env_list, char *name, char *value);
+void	handle_var_assignment(t_cmd *cmd, char *name, char *value);
 
 /*                                  Parsing                                   */
 
-t_token	*create_token(char *value);
-void	add_token(t_token **head, char *value);
+t_token	*create_token(char *value, bool quoted_flag);
+void	add_token(t_token **head, char *value, bool quoted_flag);
 t_token	*tokenize(char *input, t_msh *msh);
-char	*extract_token(char **input, t_msh *msh, int *heredoc_flag);
+char	*extract_token(char **input, t_msh *msh, int *heredoc_flag, \
+		bool *quoted_flag);
 t_ast	*init_ast(t_token **current_token);
 t_ast	*handle_non_operator(t_token **current_token, t_ast *current_node);
-t_ast	*handle_operator_ast(t_token **current_token, t_ast *root);
-t_ast	*parse_tokens_to_ast(t_token *tokens);
+t_ast	*handle_operator_ast(t_token **current_token, t_ast *root, t_msh *msh);
+t_ast	*parse_tokens_to_ast(t_token *tokens, t_msh *msh);
 int		set_command_and_args(t_ast *node, t_token *current_token);
 t_ast	*create_ast_node(void);
 t_ast	*handle_pthesis_tk(t_token **cur_token, t_ast **root, t_ast **cur_node);
 t_ast	*handle_op_and_non_op_tokens(t_token *cur_token, t_ast *root);
-void	handle_token_op(t_token **cur_token, t_ast **cur_node, t_ast **root, \
-		t_ast **pthesis_node);
+void	handle_token_op(t_pth *pth, t_msh *msh);
 void	*free_ast_return_null(t_ast *cur_node);
 void	*handle_nop_block(t_token **cur_token, t_ast **cur_node, t_ast **root);
 
@@ -294,7 +330,7 @@ void	*handle_nop_block(t_token **cur_token, t_ast **cur_node, t_ast **root);
 char	*process_input(const char *input);
 void	handle_quotes(const char **inp_ptr, char **res_ptr);
 void	handle_operator(const char **inp_ptr, char **res_ptr, char *result, \
-size_t buffer_size);
+		size_t buffer_size);
 t_cmd	*ast_to_cmd(t_ast *root);
 void	process_cmd(char *prompt, t_msh *msh);
 void	execute_ast(t_ast *root, t_msh *msh);
@@ -303,6 +339,7 @@ int		execute_builtin(t_cmd *cmd);
 int		count_ast_nodes(t_ast *root);
 void	populate_tokens_array(t_ast *root, char **tokens, int *index);
 void	*handle_buffer_overflow(const char *error_message);
+void	free_null(char *str);
 
 /*                                    module                                  */
 char	*exp_env_var(char *input, t_msh *msh);
@@ -315,19 +352,27 @@ char	*exp_special_var(const char *input, int *index, char *rst, t_msh *msh);
 char	*exp_general_var(const char *input, int *index, char *rst, t_msh *msh);
 void	handle_logical_op(t_ast *root, t_msh *msh);
 void	handle_parentheses_op(t_ast *root, t_msh *msh);
-t_ast	*parse_parentheses(t_token **current_token);
+t_ast	*parse_parentheses(t_token **current_token, t_msh *msh);
 t_ast	*integrate_ast_node(t_ast *root, t_ast *pthesis_node);
-t_ast	*handle_parentheses_ast(t_token **current_token, t_ast *root);
+t_ast	*handle_parentheses_ast(t_token **current_token, t_ast *root, \
+		t_msh *msh);
 char	*extract_and_expand_var(const char *input, int *index, t_msh *msh);
 char	*const_final_exp(char *exp, const char *input, int *index, char *rst);
 char	*get_expanded_value(char *token, t_msh *msh);
 char	*ext_and_exp_var(const char *input, int *index, t_msh *msh);
 char	*combine_expanded_with_rest(char *expanded, char *rst);
+char	*expand_command(t_cmd *cmd);
+char	*handle_path_search(char *expanded_cmd, t_cmd *cmd, int *allocated);
+char	*process_path_stat(char *expanded_cmd, struct stat *path_stat, \
+		t_cmd *cmd, int *allocated);
 
 /*                                    pipes                                  */
 pid_t	fork_first_child(t_ast *root, t_msh *msh, int pipefd[2]);
+pid_t	fork_first_child_heredoc(t_ast *root, t_msh *msh, int pipefd[2], \
+		int heredoc_fd);
 pid_t	fork_second_child(t_ast *root, t_msh *msh, int pipefd[2]);
 void	execute_pipes(t_ast *root, t_msh *msh);
+void	wait_for_childs(pid_t p1, pid_t p2, int pipefd[2], t_msh *msh);
 
 t_ast	*get_command(t_ast *root, int *current_index, int target_index);
 int		count_commands(t_ast *root);
@@ -361,6 +406,21 @@ void	handle_redir_file(t_token **current_token, char **file_field);
 int		has_quotes(char *delimiter);
 char	*read_heredoc_line(char *delimiter);
 char	*expand_heredoc_line(char *line, t_msh *msh);
+void	process_heredoc_flag(int *heredoc_flag, t_msh *msh, char *token);
+int		handle_redir_input(t_token **current_token, t_ast *redir_node);
+int		handle_redir_replace(t_token **current_token, t_ast *redir_node);
+int		handle_redir_append(t_token **current_token, t_ast *redir_node);
+int		handle_redir_heredoc(t_token **current_token, t_ast *redir_node);
+void	process_heredoc_flag(int *heredoc_flag, t_msh *msh, char *token);
+bool	check_input_file(t_ast *root, t_msh *msh);
+bool	check_redir_has_command(t_ast *root, t_msh *msh);
+void	handle_multiple_redir_files(t_ast *root);
+int		parse_and_get_heredoc_fd(t_ast *root, t_msh *msh);
+int		handle_heredoc_output_redir(t_ast *root, t_msh *msh);
+int		copy_file(int src_fd, int dest_fd);
+t_hrd	new_heredoc_redir(t_ast *root, t_msh *msh);
+int		handle_heredoc_output_redir(t_ast *root, t_msh *msh);
+int		handle_redirection_file(t_ast *tmp, int fd);
 
 /*									SIGNALS								*/
 void	sig_handler_int(int signum);
@@ -369,5 +429,17 @@ void	sig_non_interactive(int signum);
 void	handle_non_interactive(void);
 void	sig_handle_heredoc(int signum);
 void	setup_signal_handlers(void);
+// void	heredoc_sig_handler(int signum, siginfo_t *info, void *context);
+// void	handle_signals_heredoc(void);
+
+//////////// 	TEST	////////
+// void	print_tokens(char **tokens);
+void	print_env_list(t_env *env_list);
+// void test_create_env_node();
+// void test_add_env_node();
+// void test_init_arr_and_list();
+// void test_init_env();
+void	prt_error(const char *format, char *arg);
+void	handle_multiple_outputs(t_ast *root, t_msh *msh);
 
 #endif

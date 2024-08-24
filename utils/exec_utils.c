@@ -6,24 +6,36 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/06 14:57:47 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/12 16:22:21 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/19 18:57:47 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*get_command_path(t_cmd *cmd)
+char	*get_command_path(t_cmd *cmd, int *allocated)
 {
-	char	*cmd_path;
+	char		*expanded_cmd;
+	char		*result;
+	struct stat	path_stat;
 
-	cmd_path = find_path(cmd->tokens[0], cmd->env);
-	if (!cmd_path)
-	{
-		ft_printf("msh: %s: command not found\n", cmd->tokens[0]);
-		cmd->msh->exit_status = 127;
+	*allocated = 0;
+	expanded_cmd = expand_command(cmd);
+	if (!expanded_cmd)
 		return (NULL);
+	if (!ft_strchr(expanded_cmd, '/'))
+		return (handle_path_search(expanded_cmd, cmd, allocated));
+	if (lstat(expanded_cmd, &path_stat) == 0)
+	{
+		result = process_path_stat(expanded_cmd, &path_stat, cmd, allocated);
+		return (result);
 	}
-	return (cmd_path);
+	else
+	{
+		prt_error("msh: %s: No such file or directory\n", expanded_cmd);
+		cmd->msh->exit_status = 127;
+	}
+	free(expanded_cmd);
+	return (NULL);
 }
 
 void	execute_in_child(char *cmd_path, char **tokens, char **env)

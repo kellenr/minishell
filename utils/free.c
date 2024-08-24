@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 00:20:12 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/12 06:39:45 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/23 00:21:35 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,7 @@ void	free_cmd(t_cmd *cmd)
 	if (!cmd)
 		return ;
 	if (cmd->cmd)
-	{
 		free(cmd->cmd);
-		cmd->cmd = NULL;
-	}
 	if (cmd->tokens)
 	{
 		free_array(cmd->tokens, array_len(cmd->tokens));
@@ -37,10 +34,9 @@ void	free_cmd(t_cmd *cmd)
 		cmd->env = NULL;
 	}
 	if (cmd->env_list)
-	{
 		free_env_list(cmd->env_list);
-		cmd->env_list = NULL;
-	}
+	if (cmd->export_list)
+		free_env_list(cmd->export_list);
 	free(cmd);
 	cmd = NULL;
 }
@@ -70,8 +66,10 @@ void	free_ast(t_ast *root)
 {
 	if (!root)
 		return ;
-	free_ast(root->left);
-	free_ast(root->right);
+	if (root->left)
+		free_ast(root->left);
+	if (root->right)
+		free_ast(root->right);
 	free_ast_node(root);
 	root = NULL;
 }

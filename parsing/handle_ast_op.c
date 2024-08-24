@@ -6,19 +6,21 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 16:33:38 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/12 16:09:18 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/23 13:50:09 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_ast	*handle_operator_pipe_ast(t_token **current_token, t_ast *root)
+t_ast	*handle_operator_pipe_ast(t_token **current_token, t_ast *root, \
+		t_msh *msh)
 {
 	t_ast	*pipe_node;
 
 	if (root == NULL)
 	{
-		ft_printf("msh: syntax error near unexpected token '|'\n");
+		prt_error("msh: syntax error near unexpected token '|'\n", NULL);
+		msh->exit_status = 2;
 		return (NULL);
 	}
 	pipe_node = malloc(sizeof(t_ast));
@@ -50,7 +52,7 @@ t_ast	*handle_operator_redir_ast(t_token **current_token, t_ast *root)
 	(*current_token) = (*current_token)->next;
 	if (*current_token == NULL || is_operator((*current_token)->op))
 	{
-		ft_printf("msh: syntax error near unexpected token 'newline'\n");
+		prt_error("msh: syntax error near unexpected token 'newline'\n", NULL);
 		return (free_redir_node(redir_node->redir, redir_node));
 	}
 	if (handle_redir_input(current_token, redir_node) == 0 || \
@@ -73,7 +75,7 @@ t_ast	*handle_operator_and_or_ast(t_token **current_token, t_ast *root)
 
 	if (root == NULL)
 	{
-		ft_printf("msh: syntax error near unexpected token '%s'\n", \
+		prt_error("msh: syntax error near unexpected token '%s'\n", \
 				(*current_token)->value);
 		return (NULL);
 	}
@@ -99,12 +101,12 @@ t_ast	*handle_operator_and_or_ast(t_token **current_token, t_ast *root)
  * Takes the current token and the root of the AST as arguments.
  * Returns the updated root of the AST.
  */
-t_ast	*handle_operator_ast(t_token **current_token, t_ast *root)
+t_ast	*handle_operator_ast(t_token **current_token, t_ast *root, t_msh *msh)
 {
 	if (current_token && *current_token)
 	{
 		if ((*current_token)->op == PIPE)
-			return (handle_operator_pipe_ast(current_token, root));
+			return (handle_operator_pipe_ast(current_token, root, msh));
 		else if ((*current_token)->op == REDIR_APPEND || \
 				(*current_token)->op == REDIR_REPLACE || \
 				(*current_token)->op == REDIR_HERE_DOC || \
@@ -128,7 +130,7 @@ t_ast	*handle_operator_ast(t_token **current_token, t_ast *root)
  */
 t_ast	*handle_non_operator(t_token **current_token, t_ast *current_node)
 {
-	int	argc;
+	int		argc;
 
 	if (current_node->command == NULL)
 		initialize_command_and_args(current_node, *current_token);

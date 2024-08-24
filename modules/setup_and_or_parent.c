@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 16:17:06 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/11 23:04:56 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/20 22:18:16 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,13 +59,13 @@ void	handle_parentheses_op(t_ast *root, t_msh *msh)
 		perror("fork");
 }
 
-t_ast	*parse_parentheses(t_token **current_token)
+t_ast	*parse_parentheses(t_token **current_token, t_msh *msh)
 {
 	t_ast	*pthesis_node;
 
 	pthesis_node = NULL;
 	*current_token = (*current_token)->next;
-	pthesis_node = parse_tokens_to_ast(*current_token);
+	pthesis_node = parse_tokens_to_ast(*current_token, msh);
 	while (*current_token && (*current_token)->op != CLOSE)
 		*current_token = (*current_token)->next;
 	if (*current_token && (*current_token)->op == CLOSE)
@@ -98,10 +98,11 @@ t_ast	*integrate_ast_node(t_ast *root, t_ast *pthesis_node)
 	}
 }
 
-t_ast	*handle_parentheses_ast(t_token **current_token, t_ast *root)
+t_ast	*handle_parentheses_ast(t_token **current_token, \
+		t_ast *root, t_msh *msh)
 {
 	t_ast	*pthesis_node;
 
-	pthesis_node = parse_parentheses(current_token);
+	pthesis_node = parse_parentheses(current_token, msh);
 	return (integrate_ast_node(root, pthesis_node));
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredocs.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 11:54:56 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/07 14:15:36 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/23 00:11:33 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,33 @@ void	handle_heredoc(t_ast *root, t_msh *msh)
 	redirect_and_execute(fd, STDIN_FILENO, root, msh);
 	unlink("tmp_file");
 	close(fd);
+}
+
+int	parse_and_get_heredoc_fd(t_ast *root, t_msh *msh)
+{
+	int	heredoc_fd;
+
+	heredoc_fd = open_tmp_file(msh);
+	if (heredoc_fd == -1)
+		return (-1);
+	if (parse_heredoc(root->redir->here_doc_delim, heredoc_fd, msh))
+	{
+		if (g_signal == 2)
+			msh->exit_status = 130;
+		else
+			msh->exit_status = 1;
+		close(heredoc_fd);
+		return (-1);
+	}
+	close(heredoc_fd);
+	heredoc_fd = open("tmp_file", O_RDONLY, 0);
+	if (heredoc_fd == -1)
+	{
+		perror("handle_heredoc: open tmp_file");
+		msh->exit_status = 1;
+		return (-1);
+	}
+	return (heredoc_fd);
 }
 
 int	parse_heredoc(char *delimiter, int fd, t_msh *msh)
@@ -76,8 +103,9 @@ char	*read_heredoc_line(char *delimiter)
 	line = readline("> ");
 	if (!line)
 	{
-		ft_printf("msh: warning: here-document delimited by end-of-file \
+		prt_error("msh: warning: here-document delimited by end-of-file \
 		(wanted %s')\n", delimiter);
+		return (NULL);
 	}
 	return (line);
 }

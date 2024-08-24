@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 17:32:36 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/12 05:39:13 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/19 17:46:20 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,4 +102,35 @@ void	*handle_buffer_overflow(const char *error_message)
 {
 	perror(error_message);
 	return (NULL);
+}
+
+/*
+ * Function to create a command structure from an AST node.
+ * Takes the AST node as an argument.
+ * Returns a pointer to the created command structure.
+ */
+t_cmd	*ast_to_cmd(t_ast *root)
+{
+	t_cmd	*cmd;
+	int		count;
+
+	count = 0;
+	cmd = init_cmd();
+	if (!cmd)
+		return (NULL);
+	cmd->tokens = copy_tokens(root->args, &count);
+	if (!cmd->tokens)
+	{
+		free(cmd);
+		return (NULL);
+	}
+	cmd->cmd = ft_strdup(root->command);
+	if (!cmd->cmd)
+	{
+		free_array(cmd->tokens, count);
+		free_cmd(cmd);
+		return (NULL);
+	}
+	cmd->argc = count;
+	return (cmd);
 }

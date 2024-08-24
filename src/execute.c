@@ -6,7 +6,7 @@
 /*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 13:54:08 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/12 17:58:39 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/23 13:32:31 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ void	execute_ast(t_ast *root, t_msh *msh)
 	else if (root->op == SUBSHELL)
 		handle_parentheses_op(root, msh);
 	else
-		execute_simple_command(root, msh);
+		execute_command_helper(root, msh);
 }
 
 /*
@@ -94,24 +94,22 @@ int	execute_builtin(t_cmd *cmd)
  * Forks a child process to execute the command and waits for it to complete.
  * Updates the global status variable with the exit status of the command.
  */
-
 void	execute_command(t_cmd *cmd)
 {
-	pid_t	pid;
-	int		status;
 	char	*cmd_path;
+	int		cmd_flag;
 
+	cmd_flag = 0;
 	if (!check_tokens(cmd))
 		return ;
-	cmd_path = get_command_path(cmd);
+	cmd_path = get_command_path(cmd, &cmd_flag);
 	if (!cmd_path)
 	{
-		cmd->msh->exit_status = 127;
 		return ;
 	}
 	handle_non_interactive();
-	fork_and_execute(cmd_path, cmd, &pid, &status);
-	if (!(ft_strcmp(cmd->tokens[0], cmd_path) == 0))
+	fork_and_execute(cmd, cmd_path);
+	if (cmd_flag == 1)
 		free(cmd_path);
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);

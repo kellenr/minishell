@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ast_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/06 10:06:43 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/07 11:33:31 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/23 00:20:50 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,9 @@ t_ast	*init_ast_node(void)
 	node->left = NULL;
 	node->right = NULL;
 	node->op = NONE;
+	node->redir = NULL;
+	node->fd = -1;
+	node->saved_fd = -1;
 	node->redir = NULL;
 	return (node);
 }
@@ -86,6 +89,9 @@ void	handle_redir_file(t_token **current_token, char **file_field)
 {
 	*file_field = ft_strdup((*current_token)->value);
 	if (!*file_field)
+	{
+		perror("Memory allocation failed");
 		return ;
+	}
 	(*current_token) = (*current_token)->next;
 }

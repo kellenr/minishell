@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 01:41:45 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/11 23:40:55 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/22 00:35:42 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,20 +20,27 @@
 char	*exp_env_var(char *input, t_msh *msh)
 {
 	char	*result;
+	char	*tmp;
 	int		i;
 
+	if (input[0] == '\'' && input[1] != '\'')
+		return (ft_strdup(input));
 	if (!input)
 		return (NULL);
-	result = ft_strdup("");
+	result = initialize_result_and_tmp(&tmp);
 	if (!result)
 		return (NULL);
 	i = 0;
 	while (input[i])
 	{
-		if (input[i] == '$')
-			result = exp_variable(input, &i, result, msh);
-		else
-			result = process_literal(input, &i, result);
+		tmp = expand_or_process_literal(input, &i, result, msh);
+		if (!tmp)
+		{
+			free(result);
+			return (NULL);
+		}
+		free(result);
+		result = tmp;
 	}
 	return (result);
 }
@@ -69,46 +76,26 @@ char	*exp_variable(const char *input, int *index, char *result, t_msh *msh)
 	char	*expanded;
 
 	j = *index + 1;
-	if (input[j] == '\0' || input[j] == ' ')
+	if ((input[j] == '\0' || input[j] == ' ' || input[j] == '"' \
+		|| input[j] == '\''))
 	{
 		expanded = ft_strjoin(result, "$");
+		if (!expanded)
+		{
+			free(result);
+			return (NULL);
+		}
 		(*index)++;
 		return (expanded);
 	}
 	if (input[j] == '?')
 	{
 		expanded = exp_special_var(input, index, result, msh);
+		*index += 2;
 		return (expanded);
 	}
 	expanded = exp_general_var(input, index, result, msh);
 	return (expanded);
-}
-
-/*
- * Function to process a literal in the input string.
- * Takes the input string, the current index, and the result string.
- * Returns the updated result string and updates the index.
- */
-char	*const_final_exp(char *exp, const char *input, int *index, char *rst)
-{
-	char	*suffix;
-	char	*tmp;
-	char	*final_expansion;
-
-	suffix = ft_substr(input, *index + 2, *index - (*index + 2));
-	if (!suffix)
-		return (NULL);
-	tmp = ft_strjoin(exp, suffix);
-	free(suffix);
-	free(exp);
-	if (!tmp)
-		return (NULL);
-	final_expansion = ft_strjoin(rst, tmp);
-	free(rst);
-	free(tmp);
-	if (!final_expansion)
-		return (NULL);
-	return (final_expansion);
 }
 
 /*
@@ -122,9 +109,24 @@ char	*const_final_exp(char *exp, const char *input, int *index, char *rst)
 char	*exp_special_var(const char *input, int *index, char *rst, t_msh *msh)
 {
 	char	*exp;
+	char	*final_expansion;
 
 	exp = extract_and_expand_var(input, index, msh);
 	if (!exp)
 		return (NULL);
-	return (const_final_exp(exp, input, index, rst));
+	final_expansion = ft_strjoin(rst, exp);
+	free(exp);
+	return (final_expansion);
+}
+
+char	*expand_or_process_literal(char *input, int *i, char *result, \
+		t_msh *msh)
+{
+	char	*temp;
+
+	if (input[*i] == '$')
+		temp = exp_variable(input, i, result, msh);
+	else
+		temp = process_literal(input, i, result);
+	return (temp);
 }

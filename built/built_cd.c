@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   built_cd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 21:17:54 by keramos-          #+#    #+#             */
-/*   Updated: 2024/07/08 17:18:08 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/18 01:58:37 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,10 @@ char	*get_dir(t_cmd *cmd, char *prev_dir)
 
 	if (cmd->argc < 2 || ft_strcmp(cmd->tokens[1], "~") == 0)
 	{
-		home = getenv("HOME");
+		home = ft_getenv("HOME", cmd);
 		if (!home)
 		{
-			ft_printf("cd: HOME not set\n");
+			prt_error("cd: HOME not set\n", NULL);
 			return (NULL);
 		}
 		return (home);
@@ -35,7 +35,7 @@ char	*get_dir(t_cmd *cmd, char *prev_dir)
 	{
 		if (!prev_dir)
 		{
-			ft_printf("cd: OLDPWD not set\n");
+			prt_error("cd: OLDPWD not set\n", NULL);
 			return (NULL);
 		}
 		ft_printf("%s\n", prev_dir);
@@ -58,7 +58,7 @@ int	ft_cd(t_cmd *cmd)
 
 	if (cmd->argc > 2)
 	{
-		ft_printf("cd: too many arguments\n");
+		prt_error("cd: too many arguments\n", NULL);
 		return (EXIT_FAILURE);
 	}
 	target_dir = get_dir(cmd, prev_dir);
@@ -77,4 +77,21 @@ int	ft_cd(t_cmd *cmd)
 	free(prev_dir);
 	prev_dir = ft_strdup(cwd);
 	return (EXIT_SUCCESS);
+}
+
+char	*ft_getenv(char *name, t_cmd *cmd)
+{
+	t_env	*env;
+	size_t	name_len;
+
+	name_len = ft_strlen(name);
+	env = cmd->env_list;
+	while (env != NULL)
+	{
+		if (ft_strncmp(env->name, name, name_len) == 0 && \
+		env->name[name_len] == '\0')
+			return (env->value);
+		env = env->next;
+	}
+	return (NULL);
 }

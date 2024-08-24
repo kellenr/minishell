@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   erro.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 13:19:54 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/06 15:26:28 by fibarros         ###   ########.fr       */
+/*   Updated: 2024/08/18 01:55:38 by keramos-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,4 +20,18 @@ void	ft_error(char *str)
 {
 	ft_putendl_fd(str, 2);
 	exit(EXIT_FAILURE);
+}
+
+void	prt_error(const char *format, char *arg)
+{
+	int	saved_stdout;
+
+	saved_stdout = dup(1);
+	dup2(2, 1);
+	if (arg == NULL)
+		ft_putstr_fd((char *)format, 2);
+	else
+		ft_printf(format, arg);
+	dup2(saved_stdout, 1);
+	close(saved_stdout);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 12:07:43 by keramos-          #+#    #+#             */
-/*   Updated: 2024/08/11 21:41:07 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/23 13:49:19 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ void	receive_msg(t_msh *msh)
 int	main(int argc, char **argv, char **env)
 {
 	t_msh	*msh;
+	int		err_code;
 
 	(void)argv;
 	msh = ft_calloc(1, sizeof(t_msh));
@@ -50,9 +51,10 @@ int	main(int argc, char **argv, char **env)
 	ft_intro_art();
 	setup_signal_handlers();
 	receive_msg(msh);
+	err_code = msh->exit_status;
 	free_all(msh);
 	rl_clear_history();
-	return (0);
+	return (err_code);
 }
 
 int	init_msh(char **env, t_msh *msh)

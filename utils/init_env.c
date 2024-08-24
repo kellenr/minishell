@@ -6,7 +6,7 @@
 /*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 16:48:37 by fibarros          #+#    #+#             */
-/*   Updated: 2024/08/12 00:56:57 by keramos-         ###   ########.fr       */
+/*   Updated: 2024/08/19 12:42:43 by fibarros         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,12 @@ int	init_env(t_cmd *cmd, char **envp)
 		return (1);
 	}
 	cmd->env_list = NULL;
+	cmd->export_list = NULL;
 	if (init_arr_and_list(cmd, envp) != 0)
 	{
 		free_array(cmd->env, array_len(envp));
 		free_env_list(cmd->env_list);
+		free_env_list(cmd->export_list);
 		perror("Allocation error");
 		return (1);
 	}
@@ -34,7 +36,6 @@ int	init_env(t_cmd *cmd, char **envp)
 int	init_arr_and_list(t_cmd *cmd, char **envp)
 {
 	int		i;
-	t_env	*new_node;
 
 	i = 0;
 	while (envp[i])
@@ -43,20 +44,17 @@ int	init_arr_and_list(t_cmd *cmd, char **envp)
 		if (!cmd->env[i])
 		{
 			free_array(cmd->env, i + 1);
-			free_env_list(cmd->env_list);
 			return (-1);
 		}
-		new_node = create_env_node(envp[i]);
-		if (!new_node)
-		{
-			free_array(cmd->env, i + 1);
-			free_env_list(cmd->env_list);
-			return (-1);
-		}
-		add_env_node(&cmd->env_list, new_node);
 		i++;
 	}
 	cmd->env[i] = NULL;
+	if (init_env_and_export(cmd, envp) != 0)
+	{
+		free_array(cmd->env, i + 1);
+		free_env_list(cmd->export_list);
+		free_env_list(cmd->env_list);
+	}
 	return (0);
 }
 
