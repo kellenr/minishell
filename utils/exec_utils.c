@@ -73,3 +73,20 @@ int	check_tokens(t_cmd *cmd)
 	}
 	return (1);
 }
+
+void	fork_and_execute(char *cmd_path, t_cmd *cmd, pid_t *pid, int *status)
+{
+	*pid = fork();
+	if (*pid == 0)
+		execute_in_child(cmd_path, cmd->tokens, cmd->env);
+	else if (*pid > 0)
+	{
+		waitpid(*pid, status, 0);
+		handle_child_status(cmd, *status);
+	}
+	else
+	{
+		perror("fork");
+		cmd->msh->exit_status = 1;
+	}
+}

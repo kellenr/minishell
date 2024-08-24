@@ -260,6 +260,10 @@ char	*get_command_path(t_cmd *cmd, int *allocated);
 void	execute_in_child(char *cmd_path, char **tokens, char **env);
 void	handle_child_status(t_cmd *cmd, int status);
 int		check_tokens(t_cmd *cmd);
+void	handle_empty_prompt(char *prompt, char **trimmed_prompt);
+void	handle_preprocessing(char *trimmed_prompt, char **preprocessed_input);
+void	fork_and_execute(char *cmd_path, t_cmd *cmd, pid_t *pid, int *status);
+void	execute_simple_command(t_ast *root, t_msh *msh);
 
 /*									ENV										  */
 int		init_env(t_cmd *cmd, char **envp);

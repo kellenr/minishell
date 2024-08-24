@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   init_env.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 16:48:37 by fibarros          #+#    #+#             */
 /*   Updated: 2024/08/19 12:42:43 by fibarros         ###   ########.fr       */

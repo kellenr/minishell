@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   process.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fibarros <fibarros@student.42.fr>          +#+  +:+       +#+        */
+/*   By: keramos- <keramos-@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 17:32:36 by keramos-          #+#    #+#             */
 /*   Updated: 2024/08/19 17:46:20 by fibarros         ###   ########.fr       */

@@ -27,8 +27,6 @@ void	process_cmd(char *prompt, t_msh *msh)
 		return ;
 	preprocessed_input = process_input(trimmed_prompt);
 	free(trimmed_prompt);
-	if (!preprocessed_input)
-		ft_error("Error: failed to process input");
 	tokens = tokenize(preprocessed_input, msh);
 	free(preprocessed_input);
 	if (!tokens)
